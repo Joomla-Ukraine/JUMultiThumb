@@ -248,7 +248,7 @@ fieldset{
         echo '<img src="ws.png?v='. time() .'" alt="" class="img img-polaroid" />';
     }
     else {
-        echo '<a href="http://www.joomla-ua.org" target="_blank" title="Joomla! Ukraine"><img src="juws.png?v='. time() .'" alt="" class="img" /></a>';
+        echo '<a href="http://joomla-ua.org" target="_blank" title="Joomla! Ukraine"><img src="juws.png?v='. time() .'" alt="" class="img" /></a>';
     }
     ?>
     </div>
