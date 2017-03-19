@@ -1,0 +1,69 @@
+/*
+-----------------------------------------------
+File:    jumultitumb.css
+Author:  Denys Nosov at http://www.denysdesign.com
+Version: 22.12.2011
+
+License: Free
+----------------------------------------------- */
+
+/* Field label widths - short label */
+fieldset.adminform label,
+fieldset.panelform label,
+fieldset.adminform span.faux-label,
+div.current label, div.current span.faux-label {
+	min-width: 10%;
+	max-width: 30%;
+	width: 30%;
+	padding: 0 5px 0 0;
+}
+
+div.current fieldset.radio label {
+	width: 95px;
+	max-width: 40%;
+}
+
+div.current select {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+#rules label, #rules span.faux-label {
+	min-width: 150px;
+}
+
+#module-sliders fieldset.radio label, #module-sliders fieldset.radio span.faux-label {
+	min-width: 70px;
+	max-width: 40%;
+	width: auto;
+}
+
+/* Module description */
+.plg-desc {
+	overflow: hidden;
+}
+
+/* JUMultiThumb */
+.width-60, .width-40 {
+	width: 50%!important;
+}
+
+.pane-sliders .modal {
+	margin-left: 15px;
+	margin-right: 15px;
+	font-weight: bolder;
+	color: #146295; 
+}
+
+.nntoggler {
+	border: 1px solid #ccc;
+	padding: 12px;
+	margin-left: 4%;
+	margin-top: 3px;
+}
+	.nntoggler .nntoggler {
+		border: 0 none;
+		border-top: 1px dotted #ccc;
+		padding: 12px 0 0 4%;
+		margin-left: 0;
+	}
