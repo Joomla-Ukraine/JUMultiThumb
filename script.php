@@ -27,7 +27,7 @@ class Pkg_JUMultiThumbInstallerScript
 	{
 		if (version_compare(JVERSION, '3.1.0', 'lt'))
 		{
-			JError::raiseNotice(null, 'Update for Joomla! 3.4+');
+			JFactory::getApplication()->enqueueMessage('Update for Joomla! 3.4+', 'error');
 			return false;
 		}
 
@@ -36,14 +36,14 @@ class Pkg_JUMultiThumbInstallerScript
 
 		if (!in_array(JFactory::getDbo()->name, $this->dbSupport))
 		{
-			JError::raiseNotice(null, JText::_('PLG_JUMULTITHUMB_ERROR_DB_SUPPORT'));
+			JFactory::getApplication()->enqueueMessage(JText::_('PLG_JUMULTITHUMB_ERROR_DB_SUPPORT'), 'error');
 			return false;
 		}
 
 		$this->MakeDirectory($dir = JPATH_SITE .'/img', $mode = 0777);
 
 		if (!is_dir(JPATH_SITE .'/img/')) {
-			JError::raiseNotice(null, "Error creating folder 'img'. Please manually create the folder 'img' in the root of the site where you installed Joomla!");
+			JFactory::getApplication()->enqueueMessage("Error creating folder 'img'. Please manually create the folder 'img' in the root of the site where you installed Joomla!", 'error');
 		}
 
         $cache = JFactory::getCache('plg_jumultithumb');
