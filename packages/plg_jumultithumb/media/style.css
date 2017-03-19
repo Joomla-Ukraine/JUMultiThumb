@@ -1,0 +1,31 @@
+/* 
+-----------------------------------------------
+File:    style.css
+Author:  Denys Nosov at http://denysdesign.com
+Version: 16.03.2017
+
+License: Free
+----------------------------------------------- */
+
+.juimage {
+  border: #ccc 1px solid;
+  padding: 1px;
+}
+.juimg-category {
+
+}
+.juimg-featured {
+
+}
+.juimg-article {
+  
+}
+
+.juleft {
+  float: left;
+  margin: 0 6px 6px 0;
+}
+.juright {
+  float: right;
+  margin: 0 0 6px 6px;
+}

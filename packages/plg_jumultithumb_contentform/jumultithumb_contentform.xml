@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="content" method="upgrade">
+	<name>PLG_JUMULTITHUMB_CONTENTFORM</name>
+	<author>Denys Nosov</author>
+	<creationDate>17.03.2017</creationDate>
+	<copyright>(C) 2007-2017 Denys Nosov. All rights reserved.</copyright>
+	<license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License</license>
+	<authorEmail>denys@joomla-ua.org</authorEmail>
+	<authorUrl>joomla-ua.org</authorUrl>
+	<version>7.0.0</version>
+	<description>JUMultiThumb Content Form</description>
+
+	<files>
+		<folder>forms</folder>
+		<filename plugin="jumultithumb_contentform">jumultithumb_contentform.php</filename>
+		<filename>index.html</filename>
+	</files>
+
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_contentform.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_contentform.sys.ini</language>
+		<language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_contentform.ini</language>
+		<language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_contentform.sys.ini</language>
+	</languages>
+
+</extension>
