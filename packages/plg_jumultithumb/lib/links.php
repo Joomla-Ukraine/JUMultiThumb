@@ -18,9 +18,8 @@ class AutoLinks
 	{
         if(empty($link)) return $text;
 
-		$regex = "/<img(.*?)>\s*(<\/img>)?/ ";
-
-		$this->_replaceImg(NULL, $link, $title, $title);
+		$regex = "/<img[^>]+>/i";
+		$this->_replaceImg(NULL, $link, $title);
 
 		if($onlyFirstImage) {
 			$text = preg_replace_callback($regex, array(&$this, '_replaceImg'), $text, 1);
@@ -32,34 +31,23 @@ class AutoLinks
 		return $text;
 	}
 
-	public function _replaceImg($matches, $link = NULL, $title = NULL, $alt = NULL)
+	public function _replaceImg($matches, $link = NULL, $title = NULL)
 	{
 		static $_link;
 		static $_title;
-		static $_alt;
 
         if(isset($link) && isset($title))
 		{
 			$_link  = $link;
 			$title  = str_replace("'", ' ', $title);
 			$title  = str_replace('"', ' ', $title);
-			$alt    = str_replace("'", ' ', $alt);
-			$alt    = str_replace('"', ' ', $alt);
-			$_alt   = $alt;
 			$_title = $title;
-
 			$html 	= '';
 		}
         else {
 			$img    = $matches[0];
-			if(strpos($img,' alt=') == false) {
-				$img = str_replace('<img ', '<img alt="'. $_alt .'" ', $img);
-			}
-            else {
-			    $img = str_replace('<img ', '<img ', $img);
-			}
-
-			$html = '<a href="'. $_link .'">'. $img .'</a>';
+			$img    = str_replace('alt=""', 'alt="'. trim($_title) .'"', $img);
+			$html   = '<a href="'. $_link .'">'. $img .'</a>';
 		}
 
 		return $html;

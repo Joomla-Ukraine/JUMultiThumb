@@ -48,11 +48,12 @@ class plgContentjumultithumb extends JPlugin
 
         if ( $this->modeHelper && $this->modeHelper->jView('Article') ) return;
 
-        $onlyFirstImage 	= $this->params->get('Only_For_First_Image');
-        $autolinks 			= new AutoLinks($imgTitlePrefix, $imgAltPrefix, $onlyFirstImage);
-        $link 				= $this->modeHelper->jViewLink($article);
+        $autolinks = new AutoLinks();
 
-        $article->text 		= @$autolinks->handleImgLinks($article->text, $article->title, $link, $onlyFirstImage);
+        $onlyFirstImage = $this->params->get('Only_For_First_Image');
+        $link = $this->modeHelper->jViewLink($article);
+
+        $article->text = @$autolinks->handleImgLinks($article->text, $article->title, $link, $onlyFirstImage);
         $article->introtext = @$autolinks->handleImgLinks($article->introtext, $article->title, $link, $onlyFirstImage);
     }
 

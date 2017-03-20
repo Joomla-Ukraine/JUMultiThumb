@@ -7,7 +7,7 @@
 	<license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License</license>
 	<authorEmail>denys@joomla-ua.org</authorEmail>
 	<authorUrl>www.joomla-ua.org</authorUrl>
-	<version>7.0.0</version>
+	<version>7.0.1</version>
 	<description>PLG_JUMULTITHUMB_DESCRIPTION</description>
 
 	<files>
@@ -3839,10 +3839,10 @@
 					<option value="customjs">PLG_JUMULTITHUMB_CUSTOM_JS</option>
 				</field>
 
-           		<field name="uselightbox" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_LIGHTBOX">
-                	<option value="0">JNO</option>
-                	<option value="1">JYES</option>
-            	</field>
+				<field name="uselightbox" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_LIGHTBOX">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
 
 				<field name="@toggler_choose_settings900_a" type="nn_toggler" param="uselightbox" value="1"/>
 
