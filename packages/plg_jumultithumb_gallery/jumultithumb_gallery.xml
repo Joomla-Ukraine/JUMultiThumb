@@ -2,12 +2,12 @@
 <extension type="plugin" version="3.0" group="content" method="upgrade">
 	<name>PLG_JUMULTITHUMB_GALLERY</name>
 	<author>Denys Nosov</author>
-	<creationDate>19.03.2017</creationDate>
+	<creationDate>20.03.2017</creationDate>
 	<copyright>(C) 2007-2017 Denys Nosov. All rights reserved.</copyright>
 	<license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License</license>
 	<authorEmail>denys@joomla-ua.org</authorEmail>
 	<authorUrl>joomla-ua.org</authorUrl>
-	<version>7.0.0</version>
+	<version>7.0.1</version>
 	<description>PLG_JUMULTITHUMB_XML_DESCRIPTION</description>
 
 	<files>

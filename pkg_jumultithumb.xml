@@ -2,14 +2,14 @@
 <extension type="package" version="3.1" method="upgrade">
     <name>PLG_JUMULTITHUMB</name>
     <packagename>jumultithumb</packagename>
-    <creationDate>19.03.2017</creationDate>
+    <creationDate>20.03.2017</creationDate>
     <packager>Joomla! Ukraine</packager>
     <copyright>(C) 2007-2017 Denys Nosov, Joomla! Ukraine</copyright>
     <packagerurl>http://joomla-ua.org</packagerurl>
     <author>Denys Nosov, Joomla! Ukraine</author>
     <authorEmail>denys@joomla-ua.org</authorEmail>
     <authorUrl>http://joomla-ua.org</authorUrl>
-    <version>7.0.0</version>
+    <version>7.0.1</version>
     <license>GNU/GPL Version 2 or later and Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
     </license>
     <description>PLG_JUMULTITHUMB_XML_DESCRIPTION</description>
