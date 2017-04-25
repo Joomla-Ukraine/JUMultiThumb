@@ -1,5 +1,16 @@
 <?php
 /**
+ * JUMultiThumb
+ *
+ * @package          Joomla.Site
+ * @subpackage       pkg_jumultithumb
+ *
+ * @author           Denys Nosov, denys@joomla-ua.org
+ * @copyright        2007-2017 (C) Joomla! Ukraine, http://joomla-ua.org. All rights reserved.
+ * @license          GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+/**
  * Element: Toggler
  * Adds slide in and out functionality to framework based on an framework value
  *
@@ -10,17 +21,6 @@
  * @copyright       Copyright © 2015 NoNumber All Rights Reserved
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
  */
-
-/**
- * JUMultiThumb
- *
- * @version 	7.x
- * @package 	JUMultiThumb
- * @author 		Denys D. Nosov (denys@joomla-ua.org)
- * @copyright 	(C) 2007-2017 by Denys D. Nosov (http://joomla-ua.org)
- * @license 	GNU/GPL: http://www.gnu.org/copyleft/gpl.html
- *
- **/
 
 defined('_JEXEC') or die;
 
