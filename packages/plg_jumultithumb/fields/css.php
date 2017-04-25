@@ -2,11 +2,11 @@
 /**
  * JUMultiThumb
  *
- * @version 	7.x
- * @package 	JUMultiThumb
- * @author 		Denys D. Nosov (denys@joomla-ua.org)
- * @copyright 	(C) 2007-2017 by Denys D. Nosov (http://joomla-ua.org)
- * @license 	GNU/GPL: http://www.gnu.org/copyleft/gpl.html
+ * @version          7.x
+ * @package          JUMultiThumb
+ * @author           Denys D. Nosov (denys@joomla-ua.org)
+ * @copyright    (C) 2007-2017 by Denys D. Nosov (http://joomla-ua.org)
+ * @license          GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  *
  **/
 
@@ -22,20 +22,19 @@ class JFormFieldModal_CSS extends JFormField
 	{
 		JHtml::_('behavior.modal', 'a.modal');
 
-		$script = array();
-		$script[] = '	function jSelectArticle_'.$this->id.'(id, title, catid, object) {';
-		$script[] = '		document.id("'.$this->id.'_id").value = id;';
-		$script[] = '		document.id("'.$this->id.'_name").value = title;';
+		$script   = array();
+		$script[] = '	function jSelectArticle_' . $this->id . '(id, title, catid, object) {';
+		$script[] = '		document.id("' . $this->id . '_id").value = id;';
+		$script[] = '		document.id("' . $this->id . '_name").value = title;';
 		$script[] = '		SqueezeBox.close();';
 		$script[] = '	}';
 
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
-		$html	= array();
-        $uri = JFactory::getURI();
-		$link	= str_replace('administrator/', '', JURI::base() ).'plugins/content/jumultithumb/load/css.php';
+		$html = array();
+		$link = str_replace('administrator/', '', JURI::base()) . 'plugins/content/jumultithumb/load/css.php';
 
-		$html[] = '<a class="modal btn btn-primary" title="'.JText::_('PLG_JUMULTITHUMB_CSS_UPLOAD').'" href="'.$link.'" rel="{handler: \'iframe\', size: {x: 900, y: 550}}"><i class="icon-apply icon-white"></i> '.JText::_('PLG_JUMULTITHUMB_CSS_UPLOAD').'</a>';
+		$html[] = '<a class="modal btn btn-primary" title="' . JText::_('PLG_JUMULTITHUMB_CSS_UPLOAD') . '" href="' . $link . '" rel="{handler: \'iframe\', size: {x: 900, y: 550}}"><i class="icon-apply icon-white"></i> ' . JText::_('PLG_JUMULTITHUMB_CSS_UPLOAD') . '</a>';
 
 		return implode("\n", $html);
 	}

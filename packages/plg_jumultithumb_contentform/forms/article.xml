@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-  <form>
-   <fields name="attribs">
-		<fieldset name="JUMultithumbContentForm_Watermark" label="PLG_JUMULTITHUMB_WATERMARK">
+<form>
+    <fields name="attribs">
+        <fieldset name="JUMultithumbContentForm_Watermark" label="PLG_JUMULTITHUMB_WATERMARK">
 
-			<field type="spacer" name="s1" class="text" label="PLG_JUMULTITHUMB_WATERMARK_IMG" />
+            <field type="spacer" name="s1" class="text" label="PLG_JUMULTITHUMB_WATERMARK_IMG"/>
 
-           	<field
-                name="watermark"
-                class="btn-group"
-                type="radio"
-                default="0"
-                label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG"
+            <field
+                    name="watermark"
+                    class="btn-group"
+                    type="radio"
+                    default="0"
+                    label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG"
             >
-               	<option value="0">JNO</option>
-               	<option value="1">JYES</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
 
-           	<field
-                name="watermark_intro_only"
-                class="btn-group"
-                type="radio"
-                default="0"
-                label="PLG_JUMULTITHUMB_WATERMARK_INTROTEXT_IMG"
+            <field
+                    name="watermark_intro_only"
+                    class="btn-group"
+                    type="radio"
+                    default="0"
+                    label="PLG_JUMULTITHUMB_WATERMARK_INTROTEXT_IMG"
             >
-               	<option value="0">JNO</option>
-               	<option value="1">JYES</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
 
-           	<field
-                name="watermark_s"
-                class="btn-group"
-                type="radio"
-                default="0"
-                label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG"
+            <field
+                    name="watermark_s"
+                    class="btn-group"
+                    type="radio"
+                    default="0"
+                    label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG"
             >
-               	<option value="0">JNO</option>
-               	<option value="1">JYES</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
 
-			<field type="spacer" name="s2" class="text" label="PLG_JUMULTITHUMB_WATERMARK_GALERRY" />
+            <field type="spacer" name="s2" class="text" label="PLG_JUMULTITHUMB_WATERMARK_GALERRY"/>
 
-           	<field
-                name="watermark_gallery"
-                class="btn-group"
-                type="radio"
-                default="0"
-                label="PLG_JUMULTITHUMB_WATERMARK_ORIG_GALERRY"
+            <field
+                    name="watermark_gallery"
+                    class="btn-group"
+                    type="radio"
+                    default="0"
+                    label="PLG_JUMULTITHUMB_WATERMARK_ORIG_GALERRY"
             >
-               	<option value="0">JNO</option>
-               	<option value="1">JYES</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
 
-           	<field
-                name="watermark_gallery_s"
-                class="btn-group"
-                type="radio"
-                default="0"
-                label="PLG_JUMULTITHUMB_WATERMARK_SMALL_GALERRY"
+            <field
+                    name="watermark_gallery_s"
+                    class="btn-group"
+                    type="radio"
+                    default="0"
+                    label="PLG_JUMULTITHUMB_WATERMARK_SMALL_GALERRY"
             >
-               	<option value="0">JNO</option>
-               	<option value="1">JYES</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
 
-		</fieldset>
-  </fields>
+        </fieldset>
+    </fields>
 </form> 

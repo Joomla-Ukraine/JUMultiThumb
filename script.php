@@ -2,11 +2,11 @@
 /**
  * JUMultiThumb
  *
- * @version 	7.x
- * @package 	JUMultiThumb
- * @author 		Denys D. Nosov (denys@joomla-ua.org)
- * @copyright 	(C) 2007-2017 by Denys D. Nosov (http://joomla-ua.org)
- * @license 	GNU/GPL: http://www.gnu.org/copyleft/gpl.html
+ * @version          7.x
+ * @package          JUMultiThumb
+ * @author           Denys D. Nosov (denys@joomla-ua.org)
+ * @copyright    (C) 2007-2017 by Denys D. Nosov (http://joomla-ua.org)
+ * @license          GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  *
  **/
 
@@ -25,76 +25,77 @@ class Pkg_JUMultiThumbInstallerScript
 
 	public function preflight($type, $parent)
 	{
-		if (version_compare(JVERSION, '3.1.0', 'lt'))
+		if(version_compare(JVERSION, '3.1.0', 'lt'))
 		{
 			JFactory::getApplication()->enqueueMessage('Update for Joomla! 3.4+', 'error');
+
 			return false;
 		}
 
-        $lang = JFactory::getLanguage();
-        $lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
+		$lang = JFactory::getLanguage();
+		$lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
 
-		if (!in_array(JFactory::getDbo()->name, $this->dbSupport))
+		if(!in_array(JFactory::getDbo()->name, $this->dbSupport))
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('PLG_JUMULTITHUMB_ERROR_DB_SUPPORT'), 'error');
+
 			return false;
 		}
 
-		$this->MakeDirectory($dir = JPATH_SITE .'/img', $mode = 0777);
+		$this->MakeDirectory($dir = JPATH_SITE . '/img', $mode = 0777);
 
-		if (!is_dir(JPATH_SITE .'/img/')) {
+		if(!is_dir(JPATH_SITE . '/img/'))
+		{
 			JFactory::getApplication()->enqueueMessage("Error creating folder 'img'. Please manually create the folder 'img' in the root of the site where you installed Joomla!", 'error');
 		}
 
-        $cache = JFactory::getCache('plg_jumultithumb');
-    	$cache->clean();
+		$cache = JFactory::getCache('plg_jumultithumb');
+		$cache->clean();
 
 		return true;
 	}
 
 	public function uninstall($parent)
-    {
-    	return true;
+	{
+		return true;
 	}
 
 	public function update($parent)
-    {
-        return true;
+	{
+		return true;
 	}
 
 	public function postflight($type, $parent, $results)
 	{
-		$enabled    = array();
-		$newalert 	= '';
+		$enabled  = array();
+		$newalert = '';
 
-        $db         = JFactory::getDbo();
-		$query      = $db->getQuery(true);
-        $app        = JFactory::getApplication();
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$app   = JFactory::getApplication();
 
-		$version    = new JVersion;
-        $joomla     = substr($version->getShortVersion(), 0, 3);
+		$version = new JVersion;
+		$joomla  = substr($version->getShortVersion(), 0, 3);
 
-        $adm_url	= str_replace('/administrator', '', JURI::base());
+		$qv = $db->getQuery(true);
+		$qv = 'UPDATE `#__extensions` SET `enabled` = 1, `ordering` = -100 WHERE `element` = ' . $db->Quote('jumultithumb') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
+		$db->setQuery($qv);
+		$db->query();
 
-        $qv = $db->getQuery(true);
-        $qv = 'UPDATE `#__extensions` SET `enabled` = 1, `ordering` = -100 WHERE `element` = '. $db->Quote('jumultithumb') .' AND `type` = '. $db->Quote('plugin') .' AND `client_id` = 0';
-        $db->setQuery( $qv );
-        $db->query();
+		$qv = $db->getQuery(true);
+		$qv = 'UPDATE `#__extensions` SET `enabled` = 1, `ordering` = -99 WHERE `element` = ' . $db->Quote('jumultithumb_gallery') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
+		$db->setQuery($qv);
+		$db->query();
 
-        $qv = $db->getQuery(true);
-        $qv = 'UPDATE `#__extensions` SET `enabled` = 1, `ordering` = -99 WHERE `element` = '. $db->Quote('jumultithumb_gallery') .' AND `type` = '. $db->Quote('plugin') .' AND `client_id` = 0';
-        $db->setQuery( $qv );
-        $db->query();
+		$qv = $db->getQuery(true);
+		$qv = 'UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = ' . $db->Quote('jumultithumb_editorbutton') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
+		$db->setQuery($qv);
+		$db->query();
 
-        $qv = $db->getQuery(true);
-        $qv = 'UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = '. $db->Quote('jumultithumb_editorbutton') .' AND `type` = '. $db->Quote('plugin') .' AND `client_id` = 0';
-        $db->setQuery( $qv );
-        $db->query();
-
-        $qv = $db->getQuery(true);
-        $qv = 'UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = '. $db->Quote('jumultithumb_contentform') .' AND `type` = '. $db->Quote('plugin') .' AND `client_id` = 0';
-        $db->setQuery( $qv );
-        $db->query();
+		$qv = $db->getQuery(true);
+		$qv = 'UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = ' . $db->Quote('jumultithumb_contentform') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
+		$db->setQuery($qv);
+		$db->query();
 
 		foreach ($results as $result)
 		{
@@ -107,15 +108,14 @@ class Pkg_JUMultiThumbInstallerScript
 			$enabled[$extension] = $db->loadResult();
 		}
 
-        $html = '';
-        $html .= '<style type="text/css">
+		$html = '';
+		$html .= '<style type="text/css">
 		.juinstall {
 			clear: both;
 			color: #333!important;
 			font-weight: normal;
 		    margin: 0!important;
 		    padding: 0;
-		    overflow: hiden;
 		    background: #fff!important;
 			position: absolute!important;
 			top: 0!important;
@@ -151,163 +151,171 @@ class Pkg_JUMultiThumbInstallerScript
 		        .clear {clear: both;}
         </style>';
 
-        $html .= '<div class="juinstall">
+		$html .= '<div class="juinstall">
         	<div class="juinstall-content">
-                <h2>'. JText::_('PKG_JUMULTITHUMB') .'</h2>
-                <p>'. JText::_('PKG_JUMULTITHUMB_DESCRIPTION') .'</p>
+                <h2>' . JText::_('PKG_JUMULTITHUMB') . '</h2>
+                <p>' . JText::_('PKG_JUMULTITHUMB_DESCRIPTION') . '</p>
                 <hr>
         		<table class="table table-striped" width="100%">
         			<thead>
         				<tr>
-        					<th>'. JText::_('PKG_JUMULTITHUMB_EXTENSION') .'</th>
-        					<th>'. JText::_('JSTATUS') .'</th>
-        					<th>'. JText::_('JENABLED') .'</th>
+        					<th>' . JText::_('PKG_JUMULTITHUMB_EXTENSION') . '</th>
+        					<th>' . JText::_('JSTATUS') . '</th>
+        					<th>' . JText::_('JENABLED') . '</th>
         				</tr>
         			</thead>
         			<tbody>';
 
-        foreach ($results as $result)
-        {
+		foreach ($results as $result)
+		{
 			$extension = (string) $result['name'];
 
-            $html .= '<tr><td>';
-            $html .= JText::_($extension);
-            $html .= '</td><td><strong>';
+			$html .= '<tr><td>';
+			$html .= JText::_($extension);
+			$html .= '</td><td><strong>';
 
-            if ($result['result'] == true) {
-                $html .= '<span class="label label-success">'. JText::_('PKG_JUMULTITHUMB_INSTALLED') .'</span>';
-            }
-            else {
-                $html .= '<span class="label label-important">'. JText::_('PKG_JUMULTITHUMB_NOT_INSTALLED') .'</span>';
-            }
-            $html .= '</strong></td><td>';
+			if($result['result'] == true)
+			{
+				$html .= '<span class="label label-success">' . JText::_('PKG_JUMULTITHUMB_INSTALLED') . '</span>';
+			}
+			else
+			{
+				$html .= '<span class="label label-important">' . JText::_('PKG_JUMULTITHUMB_NOT_INSTALLED') . '</span>';
+			}
+			$html .= '</strong></td><td>';
 
-            if ($enabled[$extension] == 1) {
-                $html .= '<span class="label label-success">'. JText::_('JYES') .'</span>';
-        	}
-            else {
-        	    $html .= '<span class="label label-important">'. JText::_('JNO') .'</span>';
-            }
+			if($enabled[$extension] == 1)
+			{
+				$html .= '<span class="label label-success">' . JText::_('JYES') . '</span>';
+			}
+			else
+			{
+				$html .= '<span class="label label-important">' . JText::_('JNO') . '</span>';
+			}
 
-            $html .= '</td></tr>';
-        }
+			$html .= '</td></tr>';
+		}
 
-        $html .= '</tbody></table>';
+		$html .= '</tbody></table>';
 
-        $path  = JPATH_SITE .'/plugins/content/jumultithumb/';
+		$path = JPATH_SITE . '/plugins/content/jumultithumb/';
 
-        $files = array(
-            $path .'assets/jumultithumb.jpg',
-            $path .'assets/close.png',
-            $path .'assets/toggler.js',
-            $path .'assets/script.js',
-            $path .'assets/style.css'
-        );
+		$files = array(
+			$path . 'assets/jumultithumb.jpg',
+			$path . 'assets/close.png',
+			$path . 'assets/toggler.js',
+			$path . 'assets/script.js',
+			$path . 'assets/style.css'
+		);
 
-        $folders = array(
-            $path .'img'
-        );
+		$folders = array(
+			$path . 'img'
+		);
 
-        $i = 0;
-        foreach ($files AS $file) {
-            if (file_exists($file)) $i++;
-        }
+		$i = 0;
+		foreach ($files AS $file)
+		{
+			if(file_exists($file)) $i++;
+		}
 
-        $j = 0;
-        foreach ($folders AS $folder) {
-            if (is_dir($folder)) $j++;
-        }
+		$j = 0;
+		foreach ($folders AS $folder)
+		{
+			if(is_dir($folder)) $j++;
+		}
 
-        if(($i+$j) > 0)
-        {
-            $html .= '<h2>'. JText::_('PLG_JUMULTITHUMB_REMOVE_OLD_FILES') .'</h2>
+		if(($i + $j) > 0)
+		{
+			$html .= '<h2>' . JText::_('PLG_JUMULTITHUMB_REMOVE_OLD_FILES') . '</h2>
         		<table class="table table-striped">
         			<thead>
         				<tr>
-        					<th>'. JText::_('PLG_JUMULTITHUMB_EXTENSION') .'</th>
-        					<th>'. JText::_('JSTATUS') .'</th>
+        					<th>' . JText::_('PLG_JUMULTITHUMB_EXTENSION') . '</th>
+        					<th>' . JText::_('JSTATUS') . '</th>
         				</tr>
         			</thead>
         			<tbody>';
 
-            foreach ($files AS $file)
-            {
-                if (file_exists($file))
-                {
-                    $filepath = str_replace($path, '', $file);
-                    unlink($file);
+			foreach ($files AS $file)
+			{
+				if(file_exists($file))
+				{
+					$filepath = str_replace($path, '', $file);
+					unlink($file);
 
-                    $html .= '<tr>
-            					<td><span class="label">File:</span> <code>'. $filepath .'</code></td>
+					$html .= '<tr>
+            					<td><span class="label">File:</span> <code>' . $filepath . '</code></td>
             					<td><span class="label label-inverse">Delete</span></td>
             				</tr>';
-                }
-            }
+				}
+			}
 
-            foreach ($folders AS $folder)
-            {
-                if (is_dir($folder))
-                {
-                    $folderpath = str_replace($path, '', $folder);
-                    $this->unlinkRecursive($folder, 1);
+			foreach ($folders AS $folder)
+			{
+				if(is_dir($folder))
+				{
+					$folderpath = str_replace($path, '', $folder);
+					$this->unlinkRecursive($folder, 1);
 
-                    $html .= '<tr>
-            					<td><span class="label">Folder:</span> <code>'. $folderpath .'</code></td>
+					$html .= '<tr>
+            					<td><span class="label">Folder:</span> <code>' . $folderpath . '</code></td>
             					<td><span class="label label-inverse">Delete</span></td>
             				</tr>';
-                }
-            }
+				}
+			}
 
-            $html .= '</tbody></table>';
-        }
+			$html .= '</tbody></table>';
+		}
 
-        $html .= '</div></div>';
+		$html .= '</div></div>';
 
-		if($joomla < '3.4') {
+		if($joomla < '3.4')
+		{
 			echo $html;
 		}
-        else {
+		else
+		{
 			$app->enqueueMessage($html, 'message');
 		}
 
 		return true;
 	}
 
-    public function MakeDirectory($dir, $mode)
-    {
-        if (is_dir($dir) || @mkdir($dir,$mode))
-        {
-            $indexfile    = $dir .'/index.html';
-            if(!file_exists($indexfile))
-            {
-                $file = fopen($indexfile, 'w');
-                fputs($file, '<!DOCTYPE html><title></title>');
-                fclose($file);
-            }
-            
-            return TRUE;
-        }
+	public function MakeDirectory($dir, $mode)
+	{
+		if(is_dir($dir) || @mkdir($dir, $mode))
+		{
+			$indexfile = $dir . '/index.html';
+			if(!file_exists($indexfile))
+			{
+				$file = fopen($indexfile, 'w');
+				fputs($file, '<!DOCTYPE html><title></title>');
+				fclose($file);
+			}
 
-        if (!$this->MakeDirectory(dirname($dir),$mode)) return FALSE;
+			return true;
+		}
 
-        return @mkdir($dir,$mode);
-    }
+		if(!$this->MakeDirectory(dirname($dir), $mode)) return false;
 
-    public function unlinkRecursive($dir, $deleteRootToo)
-    {
-        if(!$dh = @opendir($dir)) return;
+		return @mkdir($dir, $mode);
+	}
 
-        while (false !== ($obj = readdir($dh)))
-        {
-            if($obj == '.' || $obj == '..')  continue;
+	public function unlinkRecursive($dir, $deleteRootToo)
+	{
+		if(!$dh = @opendir($dir)) return;
 
-            if (!@unlink($dir . '/' . $obj)) $this->unlinkRecursive($dir.'/'.$obj, true);
-        }
+		while (false !== ($obj = readdir($dh)))
+		{
+			if($obj == '.' || $obj == '..') continue;
 
-        closedir($dh);
+			if(!@unlink($dir . '/' . $obj)) $this->unlinkRecursive($dir . '/' . $obj, true);
+		}
 
-        if ($deleteRootToo) @rmdir($dir);
+		closedir($dh);
 
-        return;
-    }
+		if($deleteRootToo) @rmdir($dir);
+
+		return;
+	}
 }

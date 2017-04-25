@@ -1,434 +1,500 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="3.0" group="content" method="upgrade">
-	<name>PLG_JUMULTITHUMB_GALLERY</name>
-	<author>Denys Nosov</author>
-	<creationDate>20.03.2017</creationDate>
-	<copyright>(C) 2007-2017 Denys Nosov. All rights reserved.</copyright>
-	<license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License</license>
-	<authorEmail>denys@joomla-ua.org</authorEmail>
-	<authorUrl>joomla-ua.org</authorUrl>
-	<version>7.0.1</version>
-	<description>PLG_JUMULTITHUMB_XML_DESCRIPTION</description>
+    <name>PLG_JUMULTITHUMB_GALLERY</name>
+    <author>Denys Nosov</author>
+    <creationDate>20.03.2017</creationDate>
+    <copyright>(C) 2007-2017 Denys Nosov. All rights reserved.</copyright>
+    <license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative
+        Works 3.0 License
+    </license>
+    <authorEmail>denys@joomla-ua.org</authorEmail>
+    <authorUrl>joomla-ua.org</authorUrl>
+    <version>7.0.1</version>
+    <description>PLG_JUMULTITHUMB_XML_DESCRIPTION</description>
 
-	<files>
-		<filename plugin="jumultithumb_gallery">jumultithumb_gallery.php</filename>
-		<filename>index.html</filename>
+    <files>
+        <filename plugin="jumultithumb_gallery">jumultithumb_gallery.php</filename>
+        <filename>index.html</filename>
         <folder>tmpl</folder>
     </files>
 
-	<languages>
-		<language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_gallery.ini</language>
-		<language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_gallery.sys.ini</language>
-		<language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_gallery.ini</language>
-		<language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_gallery.sys.ini</language>
-	</languages>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_gallery.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_gallery.sys.ini</language>
+        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_gallery.ini</language>
+        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_gallery.sys.ini</language>
+    </languages>
 
     <media destination="plg_jumultithumb_gallery" folder="media">
-		<filename>index.html</filename>
-	</media>
+        <filename>index.html</filename>
+    </media>
 
-	<config addfieldpath="/plugins/content/jumultithumb/fields/">
+    <config addfieldpath="/plugins/content/jumultithumb/fields/">
 
-		<fields name="params" addfieldpath="/plugins/content/jumultithumb/fields/">
+        <fields name="params" addfieldpath="/plugins/content/jumultithumb/fields/">
 
-			<fieldset name="BASIC">
+            <fieldset name="BASIC">
 
-				<field
-                    name="useimgagegallery"
-                    type="radio"
-                    class="btn-group"
-                    default="1"
-                    label="PLG_JUMULTITHUMB_USEIMAGEGALLERY"
+                <field
+                        name="useimgagegallery"
+                        type="radio"
+                        class="btn-group"
+                        default="1"
+                        label="PLG_JUMULTITHUMB_USEIMAGEGALLERY"
                 >
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
-				</field>
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				<field name="@toggler_choose_settings1_a" type="nn_toggler" param="useimgagegallery" value="1,2"/>
+                <field name="@toggler_choose_settings1_a" type="nn_toggler" param="useimgagegallery" value="1,2"/>
 
-				    <field
+                <field
                         name="width"
                         type="text"
                         default="130"
                         size="4"
                         label="PLG_JUMULTITHUMB_WIDTH"
                         description="PLG_JUMULTITHUMB_WIDTH_TIPS"
-                        />
+                />
 
-					<field
+                <field
                         name="height"
                         type="text"
                         default="130"
                         size="4"
                         label="PLG_JUMULTITHUMB_HEIGHT"
                         description="PLG_JUMULTITHUMB_HEIGHT_TIPS"
-                        />
+                />
 
-					<field
+                <field
                         name="cropzoom"
                         type="radio"
                         class="btn-group"
                         default="1"
                         label="PLG_JUMULTITHUMB_CROP_IMAGE"
-                    >
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
-
-				<field name="@toggler_showsuccessmessage1_b" type="nn_toggler"/>
-
-		        <field type="spacer" name="gall" class="text-left" label="PLG_JUMULTITHUMB_GALLERY_READMORE" />
-
-				<field
-                    name="galleryfolder"
-                    type="folderlist"
-                    default=""
-                    label="PLG_JUMULTITHUMB_GALLERY_FOLDER"
-                    description="PLG_JUMULTITHUMB_IMAGE_FOLDER_DESC"
-                    directory="images"
-                    exclude="files|jursspublisher|tmp"
-                    hide_none="1"
-                    hide_default="1"
-                    />
-
-			    <field
-                    name="gallwidth"
-                    type="text"
-                    default="130"
-                    size="4"
-                    label="PLG_JUMULTITHUMB_WIDTH"
-                    description="PLG_JUMULTITHUMB_WIDTH_TIPS"
-                    />
-
-				<field name="gallheight" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT" description="PLG_JUMULTITHUMB_HEIGHT_TIPS" />
-
-	               	<field name="maxsize_orignew" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
-	                   	<option value="0">JNO</option>
-	                   	<option value="1">JYES</option>
-	                </field>
-
-	                <field name="maxwidthnew" type="text" default="800" size="4" label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE" />
-
-	            	<field name="maxheightnew" type="text" default="500" size="4" label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE" />
-
-				<field name="gallcropzoom" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_CROP_IMAGE">
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
-				</field>
-
-				<field name="img_cache" type="folderlist" default="img" label="PLG_JUMULTITHUMB_IMAGE_FOLDER" description="PLG_JUMULTITHUMB_IMAGE_FOLDER_DESC" directory="" exclude="administrator|bin|cli|components|includes|files|layouts|log|language|libraries|logs|modules|plugins|templates|tmp" hide_none="1" hide_default="1" />
-
-				<field type="spacer" name="im10" hr="true" />
-
-               	<field name="watermarkgall" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
-                   	<option value="0">JNO</option>
-					<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-                   	<option value="1">JYES</option>
+                >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
 
-				<field name="@toggler_choose_settings700_a" type="nn_toggler" param="watermarkgall" value="1,2"/>
+                <field name="@toggler_showsuccessmessage1_b" type="nn_toggler"/>
 
-					<field name="wmposition" type="list" default="BR" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS">
-						<option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-						<option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-						<option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
-						<option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
-						<option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
-						<option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
-						<option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
-						<option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
-						<option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
-					</field>
+                <field type="spacer" name="gall" class="text-left" label="PLG_JUMULTITHUMB_GALLERY_READMORE"/>
 
-					<field name="wmopst" type="text" default="75" size="4" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC" description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS" />
+                <field
+                        name="galleryfolder"
+                        type="folderlist"
+                        default=""
+                        label="PLG_JUMULTITHUMB_GALLERY_FOLDER"
+                        description="PLG_JUMULTITHUMB_IMAGE_FOLDER_DESC"
+                        directory="images"
+                        exclude="files|jursspublisher|tmp"
+                        hide_none="1"
+                        hide_default="1"
+                />
 
-					<field name="wmx" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN" />
+                <field
+                        name="gallwidth"
+                        type="text"
+                        default="130"
+                        size="4"
+                        label="PLG_JUMULTITHUMB_WIDTH"
+                        description="PLG_JUMULTITHUMB_WIDTH_TIPS"
+                />
 
-					<field name="wmy" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN" />
+                <field name="gallheight" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT"
+                       description="PLG_JUMULTITHUMB_HEIGHT_TIPS"/>
 
-				<field name="@toggler_showsuccessmessage700_b" type="nn_toggler"/>
-
-               	<field name="watermarkgall_s" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
-                   	<option value="0">JNO</option>
-					<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-                   	<option value="1">JYES</option>
+                <field name="maxsize_orignew" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
 
-				<field name="@toggler_choose_settings701_a" type="nn_toggler" param="watermarkgall_s" value="1,2"/>
+                <field name="maxwidthnew" type="text" default="800" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE"/>
 
-					<field name="wmposition_s" type="list" default="BR" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_POS">
-						<option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-						<option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-						<option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
-						<option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
-						<option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
-						<option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
-						<option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
-						<option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
-						<option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
-					</field>
+                <field name="maxheightnew" type="text" default="500" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE"/>
 
-					<field name="wmopst_s" type="text" default="75" size="4" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_OPAC" description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS" />
+                <field name="gallcropzoom" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_CROP_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-					<field name="wmx_s" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN" />
+                <field name="img_cache" type="folderlist" default="img" label="PLG_JUMULTITHUMB_IMAGE_FOLDER"
+                       description="PLG_JUMULTITHUMB_IMAGE_FOLDER_DESC" directory=""
+                       exclude="administrator|bin|cli|components|includes|files|layouts|log|language|libraries|logs|modules|plugins|templates|tmp"
+                       hide_none="1" hide_default="1"/>
 
-					<field name="wmy_s" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN" />
+                <field type="spacer" name="im10" hr="true"/>
 
-				<field name="@toggler_showsuccessmessage701_b" type="nn_toggler"/>
+                <field name="watermarkgall" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				<field name="selectlightbox" type="list" default="jmodal" label="PLG_JUMULTITHUMB_SELECT_LIGHTBOX">
-					<option value="jmodal">Joomla Modal window (Mootools)</option>
+                <field name="@toggler_choose_settings700_a" type="nn_toggler" param="watermarkgall" value="1,2"/>
+
+                <field name="wmposition" type="list" default="BR" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS">
+                    <option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+                    <option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+                    <option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
+                    <option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
+                    <option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
+                    <option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
+                    <option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
+                    <option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
+                    <option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
+                </field>
+
+                <field name="wmopst" type="text" default="75" size="4" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC"
+                       description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS"/>
+
+                <field name="wmx" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN"/>
+
+                <field name="wmy" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN"/>
+
+                <field name="@toggler_showsuccessmessage700_b" type="nn_toggler"/>
+
+                <field name="watermarkgall_s" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="@toggler_choose_settings701_a" type="nn_toggler" param="watermarkgall_s" value="1,2"/>
+
+                <field name="wmposition_s" type="list" default="BR" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_POS">
+                    <option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+                    <option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+                    <option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
+                    <option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
+                    <option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
+                    <option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
+                    <option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
+                    <option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
+                    <option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
+                </field>
+
+                <field name="wmopst_s" type="text" default="75" size="4"
+                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_OPAC"
+                       description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS"/>
+
+                <field name="wmx_s" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN"/>
+
+                <field name="wmy_s" type="text" default="0" size="4" label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN"/>
+
+                <field name="@toggler_showsuccessmessage701_b" type="nn_toggler"/>
+
+                <field name="selectlightbox" type="list" default="jmodal" label="PLG_JUMULTITHUMB_SELECT_LIGHTBOX">
+                    <option value="jmodal">Joomla Modal window (Mootools)</option>
                     <option value="lightgallery">LightGallery (JQuery)</option>
-					<option value="colorbox">Colorbox (JQuery)</option>
-					<option value="customjs">PLG_JUMULTITHUMB_CUSTOM_JS</option>
-				</field>
+                    <option value="colorbox">Colorbox (JQuery)</option>
+                    <option value="customjs">PLG_JUMULTITHUMB_CUSTOM_JS</option>
+                </field>
 
-				<field name="choose_settings" type="radio" class="btn-group" default="-1" label="PLG_JUMULTITHUMB_MENU_ITEM_GALLERY_SELECT">
-					<option value="-1">PLG_JUMULTITHUMB_MENU_ITEM_DEFAULT</option>
-					<option value="1">1</option>
-				  	<option value="2">2</option>
-				  	<option value="3">3</option>
-				  	<option value="4">4</option>
-				  	<option value="5">5</option>
-				</field>
+                <field name="choose_settings" type="radio" class="btn-group" default="-1"
+                       label="PLG_JUMULTITHUMB_MENU_ITEM_GALLERY_SELECT">
+                    <option value="-1">PLG_JUMULTITHUMB_MENU_ITEM_DEFAULT</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </field>
+
+                <field name="@toggler_choose_settings7_a" type="nn_toggler" param="choose_settings" value="-1"/>
+
+                <field type="spacer" name="mi0" class="text" label="PLG_JUMULTITHUMB_MENU_ITEM_SETTING_DEFAULT"/>
+
+                <field name="gallery_title" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE"/>
 
-				<field name="@toggler_choose_settings7_a" type="nn_toggler" param="choose_settings" value="-1"/>
+                <field name="cssclass" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS"/>
+
+                <field name="@toggler_showsuccessmessage7_b" type="nn_toggler"/>
 
-	            	<field type="spacer" name="mi0" class="text" label="PLG_JUMULTITHUMB_MENU_ITEM_SETTING_DEFAULT" />
+                <field name="@toggler_choose_settings6_a" type="nn_toggler" param="choose_settings" value="1"/>
+
+                <field name="menu_item1" type="menuitem" multiple="true" size="15" state="1"
+                       label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM"/>
 
-	                <field name="gallery_title" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
+                <field name="gallwidth1" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH"
+                       description="PLG_JUMULTITHUMB_WIDTH_TIPS"/>
 
-	                <field name="cssclass" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS" />
+                <field name="gallheight1" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT"
+                       description="PLG_JUMULTITHUMB_HEIGHT_TIPS"/>
 
-				<field name="@toggler_showsuccessmessage7_b" type="nn_toggler"/>
+                <field name="gallcropzoom1" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_CROP_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				<field name="@toggler_choose_settings6_a" type="nn_toggler" param="choose_settings" value="1"/>
+                <field name="watermark_gall1" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-					<field name="menu_item1" type="menuitem" multiple="true" size="15" state="1" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM" />
+                <field name="watermark_gall_s1" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				    <field name="gallwidth1" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH" description="PLG_JUMULTITHUMB_WIDTH_TIPS" />
+                <field name="maxsize_orignew1" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-					<field name="gallheight1" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT" description="PLG_JUMULTITHUMB_HEIGHT_TIPS" />
+                <field name="maxwidthnew1" type="text" default="800" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE"/>
 
-					<field name="gallcropzoom1" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_CROP_IMAGE">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
+                <field name="maxheightnew1" type="text" default="500" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE"/>
 
-	               	<field name="watermark_gall1" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="usegallery_title1" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_USEGALLERY_TITLE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	               	<field name="watermark_gall_s1" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="gallery_title1" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE"/>
 
-	               	<field name="maxsize_orignew1" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
-	                   	<option value="0">JNO</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="cssclass1" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS"/>
 
-	                <field name="maxwidthnew1" type="text" default="800" size="4" label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE" />
+                <field name="@toggler_showsuccessmessage6_b" type="nn_toggler"/>
 
-	            	<field name="maxheightnew1" type="text" default="500" size="4" label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE" />
+                <field name="@toggler_choose_settings2_a" type="nn_toggler" param="choose_settings" value="2"/>
 
-					<field name="usegallery_title1" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_USEGALLERY_TITLE">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
+                <field name="menu_item2" type="menuitem" multiple="true" size="15" state="1"
+                       disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM"/>
 
-	                <field name="gallery_title1" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
+                <field name="gallwidth2" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH"
+                       description="PLG_JUMULTITHUMB_WIDTH_TIPS"/>
 
-	                <field name="cssclass1" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS" />
+                <field name="gallheight2" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT"
+                       description="PLG_JUMULTITHUMB_HEIGHT_TIPS"/>
 
-				<field name="@toggler_showsuccessmessage6_b" type="nn_toggler"/>
+                <field name="gallcropzoom2" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_CROP_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				<field name="@toggler_choose_settings2_a" type="nn_toggler" param="choose_settings" value="2"/>
+                <field name="watermark_gall2" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	                <field name="menu_item2" type="menuitem"  multiple="true" size="15" state="1" disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM" />
+                <field name="watermark_gall_s2" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				    <field name="gallwidth2" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH" description="PLG_JUMULTITHUMB_WIDTH_TIPS" />
+                <field name="maxsize_orignew2" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-					<field name="gallheight2" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT" description="PLG_JUMULTITHUMB_HEIGHT_TIPS" />
+                <field name="maxwidthnew2" type="text" default="800" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE"/>
+
+                <field name="maxheightnew2" type="text" default="500" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE"/>
+
+                <field name="usegallery_title2" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_usegallery_title">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="gallery_title2" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE"/>
+
+                <field name="cssclass2" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS"/>
+
+                <field name="@toggler_showsuccessmessage2_b" type="nn_toggler"/>
+
+                <field name="@toggler_choose_settings3_a" type="nn_toggler" param="choose_settings" value="3"/>
+
+                <field name="menu_item3" type="menuitem" multiple="true" size="15" state="1"
+                       disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM"/>
+
+                <field name="gallwidth3" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH"
+                       description="PLG_JUMULTITHUMB_WIDTH_TIPS"/>
+
+                <field name="gallheight3" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT"
+                       description="PLG_JUMULTITHUMB_HEIGHT_TIPS"/>
 
-					<field name="gallcropzoom2" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_CROP_IMAGE">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
+                <field name="gallcropzoom3" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_CROP_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	               	<field name="watermark_gall2" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="watermark_gall3" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	               	<field name="watermark_gall_s2" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="watermark_gall_s3" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	               	<field name="maxsize_orignew2" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
-	                   	<option value="0">JNO</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="maxsize_orignew3" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	                <field name="maxwidthnew2" type="text" default="800" size="4" label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE" />
+                <field name="maxwidthnew3" type="text" default="800" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE"/>
+
+                <field name="maxheightnew3" type="text" default="500" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE"/>
 
-	            	<field name="maxheightnew2" type="text" default="500" size="4" label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE" />
+                <field name="usegallery_title3" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_usegallery_title">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field name="gallery_title3" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE"/>
 
-					<field name="usegallery_title2" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_usegallery_title">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
+                <field name="cssclass3" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS"/>
+
+                <field name="@toggler_showsuccessmessage3_b" type="nn_toggler"/>
 
-	                <field name="gallery_title2" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
+                <field name="@toggler_choose_settings4_a" type="nn_toggler" param="choose_settings" value="4"/>
+
+                <field name="menu_item4" type="menuitem" multiple="true" size="15" state="1"
+                       disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM"/>
+
+                <field name="gallwidth4" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH"
+                       description="PLG_JUMULTITHUMB_WIDTH_TIPS"/>
 
-	                <field name="cssclass2" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS" />
+                <field name="gallheight4" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT"
+                       description="PLG_JUMULTITHUMB_HEIGHT_TIPS"/>
 
-				<field name="@toggler_showsuccessmessage2_b" type="nn_toggler"/>
+                <field name="gallcropzoom4" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_CROP_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				<field name="@toggler_choose_settings3_a" type="nn_toggler" param="choose_settings" value="3"/>
+                <field name="watermark_gall4" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	                <field name="menu_item3" type="menuitem"  multiple="true" size="15" state="1" disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM" />
+                <field name="watermark_gall_s4" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				    <field name="gallwidth3" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH" description="PLG_JUMULTITHUMB_WIDTH_TIPS" />
+                <field name="maxsize_orignew4" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-					<field name="gallheight3" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT" description="PLG_JUMULTITHUMB_HEIGHT_TIPS" />
+                <field name="maxwidthnew4" type="text" default="800" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE"/>
 
-					<field name="gallcropzoom3" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_CROP_IMAGE">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
+                <field name="maxheightnew4" type="text" default="500" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE"/>
 
-	               	<field name="watermark_gall3" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="usegallery_title4" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_usegallery_title">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	               	<field name="watermark_gall_s3" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="gallery_title4" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE"/>
 
-	               	<field name="maxsize_orignew3" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
-	                   	<option value="0">JNO</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="cssclass4" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS"/>
 
-	                <field name="maxwidthnew3" type="text" default="800" size="4" label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE" />
+                <field name="@toggler_showsuccessmessage4_b" type="nn_toggler"/>
 
-	            	<field name="maxheightnew3" type="text" default="500" size="4" label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE" />
+                <field name="@toggler_choose_settings5_a" type="nn_toggler" param="choose_settings" value="5"/>
 
-					<field name="usegallery_title3" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_usegallery_title">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
+                <field name="menu_item5" type="menuitem" multiple="true" size="15" state="1"
+                       disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM"/>
 
-	                <field name="gallery_title3" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
+                <field name="gallwidth5" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH"
+                       description="PLG_JUMULTITHUMB_WIDTH_TIPS"/>
 
-	                <field name="cssclass3" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS" />
+                <field name="gallheight5" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT"
+                       description="PLG_JUMULTITHUMB_HEIGHT_TIPS"/>
 
-				<field name="@toggler_showsuccessmessage3_b" type="nn_toggler"/>
+                <field name="gallcropzoom5" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_CROP_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
- 				<field name="@toggler_choose_settings4_a" type="nn_toggler" param="choose_settings" value="4"/>
+                <field name="watermark_gall5" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	                <field name="menu_item4" type="menuitem"  multiple="true" size="15" state="1" disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM" />
+                <field name="watermark_gall_s5" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
+                    <option value="0">JNO</option>
+                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+                    <option value="1">JYES</option>
+                </field>
 
-				    <field name="gallwidth4" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH" description="PLG_JUMULTITHUMB_WIDTH_TIPS" />
+                <field name="maxsize_orignew5" type="radio" class="btn-group" default="0"
+                       label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-					<field name="gallheight4" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT" description="PLG_JUMULTITHUMB_HEIGHT_TIPS" />
+                <field name="maxwidthnew5" type="text" default="800" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE"/>
 
-					<field name="gallcropzoom4" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_CROP_IMAGE">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
+                <field name="maxheightnew5" type="text" default="500" size="4"
+                       label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE"/>
 
-	               	<field name="watermark_gall4" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="usegallery_title5" type="radio" class="btn-group" default="1"
+                       label="PLG_JUMULTITHUMB_usegallery_title">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
-	               	<field name="watermark_gall_s4" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="gallery_title5" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE"/>
 
-	               	<field name="maxsize_orignew4" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
-	                   	<option value="0">JNO</option>
-	                   	<option value="1">JYES</option>
-	                </field>
+                <field name="cssclass5" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS"/>
 
-	                <field name="maxwidthnew4" type="text" default="800" size="4" label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE" />
+                <field name="@toggler_showsuccessmessage5_b" type="nn_toggler"/>
 
-	            	<field name="maxheightnew4" type="text" default="500" size="4" label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE" />
+            </fieldset>
 
-					<field name="usegallery_title4" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_usegallery_title">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
-
-	                <field name="gallery_title4" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
-
-	                <field name="cssclass4" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS" />
-
-				<field name="@toggler_showsuccessmessage4_b" type="nn_toggler"/>
-
-				<field name="@toggler_choose_settings5_a" type="nn_toggler" param="choose_settings" value="5"/>
-
-	                <field name="menu_item5" type="menuitem"  multiple="true" size="15" state="1" disable="menulink, separator" label="PLG_JUMULTITHUMB_GALLERY_MENU_ITEM" />
-
-				    <field name="gallwidth5" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_WIDTH" description="PLG_JUMULTITHUMB_WIDTH_TIPS" />
-
-					<field name="gallheight5" type="text" default="130" size="4" label="PLG_JUMULTITHUMB_HEIGHT" description="PLG_JUMULTITHUMB_HEIGHT_TIPS" />
-
-					<field name="gallcropzoom5" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_CROP_IMAGE">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
-
-	               	<field name="watermark_gall5" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
-
-	               	<field name="watermark_gall_s5" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
-	                   	<option value="0">JNO</option>
-						<option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-	                   	<option value="1">JYES</option>
-	                </field>
-
-	               	<field name="maxsize_orignew5" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
-	                   	<option value="0">JNO</option>
-	                   	<option value="1">JYES</option>
-	                </field>
-
-	                <field name="maxwidthnew5" type="text" default="800" size="4" label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE" />
-
-	            	<field name="maxheightnew5" type="text" default="500" size="4" label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE" />
-
-					<field name="usegallery_title5" type="radio" class="btn-group" default="1" label="PLG_JUMULTITHUMB_usegallery_title">
-						<option value="0">JNO</option>
-						<option value="1">JYES</option>
-					</field>
-
-	                <field name="gallery_title5" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
-
-	                <field name="cssclass5" type="text" default="" size="4" label="PLG_JUMULTITHUMB_GALLERY_CSSCLASS" />
-
-				<field name="@toggler_showsuccessmessage5_b" type="nn_toggler"/>
-
-			</fieldset>
-
-		</fields>
-	</config>
+        </fields>
+    </config>
 </extension>
