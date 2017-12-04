@@ -37,7 +37,7 @@ defined('_JEXEC') or die;
         itemprop="image"
         itemscope itemtype="https://schema.org/ImageObject"
         >
-            <?php if($_link_img && $_noresize == 1) : ?>
+            <?php if($_link_img) : ?>
             <a href="<?php echo $_link_img; ?>"<?php echo $_title . $lightbox; ?>>
             <?php endif; ?>
 
@@ -64,7 +64,7 @@ defined('_JEXEC') or die;
                 <?php endif; ?>
             <?php endif; ?>
 
-            <?php if($_link_img && $_noresize == 1): ?>
+            <?php if($_link_img): ?>
             </a>
             <?php endif; ?>
 
