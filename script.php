@@ -23,9 +23,17 @@ class Pkg_JUMultiThumbInstallerScript
 	protected $status;
 	protected $sourcePath;
 
+	/**
+	 * @param $type
+	 * @param $parent
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	public function preflight($type, $parent)
 	{
-		if(version_compare(JVERSION, '3.1.0', 'lt'))
+		if(version_compare(JVERSION, '3.4.0', 'lt'))
 		{
 			JFactory::getApplication()->enqueueMessage('Update for Joomla! 3.4+', 'error');
 
@@ -53,6 +61,37 @@ class Pkg_JUMultiThumbInstallerScript
 		$cache->clean();
 
 		return true;
+	}
+
+	/**
+	 * @param $dir
+	 * @param $mode
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
+	public function MakeDirectory($dir, $mode)
+	{
+		if(is_dir($dir) || @mkdir($dir, $mode))
+		{
+			$indexfile = $dir . '/index.html';
+			if(!file_exists($indexfile))
+			{
+				$file = fopen($indexfile, 'w');
+				fputs($file, '<!DOCTYPE html><title></title>');
+				fclose($file);
+			}
+
+			return true;
+		}
+
+		if(!$this->MakeDirectory(dirname($dir), $mode))
+		{
+			return false;
+		}
+
+		return @mkdir($dir, $mode);
 	}
 
 	public function uninstall($parent)
@@ -281,26 +320,13 @@ class Pkg_JUMultiThumbInstallerScript
 		return true;
 	}
 
-	public function MakeDirectory($dir, $mode)
-	{
-		if(is_dir($dir) || @mkdir($dir, $mode))
-		{
-			$indexfile = $dir . '/index.html';
-			if(!file_exists($indexfile))
-			{
-				$file = fopen($indexfile, 'w');
-				fputs($file, '<!DOCTYPE html><title></title>');
-				fclose($file);
-			}
-
-			return true;
-		}
-
-		if(!$this->MakeDirectory(dirname($dir), $mode)) return false;
-
-		return @mkdir($dir, $mode);
-	}
-
+	/**
+	 * @param $dir
+	 * @param $deleteRootToo
+	 *
+	 *
+	 * @since 6.0
+	 */
 	public function unlinkRecursive($dir, $deleteRootToo)
 	{
 		if(!$dh = @opendir($dir)) return;

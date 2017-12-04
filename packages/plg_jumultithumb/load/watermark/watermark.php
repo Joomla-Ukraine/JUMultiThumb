@@ -16,7 +16,6 @@ define("MAX_SIZE", "500");
 
 require_once(JPATH_BASE . '/includes/defines.php');
 require_once(JPATH_BASE . '/includes/framework.php');
-require_once(JPATH_BASE . '/libraries/joomla/factory.php');
 
 $mainframe = JFactory::getApplication('administrator');
 
@@ -24,6 +23,14 @@ $joomlaUser = JFactory::getUser();
 $lang       = JFactory::getLanguage();
 $lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
 
+/**
+ * @param $text
+ * @param $error
+ *
+ * @return string
+ *
+ * @since 6.0
+ */
 function alert($text, $error)
 {
 	if($error == 'message')
@@ -39,6 +46,25 @@ function alert($text, $error)
 	return '<div class="alert ' . $error . '">' . $text . '</div>';
 }
 
+/**
+ * @param $str
+ *
+ * @return bool|string
+ *
+ * @since 6.0
+ */
+function getExtension($str)
+{
+	$i = strrpos($str, ".");
+
+	if(!$i) return "";
+
+	$l   = strlen($str) - $i;
+	$ext = substr($str, $i + 1, $l);
+
+	return $ext;
+}
+
 $csslink = '<link href="../../../../../administrator/templates/isis/css/template.css" rel="stylesheet" type="text/css" /><link href="../../../../../media/jui/css/bootstrap.css" rel="stylesheet" type="text/css" />';
 
 if($joomlaUser->get('id') < 1)
@@ -51,18 +77,6 @@ if($joomlaUser->get('id') < 1)
     </html>
 	<?php
 	return;
-}
-
-function getExtension($str)
-{
-	$i = strrpos($str, ".");
-
-	if(!$i) return "";
-
-	$l   = strlen($str) - $i;
-	$ext = substr($str, $i + 1, $l);
-
-	return $ext;
 }
 
 $errors = 0;
@@ -204,38 +218,47 @@ if(isset($noticewb))
 {
 	echo $noticewb;
 }
+
 if(isset($noticews))
 {
 	echo $noticews;
 }
+
 if(isset($uploadsucess))
 {
 	echo $uploadsucess;
 }
+
 if(isset($unknownext))
 {
 	echo $unknownext;
 }
+
 if(isset($limitimg))
 {
 	echo $limitimg;
 }
+
 if(isset($uploadunsuccessfull))
 {
 	echo $uploadunsuccessfull;
 }
+
 if(isset($uploadsucess_s))
 {
 	echo $uploadsucess_s;
 }
+
 if(isset($unknownext_s))
 {
 	echo $unknownext_s;
 }
+
 if(isset($limitimg_s))
 {
 	echo $limitimg_s;
 }
+
 if(isset($uploadunsuccessfull_s))
 {
 	echo $uploadunsuccessfull_s;

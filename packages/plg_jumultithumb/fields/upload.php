@@ -18,6 +18,12 @@ class JFormFieldModal_Upload extends JFormField
 {
 	protected $type = 'Modal_Upload';
 
+	/**
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
 	protected function getInput()
 	{
 		JHtml::_('behavior.modal', 'a.modal');

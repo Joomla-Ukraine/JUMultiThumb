@@ -18,6 +18,12 @@ class JFormFieldModal_CSS extends JFormField
 {
 	protected $type = 'Modal_CSS';
 
+	/**
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
 	protected function getInput()
 	{
 		JHtml::_('behavior.modal', 'a.modal');

@@ -22,6 +22,12 @@ class plgContentjumultithumb extends JPlugin
 {
 	var $modeHelper;
 
+	/**
+	 * plgContentjumultithumb constructor.
+	 *
+	 * @param $subject
+	 * @param $config
+	 */
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
@@ -38,6 +44,16 @@ class plgContentjumultithumb extends JPlugin
 		}
 	}
 
+	/**
+	 * @param $context
+	 * @param $article
+	 * @param $params
+	 * @param $limitstart
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
 	{
 		$app = JFactory::getApplication();
@@ -68,6 +84,16 @@ class plgContentjumultithumb extends JPlugin
 		return true;
 	}
 
+	/**
+	 * @param $context
+	 * @param $article
+	 * @param $params
+	 * @param $limitstart
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	public function onContentPrepare($context, &$article, &$params, $limitstart)
 	{
 		$app = JFactory::getApplication();
@@ -98,6 +124,15 @@ class plgContentjumultithumb extends JPlugin
 		return true;
 	}
 
+	/**
+	 * @param     $text
+	 * @param     $article
+	 * @param int $use_wm
+	 *
+	 * @return mixed|null|string|string[]
+	 *
+	 * @since 6.0
+	 */
 	public function ImgReplace($text, &$article, $use_wm = 1)
 	{
 		$param = $this->params;
@@ -144,6 +179,16 @@ class plgContentjumultithumb extends JPlugin
 		return $text;
 	}
 
+	/**
+	 * @param $_img
+	 * @param $article
+	 * @param $watermark_o
+	 * @param $watermark_s
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
 	public function JUMultithumbReplacer($_img, &$article, $watermark_o, $watermark_s)
 	{
 		$app = JFactory::getApplication();
@@ -275,6 +320,7 @@ class plgContentjumultithumb extends JPlugin
 		if(
 			$param->get('resall') == '1' &&
 			(
+				$img['class'] == "nothumb" ||
 				$img['class'] == "noimage" ||
 				$img['class'] == "nothumbnail" ||
 				$img['class'] == "jugallery" ||
@@ -703,9 +749,9 @@ class plgContentjumultithumb extends JPlugin
 				}
 			}
 
-			if($newnoresize == '1' || $cat_newnoresize == '1')
+			if($newnoresize == '1') // || $cat_newnoresize == '1'
 			{
-				$juimgresmatche = str_replace(array(' /', JURI::base()), '', $juimgresmatche);
+				$juimgresmatche = str_replace(array(' /', JURI::base()), '', $originalsource);
 				$limage         = $this->_image(JURI::base() . $juimgresmatche, $newmaxwidth, $newmaxheight, $img_class, $img_alt, 1, 1);
 
 				return $limage;
@@ -744,16 +790,8 @@ class plgContentjumultithumb extends JPlugin
 				$param->get('cat_newmaxsize_orig') == '1'
 			)
 			{
-				if($this->modeHelper && $this->modeHelper->jView('Article'))
-				{
-					$_width  = $newmaxwidth;
-					$_height = $newmaxheight;
-				}
-				else
-				{
-					$_width  = $cat_newmaxwidth;
-					$_height = $cat_newmaxheight;
-				}
+				$_width  = $newmaxwidth;
+				$_height = $newmaxheight;
 			}
 
 			if(
@@ -882,8 +920,7 @@ class plgContentjumultithumb extends JPlugin
 
 			$thumb_img = $JUImg->Render($imgsource, $_imgparams);
 
-			if($_image_noresize == '1' || $cat_newnofullimg == '1' || $newnofullimg == '1' ||
-				$cat_newnofullimg == '1' || ($this->modeHelper && $this->modeHelper->jView('Print'))
+			if($_image_noresize == '1' || $newnofullimg == '1' || ($this->modeHelper && $this->modeHelper->jView('Print'))
 			)
 			{
 				$limage = $this->_image($thumb_img, $newwidth, $newheight, $img_class, $img_alt, 1, $_image_noresize, $img_title);
@@ -929,7 +966,7 @@ class plgContentjumultithumb extends JPlugin
 				);
 			}
 
-			if($b_newfarcrop == '1')
+			if($f_newfarcrop == '1')
 			{
 				$new_imgparams = array(
 					'far' => $f_newfarcrop_params,
@@ -965,16 +1002,62 @@ class plgContentjumultithumb extends JPlugin
 		return $limage;
 	}
 
-	public static function _aspect($html, $_cropaspect)
+	/**
+	 * @param      $_img
+	 * @param      $_w
+	 * @param      $_h
+	 * @param null $_class
+	 * @param null $_alt
+	 * @param null $_caption
+	 * @param null $_noresize
+	 * @param null $_title
+	 * @param null $_link_img
+	 * @param null $_orig_img
+	 * @param null $_lightbox
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
+	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_noresize = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null)
 	{
-		$size   = getimagesize(rawurldecode(JPATH_SITE . '/' . $html));
-		$width  = $size[0];
-		$height = $size[1] * ($_cropaspect != '' ? $_cropaspect : '0');
-		$aspect = $height / $width;
+		$app      = JFactory::getApplication();
+		$template = $app->getTemplate();
 
-		return $aspect;
+		switch ($_lightbox)
+		{
+			case 'lightgallery':
+				$lightbox = ' ' . ($_link_img ? 'data-src="' . JURI::base() . $_link_img . '"' : '') . ' ' . ($_orig_img ? 'data-download-url="' . JURI::base() . $_orig_img . '"' : '');
+				break;
+
+			case 'colorbox':
+				$lightbox = ' class="lightbox" rel="lightbox[gall]"';
+				break;
+
+			default:
+			case 'jmodal':
+				$lightbox = ' class="modal" rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
+				break;
+		}
+
+		$tmpl = $this->getTmpl($template, 'default');
+
+		ob_start();
+		require $tmpl;
+		$img = ob_get_contents();
+		ob_end_clean();
+
+		return $img;
 	}
 
+	/**
+	 * @param $template
+	 * @param $name
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
 	public function getTmpl($template, $name)
 	{
 
@@ -992,35 +1075,30 @@ class plgContentjumultithumb extends JPlugin
 		return $tmpl;
 	}
 
-	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_noresize = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null)
+	/**
+	 * @param $html
+	 * @param $_cropaspect
+	 *
+	 * @return float|int
+	 *
+	 * @since 6.0
+	 */
+	public static function _aspect($html, $_cropaspect)
 	{
-		$app      = JFactory::getApplication();
-		$template = $app->getTemplate();
+		$size   = getimagesize(rawurldecode(JPATH_SITE . '/' . $html));
+		$width  = $size[0];
+		$height = $size[1] * ($_cropaspect != '' ? $_cropaspect : '0');
+		$aspect = $height / $width;
 
-		switch ($_lightbox)
-		{
-			case 'lightgallery':
-				$lightbox = ' ' . ($_link_img ? 'data-src="' . JURI::base() . $_link_img . '"' : '') . ' ' . ($_orig_img ? 'data-download-url="' . JURI::base() . $_orig_img . '"' : '');
-				break;
-			case 'colorbox':
-				$lightbox = ' class="lightbox" rel="lightbox[gall]"';
-				break;
-			default:
-			case 'jmodal':
-				$lightbox = ' class="modal" rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
-				break;
-		}
-
-		$tmpl = $this->getTmpl($template, 'default');
-
-		ob_start();
-		require $tmpl;
-		$img = ob_get_contents();
-		ob_end_clean();
-
-		return $img;
+		return $aspect;
 	}
 
+	/**
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	public function onBeforeCompileHead()
 	{
 		$app = JFactory::getApplication();

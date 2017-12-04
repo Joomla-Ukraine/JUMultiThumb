@@ -22,6 +22,12 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 {
 	var $modeHelper;
 
+	/**
+	 * plgContentJUMULTITHUMB_Gallery constructor.
+	 *
+	 * @param $subject
+	 * @param $config
+	 */
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
@@ -39,6 +45,16 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 		}
 	}
 
+	/**
+	 * @param $context
+	 * @param $article
+	 * @param $params
+	 * @param $limitstart
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
 	{
 		$app = JFactory::getApplication();
@@ -58,7 +74,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 			return true;
 		}
 
-		$autolinks = new AutoLinks($imgTitlePrefix, $imgAltPrefix);
+		$autolinks = new AutoLinks();
 		$link      = $this->modeHelper->jViewLink($article);
 
 		$article->text = @$autolinks->handleImgLinks($article->text, $article->title, $link);
@@ -66,6 +82,16 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 		return true;
 	}
 
+	/**
+	 * @param $context
+	 * @param $article
+	 * @param $params
+	 * @param $limitstart
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	public function onContentPrepare($context, &$article, &$params, $limitstart)
 	{
 		$app = JFactory::getApplication();
@@ -106,6 +132,14 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 		return true;
 	}
 
+	/**
+	 * @param $text
+	 * @param $article
+	 *
+	 * @return null|string|string[]
+	 *
+	 * @since 6.0
+	 */
 	public function GalleryReplace($text, &$article)
 	{
 		$app = JFactory::getApplication();
@@ -251,8 +285,6 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 
 				$img_title = preg_replace("/\"/", "'", $article->title);
 
-				$rel = str_replace('/', '', $folder);
-
 				$lightbox = $param->get('selectlightbox');
 
 				$folder     = trim($matcheslist[0]);
@@ -274,15 +306,19 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 							case '1':
 								$imp_filtercolor = array('fltr_1' => 'gray');
 								break;
+
 							case '2':
 								$imp_filtercolor = array('fltr_1' => 'sep');
 								break;
+
 							case '3':
 								$imp_filtercolor = array('fltr_1' => 'th|' . $json->thumb_th_seting);
 								break;
+
 							case '4':
 								$imp_filtercolor = array('fltr_1' => 'clr|' . $json->colorized . '|' . str_replace('#', '', $json->colorpicker));
 								break;
+
 							default:
 								$imp_filtercolor = array();
 								break;
@@ -336,7 +372,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 							$thumb_img   = $JUImg->Render($file, $_imgparams);
 							$bloggallery = $this->_image($thumb_img, $param->get('width'), $param->get('height'), $img_class, $_title, 0, $_title, '');
 
-							if($a == 0) return $bloggallery;
+							//if($a == 0) return $bloggallery;
 						}
 
 						// Watermark
@@ -441,23 +477,22 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 		return $text;
 	}
 
-	public function getTmpl($template, $name)
-	{
-
-		$search = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb_gallery/' . $name . '.php';
-
-		if(is_file($search))
-		{
-			$tmpl = $search;
-		}
-		else
-		{
-			$tmpl = JPATH_SITE . '/plugins/content/jumultithumb_gallery/tmpl/' . $name . '.php';
-		}
-
-		return $tmpl;
-	}
-
+	/**
+	 * @param      $_img
+	 * @param      $_w
+	 * @param      $_h
+	 * @param null $_class
+	 * @param null $_alt
+	 * @param null $_caption
+	 * @param null $_title
+	 * @param null $_link_img
+	 * @param null $_orig_img
+	 * @param null $_lightbox
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
 	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null)
 	{
 		$app      = JFactory::getApplication();
@@ -470,11 +505,13 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 				$lightbox      = ' ';
 				$lightbox_data = ' ' . ($_link_img ? 'data-src="' . JURI::base() . $_link_img . '"' : '') . ' ' . ($_orig_img ? 'data-download-url="' . JURI::base() . $_orig_img . '"' : '');
 				break;
+
 			case 'colorbox':
 				$link          = $_link_img;
 				$lightbox      = ' class="lightbox" rel="lightbox[gall]"';
 				$lightbox_data = '';
 				break;
+
 			default:
 			case 'jmodal':
 				$link          = $_link_img;
@@ -491,5 +528,29 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 		ob_end_clean();
 
 		return $img;
+	}
+
+	/**
+	 * @param $template
+	 * @param $name
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
+	public function getTmpl($template, $name)
+	{
+		$search = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb_gallery/' . $name . '.php';
+
+		if(is_file($search))
+		{
+			$tmpl = $search;
+		}
+		else
+		{
+			$tmpl = JPATH_SITE . '/plugins/content/jumultithumb_gallery/tmpl/' . $name . '.php';
+		}
+
+		return $tmpl;
 	}
 }

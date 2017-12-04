@@ -18,6 +18,12 @@ class JFormFieldCSSCode extends JFormField
 {
 	protected $type = 'CSSCode';
 
+	/**
+	 *
+	 * @return string
+	 *
+	 * @since 6.0
+	 */
 	protected function getInput()
 	{
 		return '<textarea style="width: 350px; height: 250px;" id="css_source" readonly>img[style $=\'width\'] {

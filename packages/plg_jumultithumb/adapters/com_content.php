@@ -16,11 +16,23 @@ class plgContentJUMultiThumb_com_content
 {
 	var $plugin;
 
+	/**
+	 * plgContentJUMultiThumb_com_content constructor.
+	 *
+	 * @param $plugin
+	 */
 	public function __construct(&$plugin)
 	{
 		$this->plugin = &$plugin;
 	}
 
+	/**
+	 * @param $jlayout
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	public function jView($jlayout)
 	{
 		$app = JFactory::getApplication();
@@ -35,24 +47,31 @@ class plgContentJUMultiThumb_com_content
 			case 'Component':
 				return ($option == 'com_content');
 				break;
+
 			case 'CatBlog':
 				return (($view == 'category' && ($layout == 'blog')) || ($view == 'category' && ($layout == 'card')));
 				break;
+
 			case 'Blog':
 				return ($layout == 'blog');
 				break;
+
 			case 'Category':
 				return ($view == 'categories' && !($layout));
 				break;
+
 			case 'Categories':
 				return ($view == 'categories');
 				break;
+
 			case 'Featured':
 				return ($view == 'featured');
 				break;
+
 			case 'Print':
 				return ($print == '1');
 				break;
+
 			case 'Article':
 				return ($view == 'article');
 				break;
@@ -61,9 +80,16 @@ class plgContentJUMultiThumb_com_content
 		return true;
 	}
 
+	/**
+	 * @param $article
+	 *
+	 * @return JURI
+	 *
+	 * @since 6.0
+	 */
 	public function jViewLink($article)
 	{
-		require_once (JPATH_SITE . '/components/com_content/helpers/route.php');
+		require_once(JPATH_SITE . '/components/com_content/helpers/route.php');
 
 		if($article->params->get('access-view'))
 		{

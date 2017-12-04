@@ -16,21 +16,35 @@ jimport('joomla.utilities.date');
 
 class plgContentJUMultithumb_ContentForm extends JPlugin
 {
+	/**
+	 * plgContentJUMultithumb_ContentForm constructor.
+	 *
+	 * @param $subject
+	 * @param $config
+	 */
 	public function __construct(& $subject, $config)
-    {
+	{
 		parent::__construct($subject, $config);
 	}
 
+	/**
+	 * @param $form
+	 * @param $data
+	 *
+	 * @return bool
+	 *
+	 * @since 6.0
+	 */
 	function onContentPrepareForm($form, $data)
 	{
-		if (!($form instanceof JForm))
+		if(!($form instanceof JForm))
 		{
 			$this->_subject->setError('JERROR_NOT_A_FORM');
-            
+
 			return false;
 		}
 
-		if (in_array($form->getName(), array('com_content.article'))==false)  return true;
+		if(in_array($form->getName(), array('com_content.article')) == false) return true;
 
 		JForm::addFormPath(__DIR__ . '/forms');
 
