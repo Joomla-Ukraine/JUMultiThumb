@@ -37,7 +37,7 @@
     </languages>
 
     <updateservers>
-        <server type="extension" priority="1" name="JUMultiThumb">http://joomla-ua.org/update/plg/jumultithumb.xml
+        <server type="extension" priority="1" name="JUMultiThumb">https://joomla-ua.org/update/plg/jumultithumb.xml
         </server>
     </updateservers>
 

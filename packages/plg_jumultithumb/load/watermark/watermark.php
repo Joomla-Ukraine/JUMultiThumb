@@ -6,7 +6,7 @@
  * @subpackage       pkg_jumultithumb
  *
  * @author           Denys Nosov, denys@joomla-ua.org
- * @copyright        2007-2017 (C) Joomla! Ukraine, http://joomla-ua.org. All rights reserved.
+ * @copyright        2007-2017 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -321,7 +321,7 @@ if(isset($uploadunsuccessfull_s))
 		}
 		else
 		{
-			echo '<a href="http://joomla-ua.org" target="_blank" title="Joomla! Ukraine"><img src="juws.png?v=' . time() . '" alt="" class="img" /></a>';
+			echo '<a href="https://joomla-ua.org" target="_blank" title="Joomla! Ukraine"><img src="juws.png?v=' . time() . '" alt="" class="img" /></a>';
 		}
 		?>
     </div>

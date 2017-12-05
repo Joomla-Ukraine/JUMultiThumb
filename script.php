@@ -6,7 +6,7 @@
  * @subpackage       pkg_jumultithumb
  *
  * @author           Denys Nosov, denys@joomla-ua.org
- * @copyright        2007-2017 (C) Joomla! Ukraine, http://joomla-ua.org. All rights reserved.
+ * @copyright        2007-2017 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -329,13 +329,22 @@ class Pkg_JUMultiThumbInstallerScript
 	 */
 	public function unlinkRecursive($dir, $deleteRootToo)
 	{
-		if(!$dh = @opendir($dir)) return;
+		if(!$dh = @opendir($dir))
+		{
+			return;
+		}
 
 		while (false !== ($obj = readdir($dh)))
 		{
-			if($obj == '.' || $obj == '..') continue;
+			if($obj == '.' || $obj == '..')
+			{
+				continue;
+			}
 
-			if(!@unlink($dir . '/' . $obj)) $this->unlinkRecursive($dir . '/' . $obj, true);
+			if(!@unlink($dir . '/' . $obj))
+			{
+				$this->unlinkRecursive($dir . '/' . $obj, true);
+			}
 		}
 
 		closedir($dh);
