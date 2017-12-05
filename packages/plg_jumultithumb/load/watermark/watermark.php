@@ -57,7 +57,10 @@ function getExtension($str)
 {
 	$i = strrpos($str, ".");
 
-	if(!$i) return "";
+	if(!$i)
+	{
+		return "";
+	}
 
 	$l   = strlen($str) - $i;
 	$ext = substr($str, $i + 1, $l);
@@ -103,7 +106,7 @@ if(isset($_POST['Submit']))
 		else
 		{
 			$size = $_FILES['image']['size'];
-			if($size > MAX_SIZE * 100024)
+			if($size > MAX_SIZE * 1000024)
 			{
 				if(isset($_POST['watermark']) == 'big')
 				{
@@ -113,6 +116,7 @@ if(isset($_POST['Submit']))
 				{
 					$limitimg_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE7'), 'notice');
 				}
+
 				$errors = 1;
 			}
 
@@ -125,7 +129,7 @@ if(isset($_POST['Submit']))
 				$image_name = 'ws.png';
 			}
 
-			if(!($size > MAX_SIZE * 100024))
+			if(!($size > MAX_SIZE * 1000024))
 			{
 				$newname = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/' . $image_name;
 

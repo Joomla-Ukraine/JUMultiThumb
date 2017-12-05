@@ -78,10 +78,11 @@ class plgContentjumultithumb extends JPlugin
 		$onlyFirstImage = $this->params->get('Only_For_First_Image');
 		$link           = $this->modeHelper->jViewLink($article);
 
-		$article->text      = @$autolinks->handleImgLinks($article->text, $article->title, $link, $onlyFirstImage);
+		$article->text = @$autolinks->handleImgLinks($article->text, $article->title, $link, $onlyFirstImage);
+
 		$article->introtext = @$autolinks->handleImgLinks($article->introtext, $article->title, $link, $onlyFirstImage);
 
-		return true;
+		return;
 	}
 
 	/**
@@ -222,15 +223,19 @@ class plgContentjumultithumb extends JPlugin
 			case '1':
 				$imp_filtercolor = array('fltr_1' => 'gray');
 				break;
+
 			case '2':
 				$imp_filtercolor = array('fltr_1' => 'sep');
 				break;
+
 			case '3':
 				$imp_filtercolor = array('fltr_1' => 'th|' . $thumb_th_seting);
 				break;
+
 			case '4':
 				$imp_filtercolor = array('fltr_1' => 'clr|' . $colorized . '|' . str_replace('#', '', $colorpicker));
 				break;
+
 			default:
 				$imp_filtercolor = array();
 				break;
@@ -280,7 +285,6 @@ class plgContentjumultithumb extends JPlugin
 		$imgtitle = $img['title'];
 		$imgalign = $img['align'];
 		$imgclass = $img['class'] . ' ';
-		$cssclass = $img['class'];
 
 		if(preg_match('#float:(.*?);#s', $img['style'], $imgstyle))
 		{
@@ -352,7 +356,6 @@ class plgContentjumultithumb extends JPlugin
 				$b_newzoomcrop_params = $param->get('b_zoomcrop_paramsnew1');
 				$b_newauto_zoomcrop   = $param->get('b_auto_zoomcropnew1');
 				$b_newcropaspect      = $param->get('b_cropaspectnew1');
-				$b_newzoomcropbg      = $param->get('b_zoomcropbgnew1');
 				$b_newfarcrop         = $param->get('b_farcropnew1');
 				$b_newfarcrop_params  = $param->get('b_farcrop_paramsnew1');
 				$b_newfarcropbg       = $param->get('b_farcropbgnew1');
@@ -368,7 +371,6 @@ class plgContentjumultithumb extends JPlugin
 				$b_newzoomcrop_params = $param->get('b_zoomcrop_paramsnew2');
 				$b_newauto_zoomcrop   = $param->get('b_auto_zoomcropnew2');
 				$b_newcropaspect      = $param->get('b_cropaspectnew2');
-				$b_newzoomcropbg      = $param->get('b_zoomcropbgnew2');
 				$b_newfarcrop         = $param->get('b_farcropnew2');
 				$b_newfarcrop_params  = $param->get('b_farcrop_paramsnew2');
 				$b_newfarcropbg       = $param->get('b_farcropbgnew2');
@@ -384,7 +386,6 @@ class plgContentjumultithumb extends JPlugin
 				$b_newzoomcrop_params = $param->get('b_zoomcrop_paramsnew3');
 				$b_newauto_zoomcrop   = $param->get('b_auto_zoomcropnew3');
 				$b_newcropaspect      = $param->get('b_cropaspectnew3');
-				$b_newzoomcropbg      = $param->get('b_zoomcropbgnew3');
 				$b_newfarcrop         = $param->get('b_farcropnew3');
 				$b_newfarcrop_params  = $param->get('b_farcrop_paramsnew3');
 				$b_newfarcropbg       = $param->get('b_farcropbgnew3');
@@ -400,7 +401,6 @@ class plgContentjumultithumb extends JPlugin
 				$b_newzoomcrop_params = $param->get('b_zoomcrop_paramsnew4');
 				$b_newauto_zoomcrop   = $param->get('b_auto_zoomcropnew4');
 				$b_newcropaspect      = $param->get('b_cropaspectnew4');
-				$b_newzoomcropbg      = $param->get('b_zoomcropbgnew4');
 				$b_newfarcrop         = $param->get('b_farcropnew4');
 				$b_newfarcrop_params  = $param->get('b_farcrop_paramsnew4');
 				$b_newfarcropbg       = $param->get('b_farcropbgnew4');
@@ -416,7 +416,6 @@ class plgContentjumultithumb extends JPlugin
 				$b_newzoomcrop_params = $param->get('b_zoomcrop_paramsnew5');
 				$b_newauto_zoomcrop   = $param->get('b_auto_zoomcropnew5');
 				$b_newcropaspect      = $param->get('b_cropaspectnew5');
-				$b_newzoomcropbg      = $param->get('b_zoomcropbgnew5');
 				$b_newfarcrop         = $param->get('b_farcropnew5');
 				$b_newfarcrop_params  = $param->get('b_farcrop_paramsnew5');
 				$b_newfarcropbg       = $param->get('b_farcropbgnew5');
@@ -432,13 +431,13 @@ class plgContentjumultithumb extends JPlugin
 				$b_newzoomcrop_params = $param->get('b_zoomcrop_params');
 				$b_newauto_zoomcrop   = $param->get('b_auto_zoomcrop');
 				$b_newcropaspect      = $param->get('b_cropaspect');
-				$b_newzoomcropbg      = $param->get('b_zoomcropbg');
-				$b_newfarcrop         = $param->get('b_farcrop');
-				$b_newfarcrop_params  = $param->get('b_farcrop_params');
-				$b_newfarcropbg       = $param->get('b_farcropbg');
-				$b_aoenew             = $param->get('b_aoe');
-				$b_sxnew              = $param->def('b_sx');
-				$b_synew              = $param->def('b_sy');
+				//$b_newzoomcropbg      = $param->get('b_zoomcropbg');
+				$b_newfarcrop        = $param->get('b_farcrop');
+				$b_newfarcrop_params = $param->get('b_farcrop_params');
+				$b_newfarcropbg      = $param->get('b_farcropbg');
+				$b_aoenew            = $param->get('b_aoe');
+				$b_sxnew             = $param->def('b_sx');
+				$b_synew             = $param->def('b_sy');
 			}
 
 			$aspect = 0;
@@ -511,7 +510,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('zoomcrop_paramsnew1');
 					$newauto_zoomcrop   = $param->get('auto_zoomcropnew1');
 					$newcropaspect      = $param->get('cropaspectnew1');
-					$newzoomcropbg      = $param->get('zoomcropbgnew1');
 					$newfarcrop         = $param->get('farcropnew1');
 					$newfarcrop_params  = $param->get('farcrop_paramsnew1');
 					$newfarcropbg       = $param->get('farcropbgnew1');
@@ -531,7 +529,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('zoomcrop_paramsnew2');
 					$newauto_zoomcrop   = $param->get('auto_zoomcropnew2');
 					$newcropaspect      = $param->get('cropaspectnew2');
-					$newzoomcropbg      = $param->get('zoomcropbgnew2');
 					$newfarcrop         = $param->get('farcropnew2');
 					$newfarcrop_params  = $param->get('farcrop_paramsnew2');
 					$newfarcropbg       = $param->get('farcropbgnew2');
@@ -551,7 +548,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('zoomcrop_paramsnew3');
 					$newauto_zoomcrop   = $param->get('auto_zoomcropnew3');
 					$newcropaspect      = $param->get('cropaspectnew3');
-					$newzoomcropbg      = $param->get('zoomcropbgnew3');
 					$newfarcrop         = $param->get('farcropnew3');
 					$newfarcrop_params  = $param->get('farcrop_paramsnew3');
 					$newfarcropbg       = $param->get('farcropbgnew3');
@@ -571,7 +567,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('zoomcrop_paramsnew4');
 					$newauto_zoomcrop   = $param->get('auto_zoomcropnew4');
 					$newcropaspect      = $param->get('cropaspectnew4');
-					$newzoomcropbg      = $param->get('zoomcropbgnew4');
 					$newfarcrop         = $param->get('farcropnew4');
 					$newfarcrop_params  = $param->get('farcrop_paramsnew4');
 					$newfarcropbg       = $param->get('farcropbgnew4');
@@ -591,7 +586,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('zoomcrop_paramsnew5');
 					$newauto_zoomcrop   = $param->get('auto_zoomcropnew5');
 					$newcropaspect      = $param->get('cropaspectnew5');
-					$newzoomcropbg      = $param->get('zoomcropbgnew5');
 					$newfarcrop         = $param->get('farcropnew5');
 					$newfarcrop_params  = $param->get('farcrop_paramsnew5');
 					$newfarcropbg       = $param->get('farcropbgnew5');
@@ -611,15 +605,15 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('zoomcrop_params');
 					$newauto_zoomcrop   = $param->get('auto_zoomcrop');
 					$newcropaspect      = $param->get('cropaspect');
-					$newzoomcropbg      = $param->get('zoomcropbg');
-					$newfarcrop         = $param->get('farcrop');
-					$newfarcrop_params  = $param->get('farcrop_params');
-					$newfarcropbg       = $param->get('farcropbg');
-					$newaoe             = $param->get('aoe');
-					$newsx              = $param->def('sx');
-					$newsy              = $param->def('sy');
-					$newnoresize        = $param->get('noresize');
-					$newnofullimg       = $param->get('nofullimg');
+					//$newzoomcropbg      = $param->get('zoomcropbg');
+					$newfarcrop        = $param->get('farcrop');
+					$newfarcrop_params = $param->get('farcrop_params');
+					$newfarcropbg      = $param->get('farcropbg');
+					$newaoe            = $param->get('aoe');
+					$newsx             = $param->def('sx');
+					$newsy             = $param->def('sy');
+					$newnoresize       = $param->get('noresize');
+					$newnofullimg      = $param->get('nofullimg');
 				}
 			}
 			elseif(
@@ -637,7 +631,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('cat_zoomcrop_paramsnew1');
 					$newauto_zoomcrop   = $param->get('cat_auto_zoomcropnew1');
 					$newcropaspect      = $param->get('cat_cropaspectnew1');
-					$newzoomcropbg      = $param->get('cat_zoomcropbgnew1');
 					$newfarcrop         = $param->get('cat_farcropnew1');
 					$newfarcrop_params  = $param->get('cat_farcrop_paramsnew1');
 					$newfarcropbg       = $param->get('cat_farcropbgnew1');
@@ -657,7 +650,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('cat_zoomcrop_paramsnew2');
 					$newauto_zoomcrop   = $param->get('cat_auto_zoomcropnew2');
 					$newcropaspect      = $param->get('cat_cropaspectnew2');
-					$newzoomcropbg      = $param->get('cat_zoomcropbgnew2');
 					$newfarcrop         = $param->get('cat_farcropnew2');
 					$newfarcrop_params  = $param->get('cat_farcrop_paramsnew2');
 					$newfarcropbg       = $param->get('cat_farcropbgnew2');
@@ -677,7 +669,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('cat_zoomcrop_paramsnew3');
 					$newauto_zoomcrop   = $param->get('cat_auto_zoomcropnew3');
 					$newcropaspect      = $param->get('cat_cropaspectnew3');
-					$newzoomcropbg      = $param->get('cat_zoomcropbgnew3');
 					$newfarcrop         = $param->get('cat_farcropnew3');
 					$newfarcrop_params  = $param->get('cat_farcrop_paramsnew3');
 					$newfarcropbg       = $param->get('cat_farcropbgnew3');
@@ -697,7 +688,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('cat_zoomcrop_paramsnew4');
 					$newauto_zoomcrop   = $param->get('cat_auto_zoomcropnew4');
 					$newcropaspect      = $param->get('cat_cropaspectnew4');
-					$newzoomcropbg      = $param->get('cat_zoomcropbgnew4');
 					$newfarcrop         = $param->get('cat_farcropnew4');
 					$newfarcrop_params  = $param->get('cat_farcrop_paramsnew4');
 					$newfarcropbg       = $param->get('cat_farcropbgnew4');
@@ -717,7 +707,6 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('cat_zoomcrop_paramsnew5');
 					$newauto_zoomcrop   = $param->get('cat_auto_zoomcropnew5');
 					$newcropaspect      = $param->get('cat_cropaspectnew5');
-					$newzoomcropbg      = $param->get('cat_zoomcropbgnew5');
 					$newfarcrop         = $param->get('cat_farcropnew5');
 					$newfarcrop_params  = $param->get('cat_farcrop_paramsnew5');
 					$newfarcropbg       = $param->get('cat_farcropbgnew5');
@@ -737,15 +726,15 @@ class plgContentjumultithumb extends JPlugin
 					$newzoomcrop_params = $param->get('cat_zoomcrop_params');
 					$newauto_zoomcrop   = $param->get('cat_auto_zoomcrop');
 					$newcropaspect      = $param->get('cat_cropaspect');
-					$newzoomcropbg      = $param->get('cat_zoomcropbg');
-					$newfarcrop         = $param->get('cat_farcrop');
-					$newfarcrop_params  = $param->get('cat_farcrop_params');
-					$newfarcropbg       = $param->get('cat_farcropbg');
-					$newaoe             = $param->get('cat_aoe');
-					$newsx              = $param->def('cat_sx');
-					$newsy              = $param->def('cat_sy');
-					$newnoresize        = $param->get('cat_noresize');
-					$newnofullimg       = $param->get('cat_nofullimg');
+					//$newzoomcropbg      = $param->get('cat_zoomcropbg');
+					$newfarcrop        = $param->get('cat_farcrop');
+					$newfarcrop_params = $param->get('cat_farcrop_params');
+					$newfarcropbg      = $param->get('cat_farcropbg');
+					$newaoe            = $param->get('cat_aoe');
+					$newsx             = $param->def('cat_sx');
+					$newsy             = $param->def('cat_sy');
+					$newnoresize       = $param->get('cat_noresize');
+					$newnofullimg      = $param->get('cat_nofullimg');
 				}
 			}
 
@@ -780,6 +769,7 @@ class plgContentjumultithumb extends JPlugin
 					$wmfile    = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
 					$watermark = $wmfile;
 				}
+
 				$wmi = 'wmi|' . $watermark . '|' . $param->get('wmposition') . '|' . $param->get('wmopst') . '|' . $param->get('wmx') . '|' . $param->get('wmy');
 			}
 
@@ -794,6 +784,7 @@ class plgContentjumultithumb extends JPlugin
 				$_height = $newmaxheight;
 			}
 
+			$link_img = $imgsource;
 			if(
 				$watermark_o == '1' ||
 				$_image_noresize == '1' ||
@@ -828,10 +819,6 @@ class plgContentjumultithumb extends JPlugin
 
 				$link_img = $JUImg->Render($imgsource, $_link_imgparams);
 			}
-			else
-			{
-				$link_img = $imgsource;
-			}
 
 			// Small watermark
 			$wmi_s = '';
@@ -855,6 +842,7 @@ class plgContentjumultithumb extends JPlugin
 					$wmfile      = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
 					$watermark_s = $wmfile;
 				}
+
 				$wmi_s = 'wmi|' . $watermark_s . '|' . $param->get('wmposition_s') . '|' . $param->get('wmopst_s') . '|' . $param->get('wmx_s') . '|' . $param->get('wmy_s');
 			}
 
@@ -938,13 +926,13 @@ class plgContentjumultithumb extends JPlugin
 			$f_newzoomcrop_params = $param->get('f_zoomcrop_params');
 			$f_newauto_zoomcrop   = $param->get('f_auto_zoomcrop');
 			$f_newcropaspect      = $param->get('f_cropaspect');
-			$f_newzoomcropbg      = $param->get('f_zoomcropbg');
-			$f_newfarcrop         = $param->get('f_farcrop');
-			$f_newfarcrop_params  = $param->get('f_farcrop_params');
-			$f_newfarcropbg       = $param->get('f_farcropbg');
-			$f_aoenew             = $param->get('f_aoe');
-			$f_sxnew              = $param->def('f_sx');
-			$f_synew              = $param->def('f_sy');
+			//$f_newzoomcropbg      = $param->get('f_zoomcropbg');
+			$f_newfarcrop        = $param->get('f_farcrop');
+			$f_newfarcrop_params = $param->get('f_farcrop_params');
+			$f_newfarcropbg      = $param->get('f_farcropbg');
+			$f_aoenew            = $param->get('f_aoe');
+			$f_sxnew             = $param->def('f_sx');
+			$f_synew             = $param->def('f_sy');
 
 			$aspect = 0;
 			if($f_newauto_zoomcrop == '1')
@@ -1135,13 +1123,10 @@ class plgContentjumultithumb extends JPlugin
 			switch ($selectlightbox)
 			{
 				case 'customjs':
+					$juhead .= "\r";
 					if($param->get('customjsparam'))
 					{
 						$juhead .= "\n            " . $param->get('customjsparam');
-					}
-					else
-					{
-						$juhead .= "\r";
 					}
 					break;
 
@@ -1167,9 +1152,14 @@ class plgContentjumultithumb extends JPlugin
 					JHTML::_('behavior.modal');
 					break;
 			}
+
 			$doc->addScriptDeclaration($juhead);
 		}
-		if($param->get('use_css') == 1) $doc->addStyleSheet(JURI::base() . 'media/plg_jumultithumb/style.css');
+		
+		if($param->get('use_css') == 1)
+		{
+			$doc->addStyleSheet(JURI::base() . 'media/plg_jumultithumb/style.css');
+		}
 
 		return true;
 	}

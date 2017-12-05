@@ -36,11 +36,11 @@ class AutoLinks
 
 		if($onlyFirstImage)
 		{
-			$text = preg_replace_callback($regex, array(&$this, '_replaceImg'), $text, 1);
+			$text = preg_replace_callback($regex, array($this, '_replaceImg'), $text, 1);
 		}
 		else
 		{
-			$text = preg_replace_callback($regex, array(&$this, '_replaceImg'), $text);
+			$text = preg_replace_callback($regex, array($this, '_replaceImg'), $text);
 		}
 
 		return $text;

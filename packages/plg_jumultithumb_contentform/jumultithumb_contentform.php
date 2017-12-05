@@ -44,7 +44,10 @@ class plgContentJUMultithumb_ContentForm extends JPlugin
 			return false;
 		}
 
-		if(in_array($form->getName(), array('com_content.article')) == false) return true;
+		if(in_array($form->getName(), array('com_content.article')) == false)
+		{
+			return true;
+		}
 
 		JForm::addFormPath(__DIR__ . '/forms');
 

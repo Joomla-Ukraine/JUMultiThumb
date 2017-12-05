@@ -33,7 +33,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 
-		$option = JFactory::getApplication()->input->get('option');
+		$option = JRequest::getCmd('option');
 
 		$adapter = JPATH_SITE . '/plugins/content/jumultithumb/adapters/' . $option . '.php';
 		if(JFile::exists($adapter))
@@ -79,7 +79,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 
 		$article->text = @$autolinks->handleImgLinks($article->text, $article->title, $link);
 
-		return true;
+		return '';
 	}
 
 	/**
@@ -275,10 +275,16 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 					$gallcropzoom = $param->get('gallcropzoom');
 
 					$galltitle = str_replace('title=', '', trim($matcheslist[1]));
-					if(!$galltitle) $galltitle = $param->get('gallery_title');
+					if(!$galltitle)
+					{
+						$galltitle = $param->get('gallery_title');
+					}
 
 					$gallstyle = str_replace('class=', '', trim($matcheslist[2]));
-					if(!$gallstyle) $gallstyle = $param->get('cssclass');
+					if(!$gallstyle)
+					{
+						$gallstyle = $param->get('cssclass');
+					}
 				}
 
 				$img_cache = $param->get('img_cache');
@@ -370,9 +376,9 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 							);
 
 							$thumb_img   = $JUImg->Render($file, $_imgparams);
-							$bloggallery = $this->_image($thumb_img, $param->get('width'), $param->get('height'), $img_class, $_title, 0, $_title, '');
+							$bloggallery = $this->_image($thumb_img, $param->get('width'), $param->get('height'), null, $_title, 0, $_title, null);
 
-							//if($a == 0) return $bloggallery;
+							return $bloggallery;
 						}
 
 						// Watermark
@@ -455,7 +461,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 						$_title = ($galltitle == '' ? $img_title : $galltitle . '. ' . $img_title);
 						$_title = mb_strtoupper(mb_substr($_title, 0, 1)) . mb_substr($_title, 1);
 
-						$_gallery[] = $this->_image($thumb_img, $gallwidth, $gallheight, $img_class, $_title, 0, $_title, $imgsource, $file, $lightbox);
+						$_gallery[] = $this->_image($thumb_img, $gallwidth, $gallheight, null, $_title, 0, $_title, $imgsource, $file, $lightbox);
 					}
 
 					$gallery = implode($_gallery);
