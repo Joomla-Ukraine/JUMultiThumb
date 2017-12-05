@@ -70,7 +70,7 @@ class plgContentjumultithumb extends JPlugin
 
 		if($this->modeHelper && $this->modeHelper->jView('Article'))
 		{
-			return true;
+			return;
 		}
 
 		$autolinks = new AutoLinks();
@@ -109,7 +109,10 @@ class plgContentjumultithumb extends JPlugin
 			return true;
 		}
 
-		if(isset($article->text)) $article->text = @$this->ImgReplace($article->text, $article);
+		if(isset($article->text))
+		{
+			$article->text = @$this->ImgReplace($article->text, $article);
+		}
 
 		if(isset($article->fulltext))
 		{
@@ -117,7 +120,10 @@ class plgContentjumultithumb extends JPlugin
 			$watermark_into_only = $attribs->watermark_intro_only;
 			$use_wm              = 1;
 
-			if($watermark_into_only == 1) $use_wm = 0;
+			if($watermark_into_only == 1)
+			{
+				$use_wm = 0;
+			}
 
 			$article->fulltext = @$this->ImgReplace($article->fulltext, $article, $use_wm);
 		}
@@ -345,6 +351,8 @@ class plgContentjumultithumb extends JPlugin
 				$_image_noresize = 1;
 			}
 		}
+
+
 
 		if($this->modeHelper && $this->modeHelper->jView('CatBlog'))
 		{
@@ -1155,7 +1163,7 @@ class plgContentjumultithumb extends JPlugin
 
 			$doc->addScriptDeclaration($juhead);
 		}
-		
+
 		if($param->get('use_css') == 1)
 		{
 			$doc->addStyleSheet(JURI::base() . 'media/plg_jumultithumb/style.css');

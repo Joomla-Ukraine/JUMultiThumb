@@ -71,7 +71,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 
 		if($this->modeHelper && $this->modeHelper->jView('Article'))
 		{
-			return true;
+			return;
 		}
 
 		$autolinks = new AutoLinks();
@@ -79,7 +79,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 
 		$article->text = @$autolinks->handleImgLinks($article->text, $article->title, $link);
 
-		return '';
+		return;
 	}
 
 	/**
