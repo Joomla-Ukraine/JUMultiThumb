@@ -2,14 +2,13 @@
 <extension version="3.1" type="plugin" group="content" method="upgrade">
     <name>PLG_JUMULTITHUMB</name>
     <author>Denys Nosov</author>
-    <creationDate>05.12.2017</creationDate>
-    <copyright>(C) 2007-2017 Denys Nosov. All rights reserved.</copyright>
-    <license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative
-        Works 3.0 License
+    <creationDate>05.12.2018</creationDate>
+    <copyright>(C) 2007-2018 Denys Nosov. All rights reserved.</copyright>
+    <license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
     </license>
     <authorEmail>denys@joomla-ua.org</authorEmail>
     <authorUrl>www.joomla-ua.org</authorUrl>
-    <version>7.0.4</version>
+    <version>7.0.5</version>
     <description>PLG_JUMULTITHUMB_DESCRIPTION</description>
 
     <files>
@@ -3850,6 +3849,11 @@
             </fieldset>
 
             <fieldset name="WATERMARK">
+
+                <field name="wm_tab" type="radio" class="btn-group" default="0" label="PLG_JUMULTITHUMB_WM_TAB">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
 
                 <field name="Upload watermark" type="Modal_Upload" label=""/>
 

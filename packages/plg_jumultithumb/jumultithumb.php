@@ -6,7 +6,7 @@
  * @subpackage       pkg_jumultithumb
  *
  * @author           Denys Nosov, denys@joomla-ua.org
- * @copyright        2007-2017 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
+ * @copyright        2007-2018 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -116,13 +116,17 @@ class plgContentjumultithumb extends JPlugin
 
 		if(isset($article->fulltext))
 		{
-			$attribs             = json_decode($article->attribs);
-			$watermark_into_only = $attribs->watermark_intro_only;
-			$use_wm              = 1;
-
-			if($watermark_into_only == 1)
+			$use_wm = 1;
+			if($this->params->get('wm_tab', 0) == '1')
 			{
+				$attribs             = json_decode($article->attribs);
+				$watermark_into_only = $attribs->watermark_intro_only;
+
 				$use_wm = 0;
+				if($watermark_into_only == '1')
+				{
+					$use_wm = 1;
+				}
 			}
 
 			$article->fulltext = @$this->ImgReplace($article->fulltext, $article, $use_wm);
@@ -140,7 +144,7 @@ class plgContentjumultithumb extends JPlugin
 	 *
 	 * @since 6.0
 	 */
-	public function ImgReplace($text, &$article, $use_wm = 1)
+	public function ImgReplace($text, &$article, $use_wm)
 	{
 		$param = $this->params;
 
@@ -148,11 +152,17 @@ class plgContentjumultithumb extends JPlugin
 		$only_image_category = $param->get('only_image_category');
 		$only_image_featured = $param->get('only_image_featured');
 
-		$attribs     = json_decode($article->attribs);
-		$watermark_o = $attribs->watermark;
-		$watermark_s = $attribs->watermark_s;
+		$watermark_o = 1;
+		$watermark_s = 1;
 
-		if($use_wm == 0)
+		if($this->params->get('wm_tab', 0) == '1')
+		{
+			$attribs     = json_decode($article->attribs);
+			$watermark_o = $attribs->watermark;
+			$watermark_s = $attribs->watermark_s;
+		}
+
+		if($use_wm == '0')
 		{
 			$watermark_o = '0';
 			$watermark_s = '0';
@@ -351,8 +361,6 @@ class plgContentjumultithumb extends JPlugin
 				$_image_noresize = 1;
 			}
 		}
-
-
 
 		if($this->modeHelper && $this->modeHelper->jView('CatBlog'))
 		{
@@ -757,14 +765,16 @@ class plgContentjumultithumb extends JPlugin
 			// Watermark
 			$wmi = '';
 			if(
-				$watermark_o == '1' ||
-				$_image_noresize == '1' ||
-				$param->get('a_watermark') == '1' ||
-				$param->get('a_watermarknew1') == '1' ||
-				$param->get('a_watermarknew2') == '1' ||
-				$param->get('a_watermarknew3') == '1' ||
-				$param->get('a_watermarknew4') == '1' ||
-				$param->get('a_watermarknew5') == '1'
+				$watermark_o == '1' &&
+				(
+					$_image_noresize == '1' ||
+					$param->get('a_watermark') == '1' ||
+					$param->get('a_watermarknew1') == '1' ||
+					$param->get('a_watermarknew2') == '1' ||
+					$param->get('a_watermarknew3') == '1' ||
+					$param->get('a_watermarknew4') == '1' ||
+					$param->get('a_watermarknew5') == '1'
+				)
 			)
 			{
 				$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
@@ -781,6 +791,7 @@ class plgContentjumultithumb extends JPlugin
 				$wmi = 'wmi|' . $watermark . '|' . $param->get('wmposition') . '|' . $param->get('wmopst') . '|' . $param->get('wmx') . '|' . $param->get('wmy');
 			}
 
+
 			$_width  = '';
 			$_height = '';
 			if(
@@ -794,17 +805,19 @@ class plgContentjumultithumb extends JPlugin
 
 			$link_img = $imgsource;
 			if(
-				$watermark_o == '1' ||
-				$_image_noresize == '1' ||
-				$param->get('a_watermark') == '1' ||
-				$param->get('a_watermarknew1') == '1' ||
-				$param->get('a_watermarknew2') == '1' ||
-				$param->get('a_watermarknew3') == '1' ||
-				$param->get('a_watermarknew4') == '1' ||
-				$param->get('a_watermarknew5') == '1' ||
+				$watermark_o == '1' &&
+				(
+					$_image_noresize == '1' ||
+					$param->get('a_watermark') == '1' ||
+					$param->get('a_watermarknew1') == '1' ||
+					$param->get('a_watermarknew2') == '1' ||
+					$param->get('a_watermarknew3') == '1' ||
+					$param->get('a_watermarknew4') == '1' ||
+					$param->get('a_watermarknew5') == '1' ||
 
-				$param->get('maxsize_orig') == '1' ||
-				$param->get('cat_newmaxsize_orig') == '1'
+					$param->get('maxsize_orig') == '1' ||
+					$param->get('cat_newmaxsize_orig') == '1'
+				)
 			)
 			{
 				$link_imgparams = array(
@@ -831,13 +844,15 @@ class plgContentjumultithumb extends JPlugin
 			// Small watermark
 			$wmi_s = '';
 			if(
-				$watermark_s == '1' ||
-				$param->get('a_watermark_s') == '1' ||
-				$param->get('a_watermarknew1_s') == '1' ||
-				$param->get('a_watermarknew2_s') == '1' ||
-				$param->get('a_watermarknew3_s') == '1' ||
-				$param->get('a_watermarknew4_s') == '1' ||
-				$param->get('a_watermarknew5_s') == '1'
+				$watermark_s == '1' &&
+				(
+					$param->get('a_watermark_s') == '1' ||
+					$param->get('a_watermarknew1_s') == '1' ||
+					$param->get('a_watermarknew2_s') == '1' ||
+					$param->get('a_watermarknew3_s') == '1' ||
+					$param->get('a_watermarknew4_s') == '1' ||
+					$param->get('a_watermarknew5_s') == '1'
+				)
 			)
 			{
 				$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
