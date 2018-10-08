@@ -12,23 +12,25 @@
 
 define('_JEXEC', 1);
 define('DS', DIRECTORY_SEPARATOR);
-define('JPATH_BASE', __DIR__ . "/../../..");
-define("MAX_SIZE", "500");
+define('JPATH_BASE', __DIR__ . '/../../..');
+define('MAX_SIZE', '500');
 
-require_once(JPATH_BASE . '/includes/defines.php');
-require_once(JPATH_BASE . '/includes/framework.php');
+require_once JPATH_BASE . '/includes/defines.php';
+require_once JPATH_BASE . '/includes/framework.php';
 
-$mainframe = JFactory::getApplication('administrator');
-$mainframe->initialise();
+use Joomla\CMS\Factory;
 
-$joomlaUser = JFactory::getUser();
+$app = Factory::getApplication('administrator');
+$app->execute();
 
-$lang = JFactory::getLanguage();
+$joomlaUser = Factory::getUser();
+
+$lang = Factory::getLanguage();
 $lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
 
 $language = mb_strtolower($lang->getTag());
 
-$doc = JFactory::getDocument();
+$doc = Factory::getDocument();
 
 $doc->addStyleSheet('/media/jui/css/bootstrap.min.css');
 

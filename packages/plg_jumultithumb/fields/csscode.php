@@ -22,7 +22,7 @@ class JFormFieldCSSCode extends JFormField
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
 	protected function getInput()
 	{

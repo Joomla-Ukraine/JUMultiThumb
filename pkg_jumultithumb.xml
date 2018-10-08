@@ -2,16 +2,15 @@
 <extension type="package" version="3.1" method="upgrade">
     <name>PLG_JUMULTITHUMB</name>
     <packagename>jumultithumb</packagename>
-    <creationDate>05.01.2018</creationDate>
+    <creationDate>@date@</creationDate>
     <packager>Joomla! Ukraine</packager>
     <copyright>(C) 2007-2018 Denys Nosov, Joomla! Ukraine</copyright>
     <packagerurl>https://joomla-ua.org</packagerurl>
     <author>Denys Nosov, Joomla! Ukraine</author>
     <authorEmail>denys@joomla-ua.org</authorEmail>
     <authorUrl>https://joomla-ua.org</authorUrl>
-    <version>7.0.5</version>
-    <license>GNU/GPL Version 2 or later and Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
-    </license>
+    <version>@version@</version>
+    <license>GNU/GPL Version 2 or later and Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License</license>
     <description>PLG_JUMULTITHUMB_XML_DESCRIPTION</description>
     <scriptfile>script.php</scriptfile>
     <update>https://joomla-ua.org/update/plg/jumultithumb.xml</update>
@@ -24,7 +23,7 @@
         <file type="plugin" id="jumultithumb_contentform" group="content">plg_jumultithumb_contentform.zip</file>
         <file type="plugin" id="jumultithumb_gallery" group="content">plg_jumultithumb_gallery.zip</file>
         <file type="plugin" id="jumultithumb_editorbutton" group="editors-xtd">plg_jumultithumb_editorbutton.zip</file>
-        <file type="library" id="julib">lib_julib.zip</file>
+        <file type="library" id="julib">lib_julib_v@julib@.zip</file>
     </files>
     <languages folder="language">
         <language tag="en-GB">en-GB/en-GB.pkg_jumultithumb.ini</language>

@@ -12,33 +12,40 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.plugin.plugin');
 jimport('joomla.filesystem.file');
 
-require_once(JPATH_SITE . '/plugins/content/jumultithumb/lib/links.php');
-require_once(JPATH_SITE . '/libraries/julib/image.php');
+require_once JPATH_SITE . '/plugins/content/jumultithumb/lib/links.php';
+require_once JPATH_SITE . '/libraries/julib/image.php';
 
 class plgContentjumultithumb extends JPlugin
 {
-	var $modeHelper;
+	public $modeHelper;
 
 	/**
 	 * plgContentjumultithumb constructor.
 	 *
 	 * @param $subject
 	 * @param $config
+	 *
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 
-		$option  = JFactory::getApplication()->input->get('option');
+		$this->app = Factory::getApplication();
+
+		$option  = $this->app->input->get('option');
 		$adapter = JPATH_SITE . '/plugins/content/jumultithumb/adapters/' . $option . '.php';
 
 		if(JFile::exists($adapter))
 		{
-			require_once($adapter);
+			require_once $adapter;
 			$mode_option      = 'plgContentJUMultiThumb_' . $option;
 			$this->modeHelper = new $mode_option($this);
 		}
@@ -50,22 +57,21 @@ class plgContentjumultithumb extends JPlugin
 	 * @param $params
 	 * @param $limitstart
 	 *
-	 * @return bool
+	 * @return void
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
 	{
-		$app = JFactory::getApplication();
-
-		if($app->getName() != 'site')
+		if($this->app->getName() !== 'site')
 		{
-			return true;
+			return;
 		}
 
 		if(!($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
-			return true;
+			return;
 		}
 
 		if($this->modeHelper && $this->modeHelper->jView('Article'))
@@ -93,13 +99,12 @@ class plgContentjumultithumb extends JPlugin
 	 *
 	 * @return bool
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function onContentPrepare($context, &$article, &$params, $limitstart)
 	{
-		$app = JFactory::getApplication();
-
-		if($app->getName() != 'site')
+		if($this->app->getName() !== 'site')
 		{
 			return true;
 		}
@@ -116,17 +121,19 @@ class plgContentjumultithumb extends JPlugin
 
 		if(isset($article->fulltext))
 		{
-			$use_wm = 1;
-			if($this->params->get('wm_tab', 0) == '1')
-			{
-				$attribs             = json_decode($article->attribs);
-				$watermark_into_only = $attribs->watermark_intro_only;
+			$attribs = json_decode($article->attribs);
 
+			$watermark_into_only = 0;
+			if(isset($attribs->watermark_intro_only))
+			{
+				$watermark_into_only = $attribs->watermark_intro_only;
+			}
+
+			$use_wm = 1;
+
+			if($watermark_into_only == 1)
+			{
 				$use_wm = 0;
-				if($watermark_into_only == '1')
-				{
-					$use_wm = 1;
-				}
 			}
 
 			$article->fulltext = @$this->ImgReplace($article->fulltext, $article, $use_wm);
@@ -142,9 +149,10 @@ class plgContentjumultithumb extends JPlugin
 	 *
 	 * @return mixed|null|string|string[]
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
-	public function ImgReplace($text, &$article, $use_wm)
+	public function ImgReplace($text, &$article, $use_wm = 1)
 	{
 		$param = $this->params;
 
@@ -152,17 +160,11 @@ class plgContentjumultithumb extends JPlugin
 		$only_image_category = $param->get('only_image_category');
 		$only_image_featured = $param->get('only_image_featured');
 
-		$watermark_o = 1;
-		$watermark_s = 1;
+		$attribs     = json_decode($article->attribs);
+		$watermark_o = $attribs->watermark;
+		$watermark_s = $attribs->watermark_s;
 
-		if($this->params->get('wm_tab', 0) == '1')
-		{
-			$attribs     = json_decode($article->attribs);
-			$watermark_o = $attribs->watermark;
-			$watermark_s = $attribs->watermark_s;
-		}
-
-		if($use_wm == '0')
+		if($use_wm == 0)
 		{
 			$watermark_o = '0';
 			$watermark_s = '0';
@@ -204,21 +206,20 @@ class plgContentjumultithumb extends JPlugin
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function JUMultithumbReplacer($_img, &$article, $watermark_o, $watermark_s)
 	{
-		$app = JFactory::getApplication();
-
 		$JUImg = new JUImg();
 
-		$Itemid = $app->input->getInt('Itemid');
+		$Itemid = $this->app->input->getInt('Itemid');
 		$param  = $this->params;
 
 		// params
 		$quality                 = $param->get('quality');
 		$noimage_class           = $param->def('noimage_class');
-		$thumb_filtercolor       = intval($param->get('thumb_filtercolor', 0));
+		$thumb_filtercolor       = (int) $param->get('thumb_filtercolor', 0);
 		$colorized               = $param->get('colorized', '25');
 		$colorpicker             = $param->get('colorpicker', '#0000ff');
 		$thumb_th_seting         = $param->get('thumb_th_seting', 0);
@@ -237,48 +238,48 @@ class plgContentjumultithumb extends JPlugin
 		switch ($thumb_filtercolor)
 		{
 			case '1':
-				$imp_filtercolor = array('fltr_1' => 'gray');
+				$imp_filtercolor = ['fltr_1' => 'gray'];
 				break;
 
 			case '2':
-				$imp_filtercolor = array('fltr_1' => 'sep');
+				$imp_filtercolor = ['fltr_1' => 'sep'];
 				break;
 
 			case '3':
-				$imp_filtercolor = array('fltr_1' => 'th|' . $thumb_th_seting);
+				$imp_filtercolor = ['fltr_1' => 'th|' . $thumb_th_seting];
 				break;
 
 			case '4':
-				$imp_filtercolor = array('fltr_1' => 'clr|' . $colorized . '|' . str_replace('#', '', $colorpicker));
+				$imp_filtercolor = ['fltr_1' => 'clr|' . $colorized . '|' . str_replace('#', '', $colorpicker)];
 				break;
 
 			default:
-				$imp_filtercolor = array();
+				$imp_filtercolor = [];
 				break;
 		}
 
-		$usm_filtercolor = array();
+		$usm_filtercolor = [];
 		if($usm == '1' && $thumb_filters == '1')
 		{
-			$usm_filtercolor = array('fltr_2' => 'usm|' . $thumb_unsharp_amount . '|' . $thumb_unsharp_radius . '|' . $thumb_unsharp_threshold);
+			$usm_filtercolor = ['fltr_2' => 'usm|' . $thumb_unsharp_amount . '|' . $thumb_unsharp_radius . '|' . $thumb_unsharp_threshold];
 		}
 
-		$blur_filtercolor = array();
+		$blur_filtercolor = [];
 		if($thumb_blur == '1' && $thumb_filters == '1')
 		{
-			$blur_filtercolor = array('fltr_3' => 'blur|' . $thumb_blur_seting);
+			$blur_filtercolor = ['fltr_3' => 'blur|' . $thumb_blur_seting];
 		}
 
-		$brit_filtercolor = array();
+		$brit_filtercolor = [];
 		if($thumb_brit == '1' && $thumb_filters == '1')
 		{
-			$brit_filtercolor = array('fltr_4' => 'brit|' . $thumb_brit_seting);
+			$brit_filtercolor = ['fltr_4' => 'brit|' . $thumb_brit_seting];
 		}
 
-		$cont_filtercolor = array();
+		$cont_filtercolor = [];
 		if($thumb_cont == '1' && $thumb_filters == '1')
 		{
-			$cont_filtercolor = array('fltr_5' => 'cont|' . $thumb_cont_seting);
+			$cont_filtercolor = ['fltr_5' => 'cont|' . $thumb_cont_seting];
 		}
 
 		// image replacer
@@ -287,7 +288,7 @@ class plgContentjumultithumb extends JPlugin
 		preg_match_all('/(width|height|src|alt|title|class|align|style)=("[^"]*")/i', $_img, $imgAttr);
 
 		$countAttr = count($imgAttr[0]);
-		$img       = array();
+		$img       = [];
 		for ($i = 0; $i < $countAttr; $i++)
 		{
 			$img[$imgAttr[1][$i]] = str_replace('"', '', $imgAttr[2][$i]);
@@ -318,18 +319,18 @@ class plgContentjumultithumb extends JPlugin
 		}
 
 		// attributes
-		$img_class = 'juimage ' . $imgclass . $img_class . 'juimg-' . $app->input->get('view');
+		$img_class = 'juimage ' . $imgclass . $img_class . 'juimg-' . $this->app->input->get('view');
 
 		$imgalt  = mb_strtoupper(mb_substr($imgalt, 0, 1)) . mb_substr($imgalt, 1);
 		$img_alt = $imgalt;
 
 		$imgtitle  = mb_strtoupper(mb_substr($imgtitle, 0, 1)) . mb_substr($imgtitle, 1);
-		$img_title = ($imgalt ? $imgalt : $imgtitle);
-		$img_title = ($img_title ? $img_title : $article->title);
+		$img_title = ($imgalt ?: $imgtitle);
+		$img_title = ($img_title ?: $article->title);
 		$img_title = ($img_title ? ' title="' . $img_title . '"' : '');
 
 		$_image_noresize = 0;
-		if($param->get('resall') == '0' && $img['class'] != "juimage")
+		if($param->get('resall') == '0' && $img['class'] !== 'juimage')
 		{
 			$size   = getimagesize(JPATH_SITE . '/' . $originalsource);
 			$limage = $this->_image($originalsource, $size[0], $size[1], $imgclass, $img_alt, 1, 1, $img_title);
@@ -340,10 +341,10 @@ class plgContentjumultithumb extends JPlugin
 		if(
 			$param->get('resall') == '1' &&
 			(
-				$img['class'] == "nothumb" ||
-				$img['class'] == "noimage" ||
-				$img['class'] == "nothumbnail" ||
-				$img['class'] == "jugallery" ||
+				$img['class'] === 'nothumb' ||
+				$img['class'] === 'noimage' ||
+				$img['class'] === 'nothumbnail' ||
+				$img['class'] === 'jugallery' ||
 				$img['class'] == $noimage_class
 			) &&
 			$img['class'] != ''
@@ -356,15 +357,14 @@ class plgContentjumultithumb extends JPlugin
 
 				return $limage;
 			}
-			else
-			{
-				$_image_noresize = 1;
-			}
+
+			$_image_noresize = 1;
 		}
+
 
 		if($this->modeHelper && $this->modeHelper->jView('CatBlog'))
 		{
-			if(in_array($Itemid, ($param->get('menu_item1')) ? $param->get('menu_item1') : array()))
+			if(in_array($Itemid, $param->get('menu_item1') ?: [], true))
 			{
 				$b_newwidth           = $param->get('b_widthnew1');
 				$b_newheight          = $param->get('b_heightnew1');
@@ -379,7 +379,7 @@ class plgContentjumultithumb extends JPlugin
 				$b_sxnew              = $param->def('b_sxnew1');
 				$b_synew              = $param->def('b_synew1');
 			}
-			elseif(in_array($Itemid, ($param->get('menu_item2')) ? $param->get('menu_item2') : array()))
+			elseif(in_array($Itemid, $param->get('menu_item2') ?: [], true))
 			{
 				$b_newwidth           = $param->get('b_widthnew2');
 				$b_newheight          = $param->get('b_heightnew2');
@@ -394,7 +394,7 @@ class plgContentjumultithumb extends JPlugin
 				$b_sxnew              = $param->def('b_sxnew2');
 				$b_synew              = $param->def('b_synew2');
 			}
-			elseif(in_array($Itemid, ($param->get('menu_item3')) ? $param->get('menu_item3') : array()))
+			elseif(in_array($Itemid, $param->get('menu_item3') ?: [], true))
 			{
 				$b_newwidth           = $param->get('b_widthnew3');
 				$b_newheight          = $param->get('b_heightnew3');
@@ -409,7 +409,7 @@ class plgContentjumultithumb extends JPlugin
 				$b_sxnew              = $param->def('b_sxnew3');
 				$b_synew              = $param->def('b_synew3');
 			}
-			elseif(in_array($Itemid, ($param->get('menu_item4')) ? $param->get('menu_item4') : array()))
+			elseif(in_array($Itemid, $param->get('menu_item4') ?: [], true))
 			{
 				$b_newwidth           = $param->get('b_widthnew4');
 				$b_newheight          = $param->get('b_heightnew4');
@@ -424,7 +424,7 @@ class plgContentjumultithumb extends JPlugin
 				$b_sxnew              = $param->def('b_sxnew4');
 				$b_synew              = $param->def('b_synew4');
 			}
-			elseif(in_array($Itemid, ($param->get('menu_item5')) ? $param->get('menu_item5') : array()))
+			elseif(in_array($Itemid, $param->get('menu_item5') ?: [], true))
 			{
 				$b_newwidth           = $param->get('b_widthnew5');
 				$b_newheight          = $param->get('b_heightnew5');
@@ -464,27 +464,27 @@ class plgContentjumultithumb extends JPlugin
 
 			if($aspect >= '1' && $b_newauto_zoomcrop == '1')
 			{
-				$new_imgparams = array(
+				$new_imgparams = [
 					'far' => '1',
 					'bg'  => str_replace('#', '', $b_newfarcropbg)
-				);
+				];
 			}
 			else
 			{
-				$new_imgparams = array(
-					'zc' => ($b_newcropzoom == 1 ? $b_newzoomcrop_params : '')
-				);
+				$new_imgparams = [
+					'zc' => $b_newcropzoom == 1 ? $b_newzoomcrop_params : ''
+				];
 			}
 
 			if($b_newfarcrop == '1')
 			{
-				$new_imgparams = array(
+				$new_imgparams = [
 					'far' => $b_newfarcrop_params,
 					'bg'  => str_replace('#', '', $b_newfarcropbg)
-				);
+				];
 			}
 
-			$imgparams = array(
+			$imgparams = [
 				'w'     => $b_newwidth,
 				'h'     => $b_newheight,
 				'aoe'   => $b_aoenew,
@@ -492,7 +492,7 @@ class plgContentjumultithumb extends JPlugin
 				'sy'    => $b_synew,
 				'q'     => $quality,
 				'cache' => 'img'
-			);
+			];
 
 			$_imgparams = array_merge(
 				$imp_filtercolor,
@@ -509,14 +509,14 @@ class plgContentjumultithumb extends JPlugin
 			$limage = $this->_image($thumb_img, $b_newwidth, $b_newheight, $img_class, $img_alt, 0, 0);
 		}
 		elseif(
-			$this->modeHelper && $this->modeHelper->jView('Article') ||
-			$this->modeHelper && $this->modeHelper->jView('Categories') ||
-			$this->modeHelper && $this->modeHelper->jView('Category')
+			($this->modeHelper && $this->modeHelper->jView('Article')) ||
+			($this->modeHelper && $this->modeHelper->jView('Categories')) ||
+			($this->modeHelper && $this->modeHelper->jView('Category'))
 		)
 		{
 			if($this->modeHelper && $this->modeHelper->jView('Article'))
 			{
-				if(in_array($Itemid, ($param->get('menu_item1')) ? $param->get('menu_item1') : array()))
+				if(in_array($Itemid, $param->get('menu_item1') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('maxwidthnew1');
 					$newmaxheight       = $param->get('maxheightnew1');
@@ -535,7 +535,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('noresizenew1');
 					$newnofullimg       = $param->get('nofullimgnew1');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item2')) ? $param->get('menu_item2') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item2') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('maxwidthnew2');
 					$newmaxheight       = $param->get('maxheightnew2');
@@ -554,7 +554,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('noresizenew2');
 					$newnofullimg       = $param->get('nofullimgnew2');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item3')) ? $param->get('menu_item3') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item3') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('maxwidthnew3');
 					$newmaxheight       = $param->get('maxheightnew3');
@@ -573,7 +573,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('noresizenew3');
 					$newnofullimg       = $param->get('nofullimgnew3');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item4')) ? $param->get('menu_item4') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item4') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('maxwidthnew4');
 					$newmaxheight       = $param->get('maxheightnew4');
@@ -592,7 +592,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('noresizenew4');
 					$newnofullimg       = $param->get('nofullimgnew4');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item5')) ? $param->get('menu_item5') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item5') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('maxwidthnew5');
 					$newmaxheight       = $param->get('maxheightnew5');
@@ -633,11 +633,11 @@ class plgContentjumultithumb extends JPlugin
 				}
 			}
 			elseif(
-				$this->modeHelper && $this->modeHelper->jView('Categories') ||
-				$this->modeHelper && $this->modeHelper->jView('Category')
+				($this->modeHelper && $this->modeHelper->jView('Categories')) ||
+				($this->modeHelper && $this->modeHelper->jView('Category'))
 			)
 			{
-				if(in_array($Itemid, ($param->get('cat_menu_item1')) ? $param->get('cat_menu_item1') : array()))
+				if(in_array($Itemid, $param->get('cat_menu_item1') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('cat_maxwidthnew1');
 					$newmaxheight       = $param->get('cat_maxheightnew1');
@@ -656,7 +656,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('cat_noresizenew1');
 					$newnofullimg       = $param->get('cat_nofullimgnew1');
 				}
-				elseif(in_array($Itemid, ($param->get('cat_menu_item2')) ? $param->get('cat_menu_item2') : array()))
+				elseif(in_array($Itemid, $param->get('cat_menu_item2') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('cat_maxwidthnew2');
 					$newmaxheight       = $param->get('cat_maxheightnew2');
@@ -675,7 +675,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('cat_noresizenew2');
 					$newnofullimg       = $param->get('cat_nofullimgnew2');
 				}
-				elseif(in_array($Itemid, ($param->get('cat_menu_item3')) ? $param->get('cat_menu_item3') : array()))
+				elseif(in_array($Itemid, $param->get('cat_menu_item3') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('cat_maxwidthnew3');
 					$newmaxheight       = $param->get('cat_maxheightnew3');
@@ -694,7 +694,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('cat_noresizenew3');
 					$newnofullimg       = $param->get('cat_nofullimgnew3');
 				}
-				elseif(in_array($Itemid, ($param->get('cat_menu_item4')) ? $param->get('cat_menu_item4') : array()))
+				elseif(in_array($Itemid, $param->get('cat_menu_item4') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('cat_maxwidthnew4');
 					$newmaxheight       = $param->get('cat_maxheightnew4');
@@ -713,7 +713,7 @@ class plgContentjumultithumb extends JPlugin
 					$newnoresize        = $param->get('cat_noresizenew4');
 					$newnofullimg       = $param->get('cat_nofullimgnew4');
 				}
-				elseif(in_array($Itemid, ($param->get('cat_menu_item5')) ? $param->get('cat_menu_item5') : array()))
+				elseif(in_array($Itemid, $param->get('cat_menu_item5') ?: [], true))
 				{
 					$newmaxwidth        = $param->get('cat_maxwidthnew5');
 					$newmaxheight       = $param->get('cat_maxheightnew5');
@@ -756,7 +756,7 @@ class plgContentjumultithumb extends JPlugin
 
 			if($newnoresize == '1') // || $cat_newnoresize == '1'
 			{
-				$juimgresmatche = str_replace(array(' /', JURI::base()), '', $originalsource);
+				$juimgresmatche = str_replace([' /', JURI::base()], '', $originalsource);
 				$limage         = $this->_image(JURI::base() . $juimgresmatche, $newmaxwidth, $newmaxheight, $img_class, $img_alt, 1, 1);
 
 				return $limage;
@@ -765,16 +765,14 @@ class plgContentjumultithumb extends JPlugin
 			// Watermark
 			$wmi = '';
 			if(
-				$watermark_o == '1' &&
-				(
-					$_image_noresize == '1' ||
-					$param->get('a_watermark') == '1' ||
-					$param->get('a_watermarknew1') == '1' ||
-					$param->get('a_watermarknew2') == '1' ||
-					$param->get('a_watermarknew3') == '1' ||
-					$param->get('a_watermarknew4') == '1' ||
-					$param->get('a_watermarknew5') == '1'
-				)
+				$watermark_o == '1' ||
+				$_image_noresize == '1' ||
+				$param->get('a_watermark') == '1' ||
+				$param->get('a_watermarknew1') == '1' ||
+				$param->get('a_watermarknew2') == '1' ||
+				$param->get('a_watermarknew3') == '1' ||
+				$param->get('a_watermarknew4') == '1' ||
+				$param->get('a_watermarknew5') == '1'
 			)
 			{
 				$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
@@ -791,7 +789,6 @@ class plgContentjumultithumb extends JPlugin
 				$wmi = 'wmi|' . $watermark . '|' . $param->get('wmposition') . '|' . $param->get('wmopst') . '|' . $param->get('wmx') . '|' . $param->get('wmy');
 			}
 
-
 			$_width  = '';
 			$_height = '';
 			if(
@@ -805,29 +802,27 @@ class plgContentjumultithumb extends JPlugin
 
 			$link_img = $imgsource;
 			if(
-				$watermark_o == '1' &&
-				(
-					$_image_noresize == '1' ||
-					$param->get('a_watermark') == '1' ||
-					$param->get('a_watermarknew1') == '1' ||
-					$param->get('a_watermarknew2') == '1' ||
-					$param->get('a_watermarknew3') == '1' ||
-					$param->get('a_watermarknew4') == '1' ||
-					$param->get('a_watermarknew5') == '1' ||
+				$watermark_o == '1' ||
+				$_image_noresize == '1' ||
+				$param->get('a_watermark') == '1' ||
+				$param->get('a_watermarknew1') == '1' ||
+				$param->get('a_watermarknew2') == '1' ||
+				$param->get('a_watermarknew3') == '1' ||
+				$param->get('a_watermarknew4') == '1' ||
+				$param->get('a_watermarknew5') == '1' ||
 
-					$param->get('maxsize_orig') == '1' ||
-					$param->get('cat_newmaxsize_orig') == '1'
-				)
+				$param->get('maxsize_orig') == '1' ||
+				$param->get('cat_newmaxsize_orig') == '1'
 			)
 			{
-				$link_imgparams = array(
+				$link_imgparams = [
 					'w'     => $_width,
 					'h'     => $_height,
 					'aoe'   => $newaoe,
-					'fltr'  => ($wmi != '' ? $wmi : ''),
+					'fltr'  => $wmi != '' ? $wmi : '',
 					'q'     => $quality,
 					'cache' => 'img'
-				);
+				];
 
 				$_link_imgparams = array_merge(
 					$imp_filtercolor,
@@ -844,15 +839,13 @@ class plgContentjumultithumb extends JPlugin
 			// Small watermark
 			$wmi_s = '';
 			if(
-				$watermark_s == '1' &&
-				(
-					$param->get('a_watermark_s') == '1' ||
-					$param->get('a_watermarknew1_s') == '1' ||
-					$param->get('a_watermarknew2_s') == '1' ||
-					$param->get('a_watermarknew3_s') == '1' ||
-					$param->get('a_watermarknew4_s') == '1' ||
-					$param->get('a_watermarknew5_s') == '1'
-				)
+				$watermark_s == '1' ||
+				$param->get('a_watermark_s') == '1' ||
+				$param->get('a_watermarknew1_s') == '1' ||
+				$param->get('a_watermarknew2_s') == '1' ||
+				$param->get('a_watermarknew3_s') == '1' ||
+				$param->get('a_watermarknew4_s') == '1' ||
+				$param->get('a_watermarknew5_s') == '1'
 			)
 			{
 				$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
@@ -888,36 +881,36 @@ class plgContentjumultithumb extends JPlugin
 
 			if($aspect >= '1' && $newauto_zoomcrop == '1')
 			{
-				$new_imgparams = array(
+				$new_imgparams = [
 					'far' => '1',
 					'bg'  => str_replace('#', '', $newfarcropbg)
-				);
+				];
 			}
 			else
 			{
-				$new_imgparams = array(
-					'zc' => ($newcropzoom == 1 ? $newzoomcrop_params : '')
-				);
+				$new_imgparams = [
+					'zc' => $newcropzoom == 1 ? $newzoomcrop_params : ''
+				];
 			}
 
 			if($newfarcrop == '1')
 			{
-				$new_imgparams = array(
+				$new_imgparams = [
 					'far' => $newfarcrop_params,
 					'bg'  => str_replace('#', '', $newfarcropbg)
-				);
+				];
 			}
 
-			$imgparams = array(
+			$imgparams = [
 				'w'     => $newwidth,
 				'h'     => $newheight,
 				'aoe'   => $newaoe,
 				'sx'    => $newsx,
 				'sy'    => $newsy,
-				'fltr'  => ($wmi_s != '' ? $wmi_s : ''),
+				'fltr'  => $wmi_s != '' ? $wmi_s : '',
 				'q'     => $quality,
 				'cache' => 'img'
-			);
+			];
 
 			$_imgparams = array_merge(
 				$imp_filtercolor,
@@ -965,27 +958,27 @@ class plgContentjumultithumb extends JPlugin
 
 			if($aspect >= '1' && $f_newauto_zoomcrop == '1')
 			{
-				$new_imgparams = array(
+				$new_imgparams = [
 					'far' => '1',
 					'bg'  => str_replace('#', '', $f_newfarcropbg)
-				);
+				];
 			}
 			else
 			{
-				$new_imgparams = array(
-					'zc' => ($f_newcropzoom == 1 ? $f_newzoomcrop_params : '')
-				);
+				$new_imgparams = [
+					'zc' => $f_newcropzoom == 1 ? $f_newzoomcrop_params : ''
+				];
 			}
 
 			if($f_newfarcrop == '1')
 			{
-				$new_imgparams = array(
+				$new_imgparams = [
 					'far' => $f_newfarcrop_params,
 					'bg'  => str_replace('#', '', $f_newfarcropbg)
-				);
+				];
 			}
 
-			$imgparams = array(
+			$imgparams = [
 				'w'     => $f_newwidth,
 				'h'     => $f_newheight,
 				'aoe'   => $f_aoenew,
@@ -993,7 +986,7 @@ class plgContentjumultithumb extends JPlugin
 				'sy'    => $f_synew,
 				'q'     => $quality,
 				'cache' => 'img'
-			);
+			];
 
 			$_imgparams = array_merge(
 				$imp_filtercolor,
@@ -1028,12 +1021,12 @@ class plgContentjumultithumb extends JPlugin
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_noresize = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null)
 	{
-		$app      = JFactory::getApplication();
-		$template = $app->getTemplate();
+		$template = $this->app->getTemplate();
 
 		switch ($_lightbox)
 		{
@@ -1067,7 +1060,7 @@ class plgContentjumultithumb extends JPlugin
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
 	public function getTmpl($template, $name)
 	{
@@ -1092,29 +1085,27 @@ class plgContentjumultithumb extends JPlugin
 	 *
 	 * @return float|int
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
-	public static function _aspect($html, $_cropaspect)
+	public function _aspect($html, $_cropaspect)
 	{
 		$size   = getimagesize(rawurldecode(JPATH_SITE . '/' . $html));
 		$width  = $size[0];
 		$height = $size[1] * ($_cropaspect != '' ? $_cropaspect : '0');
-		$aspect = $height / $width;
 
-		return $aspect;
+		return $height / $width;
 	}
 
 	/**
 	 *
 	 * @return bool
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function onBeforeCompileHead()
 	{
-		$app = JFactory::getApplication();
-
-		if($app->getName() != 'site')
+		if($this->app->getName() !== 'site')
 		{
 			return true;
 		}
@@ -1124,7 +1115,7 @@ class plgContentjumultithumb extends JPlugin
 			return true;
 		}
 
-		$doc   = JFactory::getDocument();
+		$doc   = Factory::getDocument();
 		$param = $this->params;
 
 		$selectlightbox = $param->get('selectlightbox');
@@ -1132,16 +1123,19 @@ class plgContentjumultithumb extends JPlugin
 		if(
 			$param->get('uselightbox', '1') == '1' &&
 			(
-				$this->modeHelper && $this->modeHelper->jView('Article') ||
-				$this->modeHelper && $this->modeHelper->jView('Categories') ||
-				$this->modeHelper && $this->modeHelper->jView('CatBlog')
+				($this->modeHelper && $this->modeHelper->jView('Article')) ||
+				($this->modeHelper && $this->modeHelper->jView('Categories')) ||
+				($this->modeHelper && $this->modeHelper->jView('CatBlog'))
 			) &&
 			!($this->modeHelper && $this->modeHelper->jView('Print'))
 		)
 		{
-			if($param->get("jujq") == '0') $doc->addScript(JURI::root(true) . '/media/jui/js/jquery.min.js');
+			if($param->get('jujq') == '0')
+			{
+				$doc->addScript(JURI::root(true) . '/media/jui/js/jquery.min.js');
+			}
 
-			$juhead = "";
+			$juhead = '';
 
 			switch ($selectlightbox)
 			{
@@ -1157,7 +1151,7 @@ class plgContentjumultithumb extends JPlugin
 					$jsparams = "\r";
 					if($param->get('colorboxparam'))
 					{
-						$jsparams = "{\n		" . str_replace("<br />", "\n		", $param->get('colorboxparam')) . "\n	}";
+						$jsparams = "{\n		" . str_replace('<br />', "\n		", $param->get('colorboxparam')) . "\n	}";
 					}
 
 					$doc->addStyleSheet(JURI::base() . 'media/plg_jumultithumb/colorbox/' . $param->get('colorboxstyle') . '/colorbox.css');

@@ -1,0 +1,167 @@
+<project name="jumultithumb" default="dist" basedir=".">
+
+    <property name="VERSION" value="7.1.2"/>
+
+    <property name="JOOMLA" value="3.8.12"/>
+
+    <tstamp>
+        <format property="DATE" pattern="%d.%m.%Y" />
+    </tstamp>
+
+    <property name="julib" value="2.9.1"/>
+
+    <property name="build" value="build"/>
+
+    <property name="temp" value="temp"/>
+
+    <property name="dist" value="dist"/>
+
+    <property name="filename" value="pkg_jumultithumb_v${VERSION}.zip"/>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${build}"/>
+        <mkdir dir="${temp}"/>
+        <mkdir dir="${dist}"/>
+    </target>
+
+    <target name="temp">
+
+        <copy todir="${temp}/language">
+            <fileset dir="language">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${temp}">
+            <fileset dir="packages">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+    </target>
+
+    <target name="replace">
+
+        <copy file="pkg_jumultithumb.xml" todir="${build}">
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                    <token key="julib" value="${julib}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <!---->
+
+        <copy file="packages/plg_jumultithumb/jumultithumb.xml" todir="${temp}/temp/plg_jumultithumb">
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <delete file="${temp}/plg_jumultithumb/jumultithumb.xml"/>
+        <copy file="${temp}/temp/plg_jumultithumb/jumultithumb.xml" todir="${temp}/plg_jumultithumb"/>
+
+        <!---->
+
+        <copy file="packages/plg_jumultithumb_gallery/jumultithumb_gallery.xml" todir="${temp}/temp/plg_jumultithumb_gallery">
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <delete file="${temp}/plg_jumultithumb_gallery/jumultithumb_gallery.xml"/>
+        <copy file="${temp}/temp/plg_jumultithumb_gallery/jumultithumb_gallery.xml" todir="${temp}/plg_jumultithumb_gallery"/>
+
+        <!---->
+
+        <copy file="packages/plg_jumultithumb_editorbutton/jumultithumb_editorbutton.xml" todir="${temp}/temp/plg_jumultithumb_editorbutton">
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <delete file="${temp}/plg_jumultithumb_editorbutton/jumultithumb_editorbutton.xml"/>
+        <copy file="${temp}/temp/plg_jumultithumb_editorbutton/jumultithumb_editorbutton.xml" todir="${temp}/plg_jumultithumb_editorbutton"/>
+
+        <!---->
+
+        <copy file="packages/plg_jumultithumb_contentform/jumultithumb_contentform.xml" todir="${temp}/temp/plg_jumultithumb_contentform">
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <delete file="${temp}/plg_jumultithumb_contentform/jumultithumb_contentform.xml"/>
+        <copy file="${temp}/temp/plg_jumultithumb_contentform/jumultithumb_contentform.xml" todir="${temp}/plg_jumultithumb_contentform"/>
+
+    </target>
+
+    <target name="pack-plugins">
+
+        <mkdir dir="${build}/packages"/>
+
+        <zip destfile="${build}/packages/plg_jumultithumb.zip" description="plg_jumultithumb">
+            <fileset dir="${temp}/plg_jumultithumb"/>
+        </zip>
+
+        <zip destfile="${build}/packages/plg_jumultithumb_gallery.zip" description="plg_jumultithumb_gallery">
+            <fileset dir="${temp}/plg_jumultithumb_gallery"/>
+        </zip>
+
+        <zip destfile="${build}/packages/plg_jumultithumb_contentform.zip" description="plg_jumultithumb_contentform">
+            <fileset dir="${temp}/plg_jumultithumb_contentform"/>
+        </zip>
+
+        <zip destfile="${build}/packages/plg_jumultithumb_editorbutton.zip" description="plg_jumultithumb_editorbutton">
+            <fileset dir="${temp}/plg_jumultithumb_editorbutton"/>
+        </zip>
+
+        <copy file="../JULib/dist/lib_julib_v${julib}.zip" todir="${build}/packages"/>
+
+        <copy todir="${build}/language">
+            <fileset dir="${temp}/language">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+        <copy file="pkg_jumultithumb.xml" todir="${build}"/>
+
+        <copy file="script.php" todir="${build}"/>
+
+    </target>
+
+    <target name="dist" depends="init, temp, replace, pack-plugins">
+        <zip destfile="${dist}/${filename}">
+            <fileset dir="${build}/">
+                <include name="**/**"/>
+            </fileset>
+        </zip>
+
+        <echo msg="Removing old files..."/>
+        <delete dir="${build}"/>
+        <delete dir="${temp}"/>
+
+    </target>
+
+    <target name="clean" description="clean up">
+
+        <delete dir="${build}"/>
+        <delete dir="${temp}"/>
+
+    </target>
+
+</project>

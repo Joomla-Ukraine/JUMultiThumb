@@ -12,33 +12,40 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.plugin.plugin');
 jimport('joomla.filesystem.file');
 
-require_once(JPATH_SITE . '/plugins/content/jumultithumb/lib/links.php');
-require_once(JPATH_SITE . '/libraries/julib/image.php');
+require_once JPATH_SITE . '/plugins/content/jumultithumb/lib/links.php';
+require_once JPATH_SITE . '/libraries/julib/image.php';
 
 class plgContentJUMULTITHUMB_Gallery extends JPlugin
 {
-	var $modeHelper;
+	public $modeHelper;
 
 	/**
 	 * plgContentJUMULTITHUMB_Gallery constructor.
 	 *
 	 * @param $subject
 	 * @param $config
+	 *
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function __construct(& $subject, $config)
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 
-		$option = JRequest::getCmd('option');
+		$this->app = Factory::getApplication();
+
+		$option = $this->app->input->getCmd('option');
 
 		$adapter = JPATH_SITE . '/plugins/content/jumultithumb/adapters/' . $option . '.php';
 		if(JFile::exists($adapter))
 		{
-			require_once($adapter);
+			require_once $adapter;
 
 			$mode_option      = 'plgContentJUMultiThumb_' . $option;
 			$this->modeHelper = new $mode_option($this);
@@ -51,22 +58,21 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 	 * @param $params
 	 * @param $limitstart
 	 *
-	 * @return bool
+	 * @return void
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
 	{
-		$app = JFactory::getApplication();
-
-		if($app->getName() != 'site')
+		if($this->app->getName() !== 'site')
 		{
-			return true;
+			return;
 		}
 
 		if(!($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
-			return true;
+			return;
 		}
 
 		if($this->modeHelper && $this->modeHelper->jView('Article'))
@@ -90,13 +96,12 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 	 *
 	 * @return bool
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function onContentPrepare($context, &$article, &$params, $limitstart)
 	{
-		$app = JFactory::getApplication();
-
-		if($app->getName() != 'site')
+		if($this->app->getName() !== 'site')
 		{
 			return true;
 		}
@@ -138,12 +143,11 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 	 *
 	 * @return null|string|string[]
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function GalleryReplace($text, &$article)
 	{
-		$app = JFactory::getApplication();
-
 		$JUImg = new JUImg();
 
 		$regex = "/<p>\s*{gallery\s+(.*?)}\s*<\/p>/i";
@@ -151,7 +155,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 
 		if($matches)
 		{
-			$Itemid = $app->input->getInt('Itemid');
+			$Itemid = $this->app->input->getInt('Itemid');
 			$param  = $this->params;
 
 			$plugin = JPluginHelper::getPlugin('content', 'jumultithumb');
@@ -189,7 +193,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 					$matcheslist[3] = $gallstyle;
 				}
 
-				if(in_array($Itemid, ($param->get('menu_item1')) ? $param->get('menu_item1') : array()))
+				if(in_array($Itemid, $param->get('menu_item1') ?: []))
 				{
 					$maxsize_orignew = $param->get('maxsize_orignew1');
 					$newmaxwidth     = $param->get('maxwidthnew1');
@@ -204,7 +208,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 					$a_watermarkgall_s = $param->get('watermark_gall_s1');
 					$a_watermarkgall   = $param->get('watermark_gall1');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item2')) ? $param->get('menu_item2') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item2') ?: []))
 				{
 					$maxsize_orignew = $param->get('maxsize_orignew2');
 					$newmaxwidth     = $param->get('maxwidthnew2');
@@ -219,7 +223,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 					$a_watermarkgall_s = $param->get('watermark_gall_s2');
 					$a_watermarkgall   = $param->get('watermark_gall2');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item3')) ? $param->get('menu_item3') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item3') ?: []))
 				{
 					$maxsize_orignew = $param->get('maxsize_orignew3');
 					$newmaxwidth     = $param->get('maxwidthnew3');
@@ -234,7 +238,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 					$a_watermarkgall_s = $param->get('watermark_gall_s3');
 					$a_watermarkgall   = $param->get('watermark_gall3');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item4')) ? $param->get('menu_item4') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item4') ?: []))
 				{
 					$maxsize_orignew = $param->get('maxsize_orignew4');
 					$newmaxwidth     = $param->get('maxwidthnew4');
@@ -249,7 +253,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 					$a_watermarkgall_s = $param->get('watermark_gall_s4');
 					$a_watermarkgall   = $param->get('watermark_gall4');
 				}
-				elseif(in_array($Itemid, ($param->get('menu_item5')) ? $param->get('menu_item5') : array()))
+				elseif(in_array($Itemid, $param->get('menu_item5') ?: []))
 				{
 					$maxsize_orignew = $param->get('maxsize_orignew5');
 					$newmaxwidth     = $param->get('maxwidthnew5');
@@ -289,7 +293,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 
 				$img_cache = $param->get('img_cache');
 
-				$img_title = preg_replace("/\"/", "'", $article->title);
+				$img_title = preg_replace('/"/', "'", $article->title);
 
 				$lightbox = $param->get('selectlightbox');
 
@@ -301,70 +305,70 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 				$html = '';
 				if(is_dir($img_folder))
 				{
-					$images = glob($img_folder . "/{*.[jJ][pP][gG],*.[jJ][pP][eE][gG],*.[gG][iI][fF],*.[pP][nN][gG],*.[bB][mM][pP],*.[tT][iI][fF],*.[tT][iI][fF][fF]}", GLOB_BRACE);
+					$images = glob($img_folder . '/{*.[jJ][pP][gG],*.[jJ][pP][eE][gG],*.[gG][iI][fF],*.[pP][nN][gG],*.[bB][mM][pP],*.[tT][iI][fF],*.[tT][iI][fF][fF]}', GLOB_BRACE);
 					$images = str_replace($root, '', $images);
 
-					$_gallery = array();
+					$_gallery = [];
 					foreach ($images as $file)
 					{
 						switch ($json->thumb_filtercolor)
 						{
 							case '1':
-								$imp_filtercolor = array('fltr_1' => 'gray');
+								$imp_filtercolor = ['fltr_1' => 'gray'];
 								break;
 
 							case '2':
-								$imp_filtercolor = array('fltr_1' => 'sep');
+								$imp_filtercolor = ['fltr_1' => 'sep'];
 								break;
 
 							case '3':
-								$imp_filtercolor = array('fltr_1' => 'th|' . $json->thumb_th_seting);
+								$imp_filtercolor = ['fltr_1' => 'th|' . $json->thumb_th_seting];
 								break;
 
 							case '4':
-								$imp_filtercolor = array('fltr_1' => 'clr|' . $json->colorized . '|' . str_replace('#', '', $json->colorpicker));
+								$imp_filtercolor = ['fltr_1' => 'clr|' . $json->colorized . '|' . str_replace('#', '', $json->colorpicker)];
 								break;
 
 							default:
-								$imp_filtercolor = array();
+								$imp_filtercolor = [];
 								break;
 						}
 
-						$usm_filtercolor = array();
+						$usm_filtercolor = [];
 						if($json->thumb_unsharp == 1)
 						{
-							$usm_filtercolor = array('fltr_2' => 'usm|' . $json->thumb_unsharp_amount . '|' . $json->thumb_unsharp_radius . '|' . $json->thumb_unsharp_threshold);
+							$usm_filtercolor = ['fltr_2' => 'usm|' . $json->thumb_unsharp_amount . '|' . $json->thumb_unsharp_radius . '|' . $json->thumb_unsharp_threshold];
 						}
 
-						$blur_filtercolor = array();
+						$blur_filtercolor = [];
 						if($json->thumb_blur == 1)
 						{
-							$blur_filtercolor = array('fltr_3' => 'blur|' . $json->thumb_blur_seting);
+							$blur_filtercolor = ['fltr_3' => 'blur|' . $json->thumb_blur_seting];
 						}
 
-						$brit_filtercolor = array();
+						$brit_filtercolor = [];
 						if($json->thumb_brit == 1)
 						{
-							$brit_filtercolor = array('fltr_4' => 'brit|' . $json->thumb_brit_seting);
+							$brit_filtercolor = ['fltr_4' => 'brit|' . $json->thumb_brit_seting];
 						}
 
-						$cont_filtercolor = array();
+						$cont_filtercolor = [];
 						if($json->thumb_cont == 1)
 						{
-							$cont_filtercolor = array('fltr_5' => 'cont|' . $json->thumb_cont_seting);
+							$cont_filtercolor = ['fltr_5' => 'cont|' . $json->thumb_cont_seting];
 						}
 
 						if(!($this->modeHelper && $this->modeHelper->jView('Article')) && ($param->get('useimgagegallery') == '1'))
 						{
 							$_title = mb_strtoupper(mb_substr($img_title, 0, 1)) . mb_substr($img_title, 1);
 
-							$imgparams = array(
+							$imgparams = [
 								'w'     => $param->get('width'),
 								'h'     => $param->get('height'),
 								'aoe'   => '1',
 								'zc'    => $param->get('cropzoom'),
 								'cache' => $img_cache
-							);
+							];
 
 							$_imgparams = array_merge(
 								$imp_filtercolor,
@@ -402,12 +406,12 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 						$imgsource = $file;
 						if($watermark_gallery == '1' || $a_watermarkgall == '1')
 						{
-							$link_imgparams = array(
-								'w'     => ($param->get('maxsize_orignew') == '1' ? $newmaxwidth : ''),
-								'h'     => ($param->get('maxsize_orignew') == '1' ? $newmaxheight : ''),
-								'fltr'  => ($wmi != '' ? $wmi : ''),
+							$link_imgparams = [
+								'w'     => $param->get('maxsize_orignew') == '1' ? $newmaxwidth : '',
+								'h'     => $param->get('maxsize_orignew') == '1' ? $newmaxheight : '',
+								'fltr'  => $wmi != '' ? $wmi : '',
 								'cache' => $img_cache
-							);
+							];
 
 							$_link_imgparams = array_merge(
 								$imp_filtercolor,
@@ -438,14 +442,14 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 							$wmi_s = 'wmi|' . $watermark_s . '|' . $param->get('wmposition_s') . '|' . $param->get('wmopst_s') . '|' . $param->get('wmx_s') . '|' . $param->get('wmy_s');
 						}
 
-						$imgparams = array(
-							'fltr'  => ($wmi_s != '' ? $wmi_s : ''),
+						$imgparams = [
+							'fltr'  => $wmi_s != '' ? $wmi_s : '',
 							'w'     => $gallwidth,
 							'h'     => $gallheight,
 							'aoe'   => '1',
 							'zc'    => $gallcropzoom,
 							'cache' => $img_cache
-						);
+						];
 
 						$_imgparams = array_merge(
 							$imp_filtercolor,
@@ -466,8 +470,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 
 					$gallery = implode($_gallery);
 
-					$app      = JFactory::getApplication();
-					$template = $app->getTemplate();
+					$template = $this->app->getTemplate();
 					$tmpl     = $this->getTmpl($template, 'gallery');
 
 					ob_start();
@@ -497,12 +500,12 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null)
 	{
-		$app      = JFactory::getApplication();
-		$template = $app->getTemplate();
+		$template = $this->app->getTemplate();
 
 		switch ($_lightbox)
 		{
@@ -542,7 +545,7 @@ class plgContentJUMULTITHUMB_Gallery extends JPlugin
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
 	public function getTmpl($template, $name)
 	{

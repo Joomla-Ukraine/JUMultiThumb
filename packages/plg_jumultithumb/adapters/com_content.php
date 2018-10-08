@@ -14,16 +14,19 @@ defined('_JEXEC') or die;
 
 class plgContentJUMultiThumb_com_content
 {
-	var $plugin;
+	public $plugin;
 
 	/**
 	 * plgContentJUMultiThumb_com_content constructor.
 	 *
 	 * @param $plugin
+	 *
+	 * @since 7.0
 	 */
 	public function __construct(&$plugin)
 	{
 		$this->plugin = &$plugin;
+		$this->app = JFactory::getApplication();
 	}
 
 	/**
@@ -31,41 +34,40 @@ class plgContentJUMultiThumb_com_content
 	 *
 	 * @return bool
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function jView($jlayout)
 	{
-		$app = JFactory::getApplication();
-
-		$option = $app->input->get('option');
-		$view   = $app->input->get('view');
-		$layout = $app->input->get('layout');
-		$print  = $app->input->get('print');
+		$option = $this->app->input->get('option');
+		$view   = $this->app->input->get('view');
+		$layout = $this->app->input->get('layout');
+		$print  = $this->app->input->get('print');
 
 		switch ($jlayout)
 		{
 			case 'Component':
-				return ($option == 'com_content');
+				return ($option === 'com_content');
 				break;
 
 			case 'CatBlog':
-				return (($view == 'category' && ($layout == 'blog')) || ($view == 'category' && ($layout == 'card')));
+				return (($view === 'category' && ($layout === 'blog')) || ($view === 'category' && ($layout === 'card')));
 				break;
 
 			case 'Blog':
-				return ($layout == 'blog');
+				return ($layout === 'blog');
 				break;
 
 			case 'Category':
-				return ($view == 'categories' && !($layout));
+				return ($view === 'categories' && !$layout);
 				break;
 
 			case 'Categories':
-				return ($view == 'categories');
+				return ($view === 'categories');
 				break;
 
 			case 'Featured':
-				return ($view == 'featured');
+				return ($view === 'featured');
 				break;
 
 			case 'Print':
@@ -73,7 +75,7 @@ class plgContentJUMultiThumb_com_content
 				break;
 
 			case 'Article':
-				return ($view == 'article');
+				return ($view === 'article');
 				break;
 		}
 
@@ -85,11 +87,12 @@ class plgContentJUMultiThumb_com_content
 	 *
 	 * @return JURI
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function jViewLink($article)
 	{
-		require_once(JPATH_SITE . '/components/com_content/helpers/route.php');
+		require_once JPATH_SITE . '/components/com_content/helpers/route.php';
 
 		if($article->params->get('access-view'))
 		{

@@ -12,34 +12,35 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class plgContentJUMultiThumb_com_fjrelated
 {
-	var $plugin;
+	public $plugin;
 
 	public function __construct(&$plugin)
 	{
 		$this->plugin = &$plugin;
+		$this->app    = Factory::getApplication();
 	}
 
 	public function jView($jlayout)
 	{
-		$app = JFactory::getApplication();
-
-		$option = $app->input->get('option');
-		$view   = $app->input->get('view');
-		$layout = $app->input->get('layout');
-		$print  = $app->input->get('print');
+		$option = $this->app->input->get('option');
+		$view   = $this->app->input->get('view');
+		$layout = $this->app->input->get('layout');
+		$print  = $this->app->input->get('print');
 
 		switch ($jlayout)
 		{
 			case 'Component':
-				return ($option == 'com_fjrelated');
+				return ($option === 'com_fjrelated');
 				break;
 			case 'CatBlog':
-				return ($view == 'fjrelated' && ($layout == 'blog'));
+				return ($view === 'fjrelated' && $layout === 'blog');
 				break;
 			case 'Blog':
-				return ($layout == 'blog');
+				return ($layout === 'blog');
 				break;
 			case 'Print':
 				return ($print == '1');
@@ -51,7 +52,6 @@ class plgContentJUMultiThumb_com_fjrelated
 
 	public function jViewLink($article)
 	{
-
 		require_once JPATH_SITE . '/components/com_content/helpers/route.php';
 
 		if($article->params->get('access-view'))
@@ -60,7 +60,7 @@ class plgContentJUMultiThumb_com_fjrelated
 		}
 		else
 		{
-			$menu      = JFactory::getApplication()->getMenu();
+			$menu      = $this->app->getMenu();
 			$active    = $menu->getActive();
 			$itemId    = $active->id;
 			$link1     = JRoute::_('index.php?option=com_users&view=login&Itemid=' . $itemId);

@@ -10,6 +10,8 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.archive');
@@ -18,7 +20,7 @@ jimport('joomla.error.error');
 
 class Pkg_JUMultiThumbInstallerScript
 {
-	protected $dbSupport = array('mysql', 'mysqli', 'postgresql', 'sqlsrv', 'sqlazure');
+	protected $dbSupport = ['mysql', 'mysqli', 'postgresql', 'sqlsrv', 'sqlazure'];
 	protected $message;
 	protected $status;
 	protected $sourcePath;
@@ -29,7 +31,8 @@ class Pkg_JUMultiThumbInstallerScript
 	 *
 	 * @return bool
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function preflight($type, $parent)
 	{
@@ -43,7 +46,7 @@ class Pkg_JUMultiThumbInstallerScript
 		$lang = JFactory::getLanguage();
 		$lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
 
-		if(!in_array(JFactory::getDbo()->name, $this->dbSupport))
+		if(!in_array(JFactory::getDbo()->name, $this->dbSupport, true))
 		{
 			JFactory::getApplication()->enqueueMessage(JText::_('PLG_JUMULTITHUMB_ERROR_DB_SUPPORT'), 'error');
 
@@ -69,17 +72,17 @@ class Pkg_JUMultiThumbInstallerScript
 	 *
 	 * @return bool
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
 	public function MakeDirectory($dir, $mode)
 	{
-		if(is_dir($dir) || @mkdir($dir, $mode))
+		if(mkdir($dir, $mode) || is_dir($dir))
 		{
 			$indexfile = $dir . '/index.html';
 			if(!file_exists($indexfile))
 			{
-				$file = fopen($indexfile, 'w');
-				fputs($file, '<!DOCTYPE html><title></title>');
+				$file = fopen($indexfile, 'wb');
+				fwrite($file, '<!DOCTYPE html><title></title>');
 				fclose($file);
 			}
 
@@ -106,35 +109,30 @@ class Pkg_JUMultiThumbInstallerScript
 
 	public function postflight($type, $parent, $results)
 	{
-		$enabled  = array();
-		$newalert = '';
+		$enabled  = [];
 
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$app   = JFactory::getApplication();
+		$app   = Factory::getApplication();
 
 		$version = new JVersion;
 		$joomla  = substr($version->getShortVersion(), 0, 3);
 
-		$qv = $db->getQuery(true);
 		$qv = 'UPDATE `#__extensions` SET `enabled` = 1, `ordering` = -100 WHERE `element` = ' . $db->Quote('jumultithumb') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
 		$db->setQuery($qv);
-		$db->query();
+		$db->execute();
 
-		$qv = $db->getQuery(true);
 		$qv = 'UPDATE `#__extensions` SET `enabled` = 1, `ordering` = -99 WHERE `element` = ' . $db->Quote('jumultithumb_gallery') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
 		$db->setQuery($qv);
-		$db->query();
+		$db->execute();
 
-		$qv = $db->getQuery(true);
 		$qv = 'UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = ' . $db->Quote('jumultithumb_editorbutton') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
 		$db->setQuery($qv);
-		$db->query();
+		$db->execute();
 
-		$qv = $db->getQuery(true);
 		$qv = 'UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = ' . $db->Quote('jumultithumb_contentform') . ' AND `type` = ' . $db->Quote('plugin') . ' AND `client_id` = 0';
 		$db->setQuery($qv);
-		$db->query();
+		$db->execute();
 
 		foreach ($results as $result)
 		{
@@ -239,28 +237,34 @@ class Pkg_JUMultiThumbInstallerScript
 
 		$path = JPATH_SITE . '/plugins/content/jumultithumb/';
 
-		$files = array(
+		$files = [
 			$path . 'assets/jumultithumb.jpg',
 			$path . 'assets/close.png',
 			$path . 'assets/toggler.js',
 			$path . 'assets/script.js',
 			$path . 'assets/style.css'
-		);
+		];
 
-		$folders = array(
+		$folders = [
 			$path . 'img'
-		);
+		];
 
 		$i = 0;
 		foreach ($files AS $file)
 		{
-			if(file_exists($file)) $i++;
+			if(file_exists($file))
+			{
+				$i++;
+			}
 		}
 
 		$j = 0;
 		foreach ($folders AS $folder)
 		{
-			if(is_dir($folder)) $j++;
+			if(is_dir($folder))
+			{
+				$j++;
+			}
 		}
 
 		if(($i + $j) > 0)
@@ -325,7 +329,8 @@ class Pkg_JUMultiThumbInstallerScript
 	 * @param $deleteRootToo
 	 *
 	 *
-	 * @since 6.0
+	 * @since 7.0
+	 * @return string|void
 	 */
 	public function unlinkRecursive($dir, $deleteRootToo)
 	{
@@ -336,7 +341,7 @@ class Pkg_JUMultiThumbInstallerScript
 
 		while (false !== ($obj = readdir($dh)))
 		{
-			if($obj == '.' || $obj == '..')
+			if($obj === '.' || $obj === '..')
 			{
 				continue;
 			}
@@ -349,7 +354,10 @@ class Pkg_JUMultiThumbInstallerScript
 
 		closedir($dh);
 
-		if($deleteRootToo) @rmdir($dir);
+		if($deleteRootToo)
+		{
+			@rmdir($dir);
+		}
 
 		return;
 	}

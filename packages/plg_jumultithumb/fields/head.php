@@ -12,7 +12,9 @@
 
 defined('JPATH_BASE') or die;
 
-$doc     = JFactory::getDocument();
+use Joomla\CMS\Factory;
+
+$doc     = Factory::getDocument();
 $adm_url = str_replace('/administrator', '', JURI::base());
 
 $doc->addStyleSheet($adm_url . 'plugins/content/jumultithumb/assets/css/jumultithumb.css?v=2');

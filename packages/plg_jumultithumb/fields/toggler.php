@@ -12,5 +12,5 @@
 
 defined( '_JEXEC' ) or die();
 
-include('head.php');
-include('toggler34.php');
+include 'head.php';
+include 'toggler34.php';

@@ -2,13 +2,13 @@
 <extension version="3.1" type="plugin" group="editors-xtd" method="upgrade">
     <name>plg_jumultithumb_editorbutton</name>
     <author>Denys Nosov</author>
-    <creationDate>05.01.2018</creationDate>
+    <creationDate>@date@</creationDate>
     <copyright>(C) 2007-2018 Denys Nosov. All rights reserved.</copyright>
     <license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
     </license>
     <authorEmail>denys@joomla-ua.org</authorEmail>
     <authorUrl>joomla-ua.org</authorUrl>
-    <version>7.0.5</version>
+    <version>@version@</version>
     <description>PLG_JUMULTITHUMB_XML_DESCRIPTION</description>
     <files>
         <filename plugin="jumultithumb_editorbutton">jumultithumb_editorbutton.php</filename>

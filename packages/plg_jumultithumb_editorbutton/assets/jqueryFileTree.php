@@ -27,7 +27,7 @@ else
 	header('Access-Control-Allow-Origin: *');
 }
 
-if(strtolower($_SERVER['REQUEST_METHOD']) == 'options')
+if(strtolower($_SERVER['REQUEST_METHOD']) === 'options')
 {
 	header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 	header('Access-Control-Allow-Headers: X-Requested-With, Accept');
@@ -40,23 +40,23 @@ $_POST['dir'] = urldecode($_SERVER['DOCUMENT_ROOT'] . '/' . $_POST['dir']);
 
 if(file_exists($_POST['dir']))
 {
-	$files = scandir($_POST['dir']);
+	$files = scandir($_POST['dir'], SCANDIR_SORT_NONE);
 	natcasesort($files);
 
 	if(count($files) > 2)
 	{
 		/* The 2 accounts for . and .. */
-		echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
+		echo '<ul class="jqueryFileTree" style="display: none;">';
 
 		// All dirs
 		foreach ($files as $file)
 		{
-			if(file_exists($_POST['dir'] . $file) && $file != '.' && $file != '..' && is_dir($_POST['dir'] . $file))
+			if(file_exists($_POST['dir'] . $file) && $file !== '.' && $file !== '..' && is_dir($_POST['dir'] . $file))
 			{
-				echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities(str_replace($_SERVER['DOCUMENT_ROOT'] . '/', '', $_POST['dir']) . $file) . "/\">" . htmlentities($file) . "</a></li>";
+				echo '<li class="directory collapsed"><a href="#" rel="' . htmlentities(str_replace($_SERVER['DOCUMENT_ROOT'] . '/', '', $_POST['dir']) . $file) . '/">' . htmlentities($file) . '</a></li>';
 			}
 		}
 
-		echo "</ul>";
+		echo '</ul>';
 	}
 }

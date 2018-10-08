@@ -22,13 +22,13 @@ class JFormFieldModal_CSS extends JFormField
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
 	protected function getInput()
 	{
 		JHtml::_('behavior.modal', 'a.modal');
 
-		$script   = array();
+		$script   = [];
 		$script[] = '	function jSelectArticle_' . $this->id . '(id, title, catid, object) {';
 		$script[] = '		document.id("' . $this->id . '_id").value = id;';
 		$script[] = '		document.id("' . $this->id . '_name").value = title;';
@@ -37,7 +37,7 @@ class JFormFieldModal_CSS extends JFormField
 
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
-		$html = array();
+		$html = [];
 		$link = str_replace('administrator/', '', JURI::base()) . 'plugins/content/jumultithumb/load/css.php';
 
 		$html[] = '<a class="modal btn btn-primary" title="' . JText::_('PLG_JUMULTITHUMB_CSS_UPLOAD') . '" href="' . $link . '" rel="{handler: \'iframe\', size: {x: 900, y: 550}}"><i class="icon-apply icon-white"></i> ' . JText::_('PLG_JUMULTITHUMB_CSS_UPLOAD') . '</a>';

@@ -23,7 +23,8 @@ class plgButtonJUmultithumb_EditorButton extends JPlugin
 	 *
 	 * @return bool|JObject
 	 *
-	 * @since 6.0
+	 * @throws Exception
+	 * @since 7.0
 	 */
 	public function onDisplay($name, $asset, $author)
 	{
@@ -31,7 +32,10 @@ class plgButtonJUmultithumb_EditorButton extends JPlugin
 		$user      = JFactory::getUser();
 		$extension = $app->input->get('option');
 
-		if($asset == '') $asset = $extension;
+		if($asset == '')
+		{
+			$asset = $extension;
+		}
 
 		if($user->authorise('core.edit', $asset)
 			|| $user->authorise('core.create', $asset)
@@ -55,9 +59,7 @@ class plgButtonJUmultithumb_EditorButton extends JPlugin
 
 			return $button;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 }

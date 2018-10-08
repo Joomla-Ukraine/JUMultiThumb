@@ -11,15 +11,17 @@
  */
 
 define('_JEXEC', 1);
-define('JPATH_BASE', __DIR__ . "/../../../..");
-define("MAX_SIZE", "500");
+define('JPATH_BASE', __DIR__ . '/../../../..');
+define('MAX_SIZE', '500');
 
-require_once(JPATH_BASE . '/includes/defines.php');
-require_once(JPATH_BASE . '/includes/framework.php');
+require_once JPATH_BASE . '/includes/defines.php';
+require_once JPATH_BASE . '/includes/framework.php';
 
-$mainframe  = JFactory::getApplication('administrator');
-$joomlaUser = JFactory::getUser();
-$lang       = JFactory::getLanguage();
+use Joomla\CMS\Factory;
+
+$mainframe  = Factory::getApplication('administrator');
+$joomlaUser = Factory::getUser();
+$lang       = Factory::getLanguage();
 $lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
 
 $csslink = '<link href="../../../../administrator/templates/isis/css/template.css" rel="stylesheet" type="text/css" />
@@ -27,12 +29,12 @@ $csslink = '<link href="../../../../administrator/templates/isis/css/template.cs
 
 function alert($text, $error)
 {
-	if($error == 'message')
+	if($error === 'message')
 	{
 		$error = 'alert-info';
 	}
 
-	if($error == 'notice')
+	if($error === 'notice')
 	{
 		$error = 'alert-error';
 	}
@@ -92,27 +94,24 @@ License: Free
 
 if(!file_exists($style))
 {
-	$file = fopen($style, 'w');
-	fputs($file, $newcss);
+	$file = fopen($style, 'wb');
+	fwrite($file, $newcss);
 	fclose($file);
 	$notice = alert(JText::_('PLG_JUMULTITHUMB_NOTICE1') . '<br>' . JText::_('PLG_JUMULTITHUMB_NOTICE2'), 'notice');
 }
 
-if(file_exists($style))
+if(file_exists($style) && !empty($_POST['txt']))
 {
-	if(!empty($_POST['txt']))
-	{
-		$file = fopen($style, 'w');
-		fputs($file, $_POST['txt']);
-		fclose($file);
-		$notice = alert(JText::_('PLG_JUMULTITHUMB_NOTICE3'), 'message');
-	}
+	$file = fopen($style, 'wb');
+	fwrite($file, $_POST['txt']);
+	fclose($file);
+	$notice = alert(JText::_('PLG_JUMULTITHUMB_NOTICE3'), 'message');
 }
 
 if(filesize($style) < 3)
 {
-	$file = fopen($style, 'w');
-	fputs($file, $newcss);
+	$file = fopen($style, 'wb');
+	fwrite($file, $newcss);
 	fclose($file);
 	$notice = alert(JText::_('PLG_JUMULTITHUMB_NOTICE4') . '<br>' . JText::_('PLG_JUMULTITHUMB_NOTICE5'), 'notice');
 }
@@ -140,14 +139,15 @@ if(filesize($style) < 3)
     </style>
 </head>
 <body>
-<?php if(isset($notice)) echo $notice; ?>
+<?php if(isset($notice))
+{
+	echo $notice;
+} ?>
 <form action="css.php" method="post">
 
-    <legend>
-		<?php echo JText::_('PLG_JUMULTITHUMB_CSS_FRONT'); ?>
-        <button type="submit" class="btn btn-primary right"><i
-                    class="icon-apply icon-white"></i> <?php echo JText::_('PLG_JUMULTITHUMB_CSS_SAVE'); ?></button>
-    </legend>
+	<?php echo JText::_('PLG_JUMULTITHUMB_CSS_FRONT'); ?>
+    <button type="submit" class="btn btn-primary right"><i
+                class="icon-apply icon-white"></i> <?php echo JText::_('PLG_JUMULTITHUMB_CSS_SAVE'); ?></button>
 
     <textarea name="txt" style="width: 100%; height: 585px; clear: both;"
               id="css_source"><?php readfile($style); ?></textarea>

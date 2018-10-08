@@ -22,7 +22,7 @@ class AutoLinks
 	 *
 	 * @return null|string|string[]
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
 	public function handleImgLinks(&$text, $title, $link, $onlyFirstImage)
 	{
@@ -31,16 +31,16 @@ class AutoLinks
 			return $text;
 		}
 
-		$regex = "/<img[^>]+>/i";
+		$regex = '/<img[^>]+>/i';
 		$this->_replaceImg(null, $link, $title);
 
 		if($onlyFirstImage)
 		{
-			$text = preg_replace_callback($regex, array($this, '_replaceImg'), $text, 1);
+			$text = preg_replace_callback($regex, [$this, '_replaceImg'], $text, 1);
 		}
 		else
 		{
-			$text = preg_replace_callback($regex, array($this, '_replaceImg'), $text);
+			$text = preg_replace_callback($regex, [$this, '_replaceImg'], $text);
 		}
 
 		return $text;
@@ -53,7 +53,7 @@ class AutoLinks
 	 *
 	 * @return string
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
 	public function _replaceImg($matches, $link = null, $title = null)
 	{
@@ -61,11 +61,10 @@ class AutoLinks
 
 		static $_title;
 
-		if(isset($link) && isset($title))
+		if($title !== null)
 		{
 			$_link  = $link;
-			$title  = str_replace("'", ' ', $title);
-			$title  = str_replace('"', ' ', $title);
+			$title  = str_replace(["'", '"'], ' ', $title);
 			$_title = $title;
 			$html   = '';
 		}

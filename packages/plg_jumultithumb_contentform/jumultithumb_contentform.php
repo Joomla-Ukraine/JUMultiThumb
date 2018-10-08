@@ -21,6 +21,8 @@ class plgContentJUMultithumb_ContentForm extends JPlugin
 	 *
 	 * @param $subject
 	 * @param $config
+	 *
+	 * @since 7.0
 	 */
 	public function __construct(& $subject, $config)
 	{
@@ -33,9 +35,9 @@ class plgContentJUMultithumb_ContentForm extends JPlugin
 	 *
 	 * @return bool
 	 *
-	 * @since 6.0
+	 * @since 7.0
 	 */
-	function onContentPrepareForm($form, $data)
+	public function onContentPrepareForm($form, $data)
 	{
 		if(!($form instanceof JForm))
 		{
@@ -44,7 +46,7 @@ class plgContentJUMultithumb_ContentForm extends JPlugin
 			return false;
 		}
 
-		if(in_array($form->getName(), array('com_content.article')) == false)
+		if($form->getName() !== 'com_content.article')
 		{
 			return true;
 		}

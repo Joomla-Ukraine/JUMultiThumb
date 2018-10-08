@@ -11,16 +11,17 @@
  */
 
 define('_JEXEC', 1);
-define('JPATH_BASE', __DIR__ . "/../../../../..");
-define("MAX_SIZE", "500");
+define('JPATH_BASE', __DIR__ . '/../../../../..');
+define('MAX_SIZE', '500');
 
-require_once(JPATH_BASE . '/includes/defines.php');
-require_once(JPATH_BASE . '/includes/framework.php');
+require_once JPATH_BASE . '/includes/defines.php';
+require_once JPATH_BASE . '/includes/framework.php';
 
-$mainframe = JFactory::getApplication('administrator');
+use Joomla\CMS\Factory;
 
-$joomlaUser = JFactory::getUser();
-$lang       = JFactory::getLanguage();
+$app        = Factory::getApplication('administrator');
+$joomlaUser = Factory::getUser();
+$lang       = Factory::getLanguage();
 $lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
 
 /**
@@ -29,16 +30,16 @@ $lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
  *
  * @return string
  *
- * @since 6.0
+ * @since 7.0
  */
 function alert($text, $error)
 {
-	if($error == 'message')
+	if($error === 'message')
 	{
 		$error = 'alert-info';
 	}
 
-	if($error == 'notice')
+	if($error === 'notice')
 	{
 		$error = 'alert-error';
 	}
@@ -51,21 +52,20 @@ function alert($text, $error)
  *
  * @return bool|string
  *
- * @since 6.0
+ * @since 7.0
  */
 function getExtension($str)
 {
-	$i = strrpos($str, ".");
+	$i = strrpos($str, '.');
 
 	if(!$i)
 	{
-		return "";
+		return '';
 	}
 
-	$l   = strlen($str) - $i;
-	$ext = substr($str, $i + 1, $l);
+	$l = strlen($str) - $i;
 
-	return $ext;
+	return substr($str, $i + 1, $l);
 }
 
 $csslink = '<link href="../../../../../administrator/templates/isis/css/template.css" rel="stylesheet" type="text/css" /><link href="../../../../../media/jui/css/bootstrap.css" rel="stylesheet" type="text/css" />';
@@ -83,68 +83,65 @@ if($joomlaUser->get('id') < 1)
 }
 
 $errors = 0;
-if(isset($_POST['Submit']))
+if(isset($_POST['Submit'], $_FILES['image']['name']))
 {
-	if(isset($_FILES['image']['name']))
-	{
-		$filename  = stripslashes($_FILES['image']['name']);
-		$extension = getExtension($filename);
-		$extension = strtolower($extension);
+	$filename  = stripslashes($_FILES['image']['name']);
+	$extension = getExtension($filename);
+	$extension = strtolower($extension);
 
-		if(($extension != "png"))
+	if($extension != 'png')
+	{
+		if(isset($_POST['watermark']) == 'big')
+		{
+			$unknownext = alert(JText::_('PLG_JUMULTITHUMB_NOTICE6'), 'notice');
+		}
+        elseif(isset($_POST['watermark']) == 'small')
+		{
+			$unknownext_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE6'), 'notice');
+		}
+		$errors = 1;
+	}
+	else
+	{
+		$size = $_FILES['image']['size'];
+		if($size > MAX_SIZE * 1000024)
 		{
 			if(isset($_POST['watermark']) == 'big')
 			{
-				$unknownext = alert(JText::_('PLG_JUMULTITHUMB_NOTICE6'), 'notice');
+				$limitimg = alert(JText::_('PLG_JUMULTITHUMB_NOTICE7'), 'notice');
 			}
             elseif(isset($_POST['watermark']) == 'small')
 			{
-				$unknownext_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE6'), 'notice');
+				$limitimg_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE7'), 'notice');
 			}
+
 			$errors = 1;
 		}
-		else
+
+		if($_POST['watermark'] == 'big')
 		{
-			$size = $_FILES['image']['size'];
-			if($size > MAX_SIZE * 1000024)
+			$image_name = 'w.png';
+		}
+        elseif($_POST['watermark'] == 'small')
+		{
+			$image_name = 'ws.png';
+		}
+
+		if(!($size > MAX_SIZE * 1000024))
+		{
+			$newname = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/' . $image_name;
+
+			if(!move_uploaded_file($_FILES['image']['tmp_name'], $newname))
 			{
 				if(isset($_POST['watermark']) == 'big')
 				{
-					$limitimg = alert(JText::_('PLG_JUMULTITHUMB_NOTICE7'), 'notice');
+					$uploadunsuccessfull = alert(JText::_('PLG_JUMULTITHUMB_NOTICE8'), 'notice');
 				}
                 elseif(isset($_POST['watermark']) == 'small')
 				{
-					$limitimg_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE7'), 'notice');
+					$uploadunsuccessfull_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE8'), 'notice');
 				}
-
 				$errors = 1;
-			}
-
-			if($_POST['watermark'] == 'big')
-			{
-				$image_name = 'w.png';
-			}
-            elseif($_POST['watermark'] == 'small')
-			{
-				$image_name = 'ws.png';
-			}
-
-			if(!($size > MAX_SIZE * 1000024))
-			{
-				$newname = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/' . $image_name;
-
-				if(!move_uploaded_file($_FILES['image']['tmp_name'], $newname))
-				{
-					if(isset($_POST['watermark']) == 'big')
-					{
-						$uploadunsuccessfull = alert(JText::_('PLG_JUMULTITHUMB_NOTICE8'), 'notice');
-					}
-                    elseif(isset($_POST['watermark']) == 'small')
-					{
-						$uploadunsuccessfull_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE8'), 'notice');
-					}
-					$errors = 1;
-				}
 			}
 		}
 	}
@@ -152,17 +149,17 @@ if(isset($_POST['Submit']))
 
 if(isset($_POST['Submit']) && !$errors)
 {
-	if(isset($_POST['watermark']) == 'big')
+	if(isset($_POST['watermark']) === 'big')
 	{
 		$uploadsucess = alert(JText::_('PLG_JUMULTITHUMB_NOTICE9'), 'message');
 	}
-    elseif(isset($_POST['watermark']) == 'small')
+    elseif(isset($_POST['watermark']) === 'small')
 	{
 		$uploadsucess_s = alert(JText::_('PLG_JUMULTITHUMB_NOTICE9'), 'message');
 	}
 }
 
-if(JRequest::getString('del') == 'big')
+if($app->input->getCmd('del') === 'big')
 {
 	if(is_file(JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png'))
 	{
@@ -174,7 +171,7 @@ if(JRequest::getString('del') == 'big')
 		$noticewb = alert(JText::_('PLG_JUMULTITHUMB_NOTICE11'), 'notice');
 	}
 }
-elseif(JRequest::getString('del') == 'small')
+elseif($app->input->getCmd('del') === 'small')
 {
 	if(is_file(JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png'))
 	{
