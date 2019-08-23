@@ -167,6 +167,13 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 			$watermark_gallery   = $attribs->watermark_gallery;
 			$watermark_gallery_s = $attribs->watermark_gallery_s;
 
+			$attribs = json_decode($article->attribs);
+			$use_wm  = 1;
+			if($attribs->watermark_off)
+			{
+				$use_wm = 0;
+			}
+
 			foreach($matches as $match)
 			{
 				$matcheslist = explode('|', $match[ 1 ]);
@@ -372,20 +379,23 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 
 						// Watermark
 						$wmi = '';
-						if($watermark_gallery == '1' || $a_watermarkgall == '1')
+						if($use_wm == 1)
 						{
-							$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
-							if(is_file($wmfile))
+							if($watermark_gallery == '1' || $a_watermarkgall == '1')
 							{
-								$watermark = $wmfile;
-							}
-							else
-							{
-								$wmfile    = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
-								$watermark = $wmfile;
-							}
+								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
+								if(is_file($wmfile))
+								{
+									$watermark = $wmfile;
+								}
+								else
+								{
+									$wmfile    = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
+									$watermark = $wmfile;
+								}
 
-							$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
+								$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
+							}
 						}
 
 						$imgsource = $file;
@@ -405,19 +415,22 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 
 						// Small watermark
 						$wmi_s = '';
-						if($watermark_gallery_s == '1' || $a_watermarkgall_s == '1')
+						if($use_wm == 1)
 						{
-							$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
-							if(is_file($wmfile))
+							if($watermark_gallery_s == '1' || $a_watermarkgall_s == '1')
 							{
-								$watermark_s = $wmfile;
+								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
+								if(is_file($wmfile))
+								{
+									$watermark_s = $wmfile;
+								}
+								else
+								{
+									$wmfile      = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
+									$watermark_s = $wmfile;
+								}
+								$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
 							}
-							else
-							{
-								$wmfile      = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
-								$watermark_s = $wmfile;
-							}
-							$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
 						}
 
 						$imgparams = [
@@ -430,23 +443,20 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 						];
 
 						$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams);
-
-						$thumb_img = $this->juimg->render($file, $_imgparams);
-						$_title    = ($galltitle == '' ? $img_title : $galltitle . '. ' . $img_title);
-						$_title    = mb_strtoupper(mb_substr($_title, 0, 1)) . mb_substr($_title, 1);
+						$thumb_img  = $this->juimg->render($file, $_imgparams);
+						$_title     = ($galltitle == '' ? $img_title : $galltitle . '. ' . $img_title);
+						$_title     = mb_strtoupper(mb_substr($_title, 0, 1)) . mb_substr($_title, 1);
 
 						$_gallery[] = $this->_image($thumb_img, $gallwidth, $gallheight, null, $_title, 0, $_title, $imgsource, $file, $lightbox);
 					}
 
-					$gallery = implode($_gallery);
-
+					$gallery  = implode($_gallery);
 					$template = $this->app->getTemplate();
 					$tmpl     = $this->getTmpl($template, 'gallery');
 
 					ob_start();
 					require $tmpl;
-					$html = ob_get_contents();
-					ob_end_clean();
+					$html = ob_get_clean();
 				}
 
 				$text = preg_replace($regex, $html, $text, 1);
@@ -503,9 +513,8 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 
 		ob_start();
 		require $tmpl;
-		$img = ob_get_clean();
 
-		return $img;
+		return ob_get_clean();
 	}
 
 	/**

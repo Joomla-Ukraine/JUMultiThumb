@@ -128,16 +128,11 @@ class plgContentjumultithumb extends CMSPlugin
 		{
 			$attribs = json_decode($article->attribs);
 
-			$watermark_into_only = 0;
-			if(isset($attribs->watermark_intro_only))
+			$use_wm = 1;
+			if(isset($attribs->watermark_intro_only) == 1)
 			{
 				$watermark_into_only = $attribs->watermark_intro_only;
-			}
-
-			$use_wm = 1;
-			if($watermark_into_only == 1)
-			{
-				$use_wm = 0;
+				$use_wm              = 0;
 			}
 
 			$article->fulltext = @$this->ImgReplace($article->fulltext, $article, $use_wm);
@@ -227,6 +222,13 @@ class plgContentjumultithumb extends CMSPlugin
 		$thumb_brit_seting       = $this->params->get('thumb_brit_seting', 50);
 		$thumb_cont              = $this->params->get('thumb_cont', 0);
 		$thumb_cont_seting       = $this->params->get('thumb_cont_seting', 50);
+
+		$attribs = json_decode($article->attribs);
+		$use_wm  = 1;
+		if($attribs->watermark_off)
+		{
+			$use_wm = 0;
+		}
 
 		switch($thumb_filtercolor)
 		{
@@ -719,20 +721,23 @@ class plgContentjumultithumb extends CMSPlugin
 
 			// Watermark
 			$wmi = '';
-			if($watermark_o == '1' || $_image_noresize == '1' || $this->params->get('a_watermark') == '1' || $this->params->get('a_watermarknew1') == '1' || $this->params->get('a_watermarknew2') == '1' || $this->params->get('a_watermarknew3') == '1' || $this->params->get('a_watermarknew4') == '1' || $this->params->get('a_watermarknew5') == '1')
+			if($use_wm == 1)
 			{
-				$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
-				if(is_file($wmfile))
+				if($watermark_o == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1)
 				{
-					$watermark = $wmfile;
-				}
-				else
-				{
-					$wmfile    = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
-					$watermark = $wmfile;
-				}
+					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
+					if(is_file($wmfile))
+					{
+						$watermark = $wmfile;
+					}
+					else
+					{
+						$wmfile    = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
+						$watermark = $wmfile;
+					}
 
-				$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
+					$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
+				}
 			}
 
 			$_width  = '';
@@ -763,20 +768,23 @@ class plgContentjumultithumb extends CMSPlugin
 
 			// Small watermark
 			$wmi_s = '';
-			if($watermark_s == '1' || $this->params->get('a_watermark_s') == '1' || $this->params->get('a_watermarknew1_s') == '1' || $this->params->get('a_watermarknew2_s') == '1' || $this->params->get('a_watermarknew3_s') == '1' || $this->params->get('a_watermarknew4_s') == '1' || $this->params->get('a_watermarknew5_s') == '1')
+			if($use_wm == 1)
 			{
-				$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
-				if(is_file($wmfile))
+				if($watermark_s == '1' || $this->params->get('a_watermark_s') == '1' || $this->params->get('a_watermarknew1_s') == '1' || $this->params->get('a_watermarknew2_s') == '1' || $this->params->get('a_watermarknew3_s') == '1' || $this->params->get('a_watermarknew4_s') == '1' || $this->params->get('a_watermarknew5_s') == '1')
 				{
-					$watermark_s = $wmfile;
-				}
-				else
-				{
-					$wmfile      = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
-					$watermark_s = $wmfile;
-				}
+					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
+					if(is_file($wmfile))
+					{
+						$watermark_s = $wmfile;
+					}
+					else
+					{
+						$wmfile      = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
+						$watermark_s = $wmfile;
+					}
 
-				$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
+					$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
+				}
 			}
 
 			if($_image_noresize == '1')
