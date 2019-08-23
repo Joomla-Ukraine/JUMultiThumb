@@ -59,7 +59,7 @@ defined('_JEXEC') or die;
                 <meta itemprop="height" content="<?php echo $_h; ?>" />
                 <?php endif; ?>
 
-                <?php if($_alt != ''): ?>
+                <?php if($_alt !== ''): ?>
                     <?php if($_caption == 1): ?>
                     <figcaption
                         itemprop="caption"

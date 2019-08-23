@@ -10,9 +10,10 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
-
 use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
+
+defined('_JEXEC') or die;
 
 class plgContentJUMultiThumb_com_fjrelated
 {
@@ -31,7 +32,7 @@ class plgContentJUMultiThumb_com_fjrelated
 		$layout = $this->app->input->get('layout');
 		$print  = $this->app->input->get('print');
 
-		switch ($jlayout)
+		switch($jlayout)
 		{
 			case 'Component':
 				return ($option === 'com_fjrelated');
@@ -56,15 +57,14 @@ class plgContentJUMultiThumb_com_fjrelated
 
 		if($article->params->get('access-view'))
 		{
-			$link = JRoute::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
+			$link = Route::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
 		}
 		else
 		{
-			$menu      = $this->app->getMenu();
-			$active    = $menu->getActive();
+			$active    = $this->app->getMenu()->getActive();
 			$itemId    = $active->id;
-			$link1     = JRoute::_('index.php?option=com_users&view=login&Itemid=' . $itemId);
-			$returnURL = JRoute::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
+			$link1     = Route::_('index.php?option=com_users&view=login&Itemid=' . $itemId);
+			$returnURL = Route::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
 			$link      = new JURI($link1);
 
 			$link->setVar('return', base64_encode($returnURL));

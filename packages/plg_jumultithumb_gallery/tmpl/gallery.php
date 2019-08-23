@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
 
 ?>
 <div class="juphotogallery<?php echo (isset($gallstyle) ? ' '. $gallstyle : ''); ?>">
-    <?php if($galltitle != '') : ?>
+    <?php if($galltitle !== '') : ?>
     <h3 class="jutitlegallery">
         <?php echo $galltitle; ?>
     </h3>

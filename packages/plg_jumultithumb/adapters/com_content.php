@@ -10,6 +10,9 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
 class plgContentJUMultiThumb_com_content
@@ -21,12 +24,13 @@ class plgContentJUMultiThumb_com_content
 	 *
 	 * @param $plugin
 	 *
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function __construct(&$plugin)
 	{
 		$this->plugin = &$plugin;
-		$this->app = JFactory::getApplication();
+		$this->app    = Factory::getApplication();
 	}
 
 	/**
@@ -44,7 +48,7 @@ class plgContentJUMultiThumb_com_content
 		$layout = $this->app->input->get('layout');
 		$print  = $this->app->input->get('print');
 
-		switch ($jlayout)
+		switch($jlayout)
 		{
 			case 'Component':
 				return ($option === 'com_content');
@@ -96,15 +100,14 @@ class plgContentJUMultiThumb_com_content
 
 		if($article->params->get('access-view'))
 		{
-			$link = JRoute::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
+			$link = Route::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
 		}
 		else
 		{
-			$menu      = JFactory::getApplication()->getMenu();
-			$active    = $menu->getActive();
+			$active    = $this->app->getMenu()->getActive();
 			$itemId    = $active->id;
-			$link1     = JRoute::_('index.php?option=com_users&view=login&Itemid=' . $itemId);
-			$returnURL = JRoute::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
+			$link1     = Route::_('index.php?option=com_users&view=login&Itemid=' . $itemId);
+			$returnURL = Route::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));
 			$link      = new JURI($link1);
 
 			$link->setVar('return', base64_encode($returnURL));

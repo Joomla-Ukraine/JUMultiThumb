@@ -12,8 +12,6 @@
 
 defined('JPATH_BASE') or die;
 
-jimport('joomla.form.formfield');
-
 class JFormFieldModal_CSS extends JFormField
 {
 	protected $type = 'Modal_CSS';
@@ -28,14 +26,12 @@ class JFormFieldModal_CSS extends JFormField
 	{
 		JHtml::_('behavior.modal', 'a.modal');
 
-		$script   = [];
-		$script[] = '	function jSelectArticle_' . $this->id . '(id, title, catid, object) {';
-		$script[] = '		document.id("' . $this->id . '_id").value = id;';
-		$script[] = '		document.id("' . $this->id . '_name").value = title;';
-		$script[] = '		SqueezeBox.close();';
-		$script[] = '	}';
+		$script   = 'function jSelectArticle_' . $this->id . '(id, title, catid, object) {
+		document.id("' . $this->id . '_id").value = id;
+		document.id("' . $this->id . '_name").value = title;SqueezeBox.close();
+		}';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		JFactory::getDocument()->addScriptDeclaration($script);
 
 		$html = [];
 		$link = str_replace('administrator/', '', JURI::base()) . 'plugins/content/jumultithumb/load/css.php';

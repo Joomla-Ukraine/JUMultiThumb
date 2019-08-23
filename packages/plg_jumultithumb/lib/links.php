@@ -24,7 +24,7 @@ class AutoLinks
 	 *
 	 * @since 7.0
 	 */
-	public function handleImgLinks(&$text, $title, $link, $onlyFirstImage)
+	public function handleImgLinks($text, $title, $link, $onlyFirstImage)
 	{
 		if(empty($link))
 		{
@@ -36,12 +36,18 @@ class AutoLinks
 
 		if($onlyFirstImage)
 		{
-			$text = preg_replace_callback($regex, [$this, '_replaceImg'], $text, 1);
+			$text = preg_replace_callback($regex, [
+				$this,
+				'_replaceImg'
+			], $text, 1);
+
+			return $text;
 		}
-		else
-		{
-			$text = preg_replace_callback($regex, [$this, '_replaceImg'], $text);
-		}
+
+		$text = preg_replace_callback($regex, [
+			$this,
+			'_replaceImg'
+		], $text);
 
 		return $text;
 	}
@@ -58,22 +64,21 @@ class AutoLinks
 	public function _replaceImg($matches, $link = null, $title = null)
 	{
 		static $_link;
-
 		static $_title;
 
 		if($title !== null)
 		{
 			$_link  = $link;
-			$title  = str_replace(["'", '"'], ' ', $title);
+			$title  = str_replace([ "'", '"' ], ' ', $title);
 			$_title = $title;
 			$html   = '';
+
+			return $html;
 		}
-		else
-		{
-			$img  = $matches[0];
-			$img  = str_replace('alt=""', 'alt="' . trim($_title) . '"', $img);
-			$html = '<a href="' . $_link . '">' . $img . '</a>';
-		}
+
+		$img  = $matches[ 0 ];
+		$img  = str_replace('alt=""', 'alt="' . trim($_title) . '"', $img);
+		$html = '<a href="' . $_link . '">' . $img . '</a>';
 
 		return $html;
 	}
