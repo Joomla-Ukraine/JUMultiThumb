@@ -1,19 +1,15 @@
 <project name="jumultithumb" default="dist" basedir=".">
 
-    <property name="VERSION" value="7.1.3"/>
-
+    <property name="VERSION" value="7.1.4"/>
+    <property name="juimage" value="3.6.8"/>
     <property name="JOOMLA" value="3.8.13"/>
 
     <tstamp>
         <format property="DATE" pattern="%d.%m.%Y" />
     </tstamp>
 
-    <property name="julib" value="2.9.1"/>
-
     <property name="build" value="build"/>
-
     <property name="temp" value="temp"/>
-
     <property name="dist" value="dist"/>
 
     <property name="filename" value="pkg_jumultithumb_v${VERSION}.zip"/>
@@ -47,7 +43,7 @@
                 <replacetokens>
                     <token key="version" value="${VERSION}" />
                     <token key="date" value="${DATE}" />
-                    <token key="julib" value="${julib}" />
+                    <token key="juimage" value="${juimage}" />
                 </replacetokens>
             </filterchain>
         </copy>
@@ -130,7 +126,7 @@
             <fileset dir="${temp}/plg_jumultithumb_editorbutton"/>
         </zip>
 
-        <copy file="../JULib/dist/lib_julib_v${julib}.zip" todir="${build}/packages"/>
+        <copy file="../JUImage/dist/lib_juimage_v${juimage}.zip" todir="${build}/packages"/>
 
         <copy todir="${build}/language">
             <fileset dir="${temp}/language">

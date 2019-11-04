@@ -13,7 +13,6 @@
     <files>
         <filename plugin="jumultithumb_editorbutton">jumultithumb_editorbutton.php</filename>
         <folder>assets</folder>
-        <filename>index.html</filename>
         <filename>form.php</filename>
     </files>
     <languages>

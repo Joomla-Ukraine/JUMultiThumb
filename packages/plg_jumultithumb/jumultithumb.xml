@@ -13,7 +13,6 @@
 
     <files>
         <filename plugin="jumultithumb">jumultithumb.php</filename>
-        <filename>index.html</filename>
         <folder>adapters</folder>
         <folder>assets</folder>
         <folder>fields</folder>
@@ -23,7 +22,6 @@
     </files>
 
     <media destination="plg_jumultithumb" folder="media">
-        <filename>index.html</filename>
         <filename>style.css</filename>
         <folder>colorbox</folder>
     </media>

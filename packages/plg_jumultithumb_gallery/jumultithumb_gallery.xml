@@ -13,7 +13,6 @@
 
     <files>
         <filename plugin="jumultithumb_gallery">jumultithumb_gallery.php</filename>
-        <filename>index.html</filename>
         <folder>tmpl</folder>
     </files>
 
