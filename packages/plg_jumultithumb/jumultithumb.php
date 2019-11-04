@@ -181,7 +181,7 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 		}
 
-		if(($only_image_blog == '1' && $this->modeHelper && $this->modeHelper->jView('Blog')) || ($only_image_category == '1' && $this->modeHelper && $this->modeHelper->jView('Category')) || ($only_image_featured == '1' && $this->modeHelper && $this->modeHelper->jView('Featured')))
+		if(($only_image_blog == 1 && $this->modeHelper && $this->modeHelper->jView('Blog')) || ($only_image_category == 1 && $this->modeHelper && $this->modeHelper->jView('Category')) || ($only_image_featured == 1 && $this->modeHelper && $this->modeHelper->jView('Featured')))
 		{
 			preg_match_all('/(<\s*img\s+src\s*="\s*("[^"]*"|\'[^\']*\'|[^"\s]+).*?>)/i', $text, $result);
 			$img  = $result[ 1 ][ 0 ];
@@ -206,7 +206,7 @@ class plgContentjumultithumb extends CMSPlugin
 	{
 		// params
 		$quality                 = $this->params->get('quality');
-		$noimage_class           = $this->params->def('noimage_class');
+		$noimage_class           = $this->params->get('noimage_class');
 		$thumb_filtercolor       = $this->params->get('thumb_filtercolor', 0);
 		$colorized               = $this->params->get('colorized', '25');
 		$colorpicker             = $this->params->get('colorpicker', '#0000ff');
@@ -250,25 +250,25 @@ class plgContentjumultithumb extends CMSPlugin
 		}
 
 		$usm_filtercolor = [];
-		if($usm == '1' && $thumb_filters == '1')
+		if($usm == 1 && $thumb_filters == 1)
 		{
 			$usm_filtercolor = [ 'fltr_2' => 'usm|' . $thumb_unsharp_amount . '|' . $thumb_unsharp_radius . '|' . $thumb_unsharp_threshold ];
 		}
 
 		$blur_filtercolor = [];
-		if($thumb_blur == '1' && $thumb_filters == '1')
+		if($thumb_blur == 1 && $thumb_filters == 1)
 		{
 			$blur_filtercolor = [ 'fltr_3' => 'blur|' . $thumb_blur_seting ];
 		}
 
 		$brit_filtercolor = [];
-		if($thumb_brit == '1' && $thumb_filters == '1')
+		if($thumb_brit == 1 && $thumb_filters == 1)
 		{
 			$brit_filtercolor = [ 'fltr_4' => 'brit|' . $thumb_brit_seting ];
 		}
 
 		$cont_filtercolor = [];
-		if($thumb_cont == '1' && $thumb_filters == '1')
+		if($thumb_cont == 1 && $thumb_filters == 1)
 		{
 			$cont_filtercolor = [ 'fltr_5' => 'cont|' . $thumb_cont_seting ];
 		}
@@ -299,11 +299,11 @@ class plgContentjumultithumb extends CMSPlugin
 		}
 
 		$img_class = '';
-		if($imgalign != '')
+		if($imgalign !== '')
 		{
 			$img_class = 'ju' . trim($imgalign) . ' ';
 		}
-		elseif($imgstyle != '')
+		elseif($imgstyle !== '')
 		{
 			$img_class = 'ju' . trim($imgstyle) . ' ';
 		}
@@ -318,16 +318,16 @@ class plgContentjumultithumb extends CMSPlugin
 		$img_title = ($img_title ? ' title="' . $img_title . '"' : '');
 
 		$_image_noresize = 0;
-		if($this->params->get('resall') == '0' && $img[ 'class' ] !== 'juimage')
+		if($this->params->get('resall') == 0 && $img[ 'class' ] !== 'juimage')
 		{
 			$size = getimagesize(JPATH_SITE . '/' . $originalsource);
 
 			return $this->_image($originalsource, $size[ 0 ], $size[ 1 ], $imgclass, $img_alt, 1, 1, $img_title);
 		}
 
-		if($this->params->get('resall') == '1' && ($img[ 'class' ] === 'nothumb' || $img[ 'class' ] === 'noimage' || $img[ 'class' ] === 'nothumbnail' || $img[ 'class' ] === 'jugallery' || $img[ 'class' ] == $noimage_class) && $img[ 'class' ] != '')
+		if($this->params->get('resall') == 1 && ($img[ 'class' ] === 'nothumb' || $img[ 'class' ] === 'noimage' || $img[ 'class' ] === 'nothumbnail' || $img[ 'class' ] === 'jugallery' || $img[ 'class' ] == $noimage_class) && $img[ 'class' ] != '')
 		{
-			if($this->params->get('a_watermark') == '0' || $watermark_o != '1')
+			if($this->params->get('a_watermark') == 0 || $watermark_o != '1')
 			{
 				$size = getimagesize(JPATH_SITE . '/' . $originalsource);
 
@@ -351,8 +351,8 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew1');
 				$b_newfarcropbg       = $this->params->get('b_farcropbgnew1');
 				$b_aoenew             = $this->params->get('b_aoenew1');
-				$b_sxnew              = $this->params->def('b_sxnew1');
-				$b_synew              = $this->params->def('b_synew1');
+				$b_sxnew              = $this->params->get('b_sxnew1');
+				$b_synew              = $this->params->get('b_synew1');
 			}
 			elseif(in_array($this->itemid, $this->params->get('menu_item2') ? : [], true))
 			{
@@ -366,8 +366,8 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew2');
 				$b_newfarcropbg       = $this->params->get('b_farcropbgnew2');
 				$b_aoenew             = $this->params->get('b_aoenew2');
-				$b_sxnew              = $this->params->def('b_sxnew2');
-				$b_synew              = $this->params->def('b_synew2');
+				$b_sxnew              = $this->params->get('b_sxnew2');
+				$b_synew              = $this->params->get('b_synew2');
 			}
 			elseif(in_array($this->itemid, $this->params->get('menu_item3') ? : [], true))
 			{
@@ -381,8 +381,8 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew3');
 				$b_newfarcropbg       = $this->params->get('b_farcropbgnew3');
 				$b_aoenew             = $this->params->get('b_aoenew3');
-				$b_sxnew              = $this->params->def('b_sxnew3');
-				$b_synew              = $this->params->def('b_synew3');
+				$b_sxnew              = $this->params->get('b_sxnew3');
+				$b_synew              = $this->params->get('b_synew3');
 			}
 			elseif(in_array($this->itemid, $this->params->get('menu_item4') ? : [], true))
 			{
@@ -396,8 +396,8 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew4');
 				$b_newfarcropbg       = $this->params->get('b_farcropbgnew4');
 				$b_aoenew             = $this->params->get('b_aoenew4');
-				$b_sxnew              = $this->params->def('b_sxnew4');
-				$b_synew              = $this->params->def('b_synew4');
+				$b_sxnew              = $this->params->get('b_sxnew4');
+				$b_synew              = $this->params->get('b_synew4');
 			}
 			elseif(in_array($this->itemid, $this->params->get('menu_item5') ? : [], true))
 			{
@@ -411,8 +411,8 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew5');
 				$b_newfarcropbg       = $this->params->get('b_farcropbgnew5');
 				$b_aoenew             = $this->params->get('b_aoenew5');
-				$b_sxnew              = $this->params->def('b_sxnew5');
-				$b_synew              = $this->params->def('b_synew5');
+				$b_sxnew              = $this->params->get('b_sxnew5');
+				$b_synew              = $this->params->get('b_synew5');
 			}
 			else
 			{
@@ -427,12 +427,12 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_newfarcrop_params = $this->params->get('b_farcrop_params');
 				$b_newfarcropbg      = $this->params->get('b_farcropbg');
 				$b_aoenew            = $this->params->get('b_aoe');
-				$b_sxnew             = $this->params->def('b_sx');
-				$b_synew             = $this->params->def('b_sy');
+				$b_sxnew             = $this->params->get('b_sx');
+				$b_synew             = $this->params->get('b_sy');
 			}
 
 			$aspect = 0;
-			if($b_newauto_zoomcrop == '1')
+			if($b_newauto_zoomcrop == 1)
 			{
 				$aspect = $this->_aspect($imgsource, $b_newcropaspect);
 			}
@@ -440,7 +440,8 @@ class plgContentjumultithumb extends CMSPlugin
 			$new_imgparams = [
 				'zc' => $b_newcropzoom == 1 ? $b_newzoomcrop_params : ''
 			];
-			if($aspect >= '1' && $b_newauto_zoomcrop == '1')
+
+			if($aspect >= '1' && $b_newauto_zoomcrop == 1)
 			{
 				$new_imgparams = [
 					'far' => '1',
@@ -448,7 +449,7 @@ class plgContentjumultithumb extends CMSPlugin
 				];
 			}
 
-			if($b_newfarcrop == '1')
+			if($b_newfarcrop == 1)
 			{
 				$new_imgparams = [
 					'far' => $b_newfarcrop_params,
@@ -488,8 +489,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('farcrop_paramsnew1');
 					$newfarcropbg       = $this->params->get('farcropbgnew1');
 					$newaoe             = $this->params->get('aoenew1');
-					$newsx              = $this->params->def('sxnew1');
-					$newsy              = $this->params->def('synew1');
+					$newsx              = $this->params->get('sxnew1');
+					$newsy              = $this->params->get('synew1');
 					$newnoresize        = $this->params->get('noresizenew1');
 					$newnofullimg       = $this->params->get('nofullimgnew1');
 				}
@@ -507,8 +508,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('farcrop_paramsnew2');
 					$newfarcropbg       = $this->params->get('farcropbgnew2');
 					$newaoe             = $this->params->get('aoenew2');
-					$newsx              = $this->params->def('sxnew2');
-					$newsy              = $this->params->def('synew2');
+					$newsx              = $this->params->get('sxnew2');
+					$newsy              = $this->params->get('synew2');
 					$newnoresize        = $this->params->get('noresizenew2');
 					$newnofullimg       = $this->params->get('nofullimgnew2');
 				}
@@ -526,8 +527,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('farcrop_paramsnew3');
 					$newfarcropbg       = $this->params->get('farcropbgnew3');
 					$newaoe             = $this->params->get('aoenew3');
-					$newsx              = $this->params->def('sxnew3');
-					$newsy              = $this->params->def('synew3');
+					$newsx              = $this->params->get('sxnew3');
+					$newsy              = $this->params->get('synew3');
 					$newnoresize        = $this->params->get('noresizenew3');
 					$newnofullimg       = $this->params->get('nofullimgnew3');
 				}
@@ -545,8 +546,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('farcrop_paramsnew4');
 					$newfarcropbg       = $this->params->get('farcropbgnew4');
 					$newaoe             = $this->params->get('aoenew4');
-					$newsx              = $this->params->def('sxnew4');
-					$newsy              = $this->params->def('synew4');
+					$newsx              = $this->params->get('sxnew4');
+					$newsy              = $this->params->get('synew4');
 					$newnoresize        = $this->params->get('noresizenew4');
 					$newnofullimg       = $this->params->get('nofullimgnew4');
 				}
@@ -564,8 +565,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('farcrop_paramsnew5');
 					$newfarcropbg       = $this->params->get('farcropbgnew5');
 					$newaoe             = $this->params->get('aoenew5');
-					$newsx              = $this->params->def('sxnew5');
-					$newsy              = $this->params->def('synew5');
+					$newsx              = $this->params->get('sxnew5');
+					$newsy              = $this->params->get('synew5');
 					$newnoresize        = $this->params->get('noresizenew5');
 					$newnofullimg       = $this->params->get('nofullimgnew5');
 				}
@@ -584,8 +585,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params = $this->params->get('farcrop_params');
 					$newfarcropbg      = $this->params->get('farcropbg');
 					$newaoe            = $this->params->get('aoe');
-					$newsx             = $this->params->def('sx');
-					$newsy             = $this->params->def('sy');
+					$newsx             = $this->params->get('sx');
+					$newsy             = $this->params->get('sy');
 					$newnoresize       = $this->params->get('noresize');
 					$newnofullimg      = $this->params->get('nofullimg');
 				}
@@ -606,8 +607,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew1');
 					$newfarcropbg       = $this->params->get('cat_farcropbgnew1');
 					$newaoe             = $this->params->get('cat_aoenew1');
-					$newsx              = $this->params->def('cat_sxnew1');
-					$newsy              = $this->params->def('cat_synew1');
+					$newsx              = $this->params->get('cat_sxnew1');
+					$newsy              = $this->params->get('cat_synew1');
 					$newnoresize        = $this->params->get('cat_noresizenew1');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew1');
 				}
@@ -625,8 +626,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew2');
 					$newfarcropbg       = $this->params->get('cat_farcropbgnew2');
 					$newaoe             = $this->params->get('cat_aoenew2');
-					$newsx              = $this->params->def('cat_sxnew2');
-					$newsy              = $this->params->def('cat_synew2');
+					$newsx              = $this->params->get('cat_sxnew2');
+					$newsy              = $this->params->get('cat_synew2');
 					$newnoresize        = $this->params->get('cat_noresizenew2');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew2');
 				}
@@ -644,8 +645,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew3');
 					$newfarcropbg       = $this->params->get('cat_farcropbgnew3');
 					$newaoe             = $this->params->get('cat_aoenew3');
-					$newsx              = $this->params->def('cat_sxnew3');
-					$newsy              = $this->params->def('cat_synew3');
+					$newsx              = $this->params->get('cat_sxnew3');
+					$newsy              = $this->params->get('cat_synew3');
 					$newnoresize        = $this->params->get('cat_noresizenew3');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew3');
 				}
@@ -663,8 +664,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew4');
 					$newfarcropbg       = $this->params->get('cat_farcropbgnew4');
 					$newaoe             = $this->params->get('cat_aoenew4');
-					$newsx              = $this->params->def('cat_sxnew4');
-					$newsy              = $this->params->def('cat_synew4');
+					$newsx              = $this->params->get('cat_sxnew4');
+					$newsy              = $this->params->get('cat_synew4');
 					$newnoresize        = $this->params->get('cat_noresizenew4');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew4');
 				}
@@ -682,8 +683,8 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew5');
 					$newfarcropbg       = $this->params->get('cat_farcropbgnew5');
 					$newaoe             = $this->params->get('cat_aoenew5');
-					$newsx              = $this->params->def('cat_sxnew5');
-					$newsy              = $this->params->def('cat_synew5');
+					$newsx              = $this->params->get('cat_sxnew5');
+					$newsy              = $this->params->get('cat_synew5');
 					$newnoresize        = $this->params->get('cat_noresizenew5');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew5');
 				}
@@ -702,14 +703,14 @@ class plgContentjumultithumb extends CMSPlugin
 					$newfarcrop_params = $this->params->get('cat_farcrop_params');
 					$newfarcropbg      = $this->params->get('cat_farcropbg');
 					$newaoe            = $this->params->get('cat_aoe');
-					$newsx             = $this->params->def('cat_sx');
-					$newsy             = $this->params->def('cat_sy');
+					$newsx             = $this->params->get('cat_sx');
+					$newsy             = $this->params->get('cat_sy');
 					$newnoresize       = $this->params->get('cat_noresize');
 					$newnofullimg      = $this->params->get('cat_nofullimg');
 				}
 			}
 
-			if($newnoresize == '1') // || $cat_newnoresize == '1'
+			if($newnoresize == 1) // || $cat_newnoresize == 1
 			{
 				$juimgresmatche = str_replace([
 					' /',
@@ -742,16 +743,16 @@ class plgContentjumultithumb extends CMSPlugin
 
 			$_width  = '';
 			$_height = '';
-			if($this->params->get('maxsize_orig') == '1' || $this->params->get('cat_newmaxsize_orig') == '1')
+			if($this->params->get('maxsize_orig') == 1 || $this->params->get('cat_newmaxsize_orig') == 1)
 			{
 				$_width  = $newmaxwidth;
 				$_height = $newmaxheight;
 			}
 
 			$link_img = $imgsource;
-			if($watermark_o == '1' || $_image_noresize == '1' || $this->params->get('a_watermark') == '1' || $this->params->get('a_watermarknew1') == '1' || $this->params->get('a_watermarknew2') == '1' || $this->params->get('a_watermarknew3') == '1' || $this->params->get('a_watermarknew4') == '1' || $this->params->get('a_watermarknew5') == '1' ||
+			if($watermark_o == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1 ||
 
-				$this->params->get('maxsize_orig') == '1' || $this->params->get('cat_newmaxsize_orig') == '1')
+				$this->params->get('maxsize_orig') == 1 || $this->params->get('cat_newmaxsize_orig') == 1)
 			{
 				$link_imgparams = [
 					'w'     => $_width,
@@ -770,7 +771,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$wmi_s = '';
 			if($use_wm == 1)
 			{
-				if($watermark_s == '1' || $this->params->get('a_watermark_s') == '1' || $this->params->get('a_watermarknew1_s') == '1' || $this->params->get('a_watermarknew2_s') == '1' || $this->params->get('a_watermarknew3_s') == '1' || $this->params->get('a_watermarknew4_s') == '1' || $this->params->get('a_watermarknew5_s') == '1')
+				if($watermark_s == 1 || $this->params->get('a_watermark_s') == 1 || $this->params->get('a_watermarknew1_s') == 1 || $this->params->get('a_watermarknew2_s') == 1 || $this->params->get('a_watermarknew3_s') == 1 || $this->params->get('a_watermarknew4_s') == 1 || $this->params->get('a_watermarknew5_s') == 1)
 				{
 					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
 					if(is_file($wmfile))
@@ -787,7 +788,7 @@ class plgContentjumultithumb extends CMSPlugin
 				}
 			}
 
-			if($_image_noresize == '1')
+			if($_image_noresize == 1)
 			{
 				$wmi_s       = $wmi;
 				$newwidth    = ($_width && $wmi ? $_width : '');
@@ -799,7 +800,7 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 
 			$aspect = 0;
-			if($newauto_zoomcrop == '1')
+			if($newauto_zoomcrop == 1)
 			{
 				$aspect = $this->_aspect($imgsource, $newcropaspect);
 			}
@@ -807,7 +808,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$new_imgparams = [
 				'zc' => $newcropzoom == 1 ? $newzoomcrop_params : ''
 			];
-			if($aspect >= '1' && $newauto_zoomcrop == '1')
+			if($aspect >= '1' && $newauto_zoomcrop == 1)
 			{
 				$new_imgparams = [
 					'far' => '1',
@@ -815,7 +816,7 @@ class plgContentjumultithumb extends CMSPlugin
 				];
 			}
 
-			if($newfarcrop == '1')
+			if($newfarcrop == 1)
 			{
 				$new_imgparams = [
 					'far' => $newfarcrop_params,
@@ -837,7 +838,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams, $new_imgparams);
 			$thumb_img  = $this->juimg->render($imgsource, $_imgparams);
 
-			if($_image_noresize == '1' || $newnofullimg == '1' || ($this->modeHelper && $this->modeHelper->jView('Print')))
+			if($_image_noresize == 1 || $newnofullimg == 1 || ($this->modeHelper && $this->modeHelper->jView('Print')))
 			{
 				$limage = $this->_image($thumb_img, $newwidth, $newheight, $img_class, $img_alt, 1, $_image_noresize, $img_title);
 			}
@@ -859,11 +860,11 @@ class plgContentjumultithumb extends CMSPlugin
 			$f_newfarcrop_params = $this->params->get('f_farcrop_params');
 			$f_newfarcropbg      = $this->params->get('f_farcropbg');
 			$f_aoenew            = $this->params->get('f_aoe');
-			$f_sxnew             = $this->params->def('f_sx');
-			$f_synew             = $this->params->def('f_sy');
+			$f_sxnew             = $this->params->get('f_sx');
+			$f_synew             = $this->params->get('f_sy');
 
 			$aspect = 0;
-			if($f_newauto_zoomcrop == '1')
+			if($f_newauto_zoomcrop == 1)
 			{
 				$aspect = $this->_aspect($imgsource, $f_newcropaspect);
 			}
@@ -871,7 +872,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$new_imgparams = [
 				'zc' => $f_newcropzoom == 1 ? $f_newzoomcrop_params : ''
 			];
-			if($aspect >= '1' && $f_newauto_zoomcrop == '1')
+			if($aspect >= '1' && $f_newauto_zoomcrop == 1)
 			{
 				$new_imgparams = [
 					'far' => '1',
@@ -879,7 +880,7 @@ class plgContentjumultithumb extends CMSPlugin
 				];
 			}
 
-			if($f_newfarcrop == '1')
+			if($f_newfarcrop == 1)
 			{
 				$new_imgparams = [
 					'far' => $f_newfarcrop_params,
@@ -1011,9 +1012,9 @@ class plgContentjumultithumb extends CMSPlugin
 			return true;
 		}
 
-		if($this->params->get('uselightbox', '1') == '1' && (($this->modeHelper && $this->modeHelper->jView('Article')) || ($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('CatBlog'))) && !($this->modeHelper && $this->modeHelper->jView('Print')))
+		if($this->params->get('uselightbox', '1') == 1 && (($this->modeHelper && $this->modeHelper->jView('Article')) || ($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('CatBlog'))) && !($this->modeHelper && $this->modeHelper->jView('Print')))
 		{
-			if($this->params->get('jujq') == '0')
+			if($this->params->get('jujq') == 0)
 			{
 				JHtml::_('jquery.framework');
 			}
