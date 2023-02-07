@@ -65,19 +65,14 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 * @param $params
 	 * @param $limitstart
 	 *
-	 * @return bool|void
+	 * @return void
 	 *
 	 * @throws Exception
 	 * @since 7.0
 	 */
 	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
 	{
-		if($this->app->getName() !== 'site')
-		{
-			return;
-		}
-
-		if(!($this->modeHelper && $this->modeHelper->jView('Component')))
+		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
 			return;
 		}
@@ -105,12 +100,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 */
 	public function onContentPrepare($context, &$article, &$params, $limitstart)
 	{
-		if($this->app->getName() !== 'site')
-		{
-			return true;
-		}
-
-		if(!($this->modeHelper && $this->modeHelper->jView('Component')))
+		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
 			return true;
 		}
@@ -150,7 +140,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function GalleryReplace($text, &$article)
+	public function GalleryReplace($text, $article)
 	{
 		$regex = "/<p>\s*{gallery\s+(.*?)}\s*<\/p>/i";
 		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
@@ -372,9 +362,8 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 							$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams);
 
 							$thumb_img   = $this->juimg->render($file, $_imgparams);
-							$bloggallery = $this->_image($thumb_img, $this->params->get('width'), $this->params->get('height'), null, $_title, 0, $_title, null);
 
-							return $bloggallery;
+							return $this->_image($thumb_img, $this->params->get('width'), $this->params->get('height'), null, $_title, 0, $_title);
 						}
 
 						// Watermark

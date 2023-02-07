@@ -19,13 +19,7 @@
     <languages>
         <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_gallery.ini</language>
         <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_gallery.sys.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_gallery.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_gallery.sys.ini</language>
     </languages>
-
-    <media destination="plg_jumultithumb_gallery" folder="media">
-        <filename>index.html</filename>
-    </media>
 
     <config addfieldpath="/plugins/content/jumultithumb/fields/">
 

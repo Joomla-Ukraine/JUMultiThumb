@@ -1,8 +1,8 @@
 <project name="jumultithumb" default="dist" basedir=".">
 
-    <property name="VERSION" value="7.1.4"/>
-    <property name="juimage" value="3.6.8"/>
-    <property name="JOOMLA" value="3.8.13"/>
+    <property name="VERSION" value="8.0"/>
+    <property name="juimage" value="5.12"/>
+    <property name="JOOMLA" value="3.9"/>
 
     <tstamp>
         <format property="DATE" pattern="%d.%m.%Y" />
@@ -126,7 +126,7 @@
             <fileset dir="${temp}/plg_jumultithumb_editorbutton"/>
         </zip>
 
-        <copy file="../JUImage/dist/lib_juimage_v${juimage}.zip" todir="${build}/packages"/>
+        <copy file="../JUImage/dist/pkg_juimage_v${juimage}.zip" todir="${build}/packages"/>
 
         <copy todir="${build}/language">
             <fileset dir="${temp}/language">

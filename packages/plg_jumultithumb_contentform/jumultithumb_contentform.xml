@@ -19,8 +19,6 @@
     <languages>
         <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_contentform.ini</language>
         <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb_contentform.sys.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_contentform.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb_contentform.sys.ini</language>
     </languages>
 
 </extension>

@@ -63,7 +63,7 @@ $style = JPATH_BASE . '/media/plg_jumultithumb/style.css';
 $newcss = '/*
 -----------------------------------------------
 File:    style.css
-Author:  Denys Nosov at http://www.denysdesign.com
+Author:  Denys Nosov at https://www.denysdesign.com
 Version: ' . date('d.m.Y') . '
 
 License: Free

@@ -18,7 +18,5 @@
     <languages>
         <language tag="en-GB">language/en-GB/en-GB.plg_editors-xtd_jumultithumb_editorbutton.ini</language>
         <language tag="en-GB">language/en-GB/en-GB.plg_editors-xtd_jumultithumb_editorbutton.sys.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_editors-xtd_jumultithumb_editorbutton.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_editors-xtd_jumultithumb_editorbutton.sys.ini</language>
     </languages>
 </extension>

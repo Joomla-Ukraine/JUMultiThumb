@@ -289,7 +289,7 @@ if(isset($uploadunsuccessfull_s))
 		}
 		else
 		{
-			echo '<a href="http://denysdesign.com" target="_blank" title="Denys Design Studio"><img src="juw.png?v=' . time() . '" alt="" class="img" /></a>';
+			echo '<a href="https://denysdesign.com" target="_blank" title="Denys Design Studio"><img src="juw.png?v=' . time() . '" alt="" class="img" /></a>';
 		}
 		?>
     </div>

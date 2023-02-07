@@ -36,20 +36,16 @@ class AutoLinks
 
 		if($onlyFirstImage)
 		{
-			$text = preg_replace_callback($regex, [
+			return preg_replace_callback($regex, [
 				$this,
 				'_replaceImg'
 			], $text, 1);
-
-			return $text;
 		}
 
-		$text = preg_replace_callback($regex, [
+		return preg_replace_callback($regex, [
 			$this,
 			'_replaceImg'
 		], $text);
-
-		return $text;
 	}
 
 	/**
@@ -71,15 +67,13 @@ class AutoLinks
 			$_link  = $link;
 			$title  = str_replace([ "'", '"' ], ' ', $title);
 			$_title = $title;
-			$html   = '';
 
-			return $html;
+			return '';
 		}
 
 		$img  = $matches[ 0 ];
 		$img  = str_replace('alt=""', 'alt="' . trim($_title) . '"', $img);
-		$html = '<a href="' . $_link . '">' . $img . '</a>';
 
-		return $html;
+		return '<a href="' . $_link . '">' . $img . '</a>';
 	}
 }

@@ -23,14 +23,12 @@
         <file type="plugin" id="jumultithumb_contentform" group="content">plg_jumultithumb_contentform.zip</file>
         <file type="plugin" id="jumultithumb_gallery" group="content">plg_jumultithumb_gallery.zip</file>
         <file type="plugin" id="jumultithumb_editorbutton" group="editors-xtd">plg_jumultithumb_editorbutton.zip</file>
-        <file type="library" id="julib">lib_julib_v@julib@.zip</file>
+        <file type="package" id="package">pkg_juimage_v@juimage@.zip</file>
     </files>
     <languages folder="language">
         <language tag="en-GB">en-GB/en-GB.pkg_jumultithumb.ini</language>
         <language tag="en-GB">en-GB/en-GB.pkg_jumultithumb.sys.ini</language>
         <language tag="uk-UA">uk-UA/uk-UA.pkg_jumultithumb.ini</language>
         <language tag="uk-UA">uk-UA/uk-UA.pkg_jumultithumb.sys.ini</language>
-        <language tag="ru-RU">ru-RU/ru-RU.pkg_jumultithumb.ini</language>
-        <language tag="ru-RU">ru-RU/ru-RU.pkg_jumultithumb.sys.ini</language>
     </languages>
 </extension>

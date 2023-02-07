@@ -74,12 +74,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 */
 	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
 	{
-		if($this->app->getName() !== 'site')
-		{
-			return;
-		}
-
-		if(!($this->modeHelper && $this->modeHelper->jView('Component')))
+		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
 			return;
 		}
@@ -110,12 +105,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 */
 	public function onContentPrepare($context, &$article, &$params, $limitstart)
 	{
-		if($this->app->getName() !== 'site')
-		{
-			return true;
-		}
-
-		if(!($this->modeHelper && $this->modeHelper->jView('Component')))
+		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
 			return true;
 		}
@@ -203,7 +193,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function JUMultithumbReplacer($_img, &$article, $watermark_o, $watermark_s)
+	public function JUMultithumbReplacer($_img, $article, $watermark_o, $watermark_s)
 	{
 		// params
 		$quality                 = $this->params->get('quality');
@@ -1001,12 +991,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 */
 	public function onBeforeCompileHead()
 	{
-		if($this->app->getName() !== 'site')
-		{
-			return true;
-		}
-
-		if(!($this->modeHelper && $this->modeHelper->jView('Component')))
+		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
 			return true;
 		}

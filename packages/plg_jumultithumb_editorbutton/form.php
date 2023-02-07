@@ -93,21 +93,21 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
             var title = document.getElementById("title").value;
             var cssclass = document.getElementById("cssclass").value;
 
-            if (folder != '') {
+            if (folder !== '') {
                 folder = "" + folder + "";
             }
 
-            if (title == '' && cssclass != '') {
+            if (title === '' && cssclass !== '') {
                 title = "|";
             }
-            else if (title != '') {
+            else if (title !== '') {
                 title = "|" + title;
             }
             else {
-                title == "";
+                title = "";
             }
 
-            if (cssclass != '') {
+            if (cssclass !== '') {
                 cssclass = "|" + cssclass;
             }
 
