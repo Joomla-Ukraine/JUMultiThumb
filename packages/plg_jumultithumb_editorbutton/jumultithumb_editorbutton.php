@@ -10,9 +10,13 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\CMSPlugin;
+
 defined('_JEXEC') or die;
 
-class plgButtonJUmultithumb_EditorButton extends JPlugin
+class plgButtonJUmultithumb_EditorButton extends CMSPlugin
 {
 	protected $autoloadLanguage = true;
 
@@ -28,38 +32,32 @@ class plgButtonJUmultithumb_EditorButton extends JPlugin
 	 */
 	public function onDisplay($name, $asset, $author)
 	{
-		$app       = JFactory::getApplication();
-		$user      = JFactory::getUser();
-		$extension = $app->input->get('option');
+		$user             = Factory::getUser();
+		$canCreateRecords = $user->authorise('core.create', 'com_content') || count($user->getAuthorisedCategories('com_content', 'core.create')) > 0;
+		$values           = (array) Factory::getApplication()->getUserState('com_content.edit.article.id');
+		$isEditingRecords = count($values);
+		$hasAccess        = $canCreateRecords || $isEditingRecords;
 
-		if($asset == '')
+		if(!$hasAccess)
 		{
-			$asset = $extension;
+			return;
 		}
 
-		if($user->authorise('core.edit', $asset)
-			|| $user->authorise('core.create', $asset)
-			|| (count($user->getAuthorisedCategories($asset, 'core.create')) > 0)
-			|| ($user->authorise('core.edit.own', $asset) && $author == $user->id)
-			|| (count($user->getAuthorisedCategories($extension, 'core.edit')) > 0)
-			|| (count($user->getAuthorisedCategories($extension, 'core.edit.own')) > 0 && $author == $user->id)
-		)
-		{
-			$link = '../plugins/editors-xtd/jumultithumb_editorbutton/form.php';
-			JHtml::_('behavior.modal');
+		$link            = '../plugins/editors-xtd/jumultithumb_editorbutton/form.php';
+		$button          = new JObject;
+		$button->modal   = true;
+		$button->link    = $link;
+		$button->text    = Text::_('PLG_JUMULTITHUMB') . ' - ' . Text::_('COM_PLUGINS_GALLERY_FIELDSET_LABEL');
+		$button->name    = 'image';
+		$button->icon    = 'gallery';
+		$button->iconSVG = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>';
+		$button->options = [
+			'height'     => '300px',
+			'width'      => '800px',
+			'bodyHeight' => '70',
+			'modalWidth' => '80',
+		];
 
-			$button = new JObject;
-
-			$button->modal   = true;
-			$button->class   = 'btn';
-			$button->link    = $link;
-			$button->text    = JText::_('PLG_JUMULTITHUMB') . ' - ' . JText::_('COM_PLUGINS_GALLERY_FIELDSET_LABEL');
-			$button->name    = 'image';
-			$button->options = "{handler: 'iframe', size: {x: 670, y: 500}}";
-
-			return $button;
-		}
-
-		return false;
+		return $button;
 	}
 }

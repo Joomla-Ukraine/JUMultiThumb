@@ -37,23 +37,23 @@ $doc->addStyleSheet('/media/jui/css/bootstrap.min.css');
 if($joomlaUser->get('id') < 1)
 {
 	?>
-    <!DOCTYPE html>
-    <html lang="<?php echo $language; ?>">
-    <head>
-        <meta content="charset=utf-8"/>
-        <link href="../../../../media/jui/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    </head>
-    <body>
-    <dl id="system-message">
-        <dt class="error"><?php echo JText::_('PLG_JUMULTITHUMB_NOTICE'); ?></dt>
-        <dd class="message error fade">
-            <ul>
-                <li><?php echo JText::_('PLG_JUMULTITHUMB_LOGIN'); ?></li>
-            </ul>
-        </dd>
-    </dl>
-    </body>
-    </html>
+	<!DOCTYPE html>
+	<html lang="<?php echo $language; ?>">
+	<head>
+		<meta content="charset=utf-8" />
+		<link href="../../../../media/jui/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+	<dl id="system-message">
+		<dt class="error"><?php echo JText::_('PLG_JUMULTITHUMB_NOTICE'); ?></dt>
+		<dd class="message error fade">
+			<ul>
+				<li><?php echo JText::_('PLG_JUMULTITHUMB_LOGIN'); ?></li>
+			</ul>
+		</dd>
+	</dl>
+	</body>
+	</html>
 	<?php
 	return;
 }
@@ -67,16 +67,16 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
 <!DOCTYPE html>
 <html lang="<?php echo $language; ?>">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_INSERT_TAG'); ?></title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_INSERT_TAG'); ?></title>
 
-    <link href="../../../../media/jui/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/jqueryFileTree.css" rel="stylesheet" type="text/css"/>
+	<link href="../../../../media/jui/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="assets/jqueryFileTree.css" rel="stylesheet" type="text/css" />
 
-    <script src="../../../../media/jui/js/jquery.min.js"></script>
-    <script src="assets/jqueryFileTree.js?v3"></script>
+	<script src="../../../../media/jui/js/jquery.min.js"></script>
+	<script src="assets/jqueryFileTree.js?v3"></script>
 
-    <script>
+	<script>
         jQuery.noConflict();
         jQuery(document).ready(function () {
             jQuery('.selects').fileTree({
@@ -99,11 +99,9 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
 
             if (title === '' && cssclass !== '') {
                 title = "|";
-            }
-            else if (title !== '') {
+            } else if (title !== '') {
                 title = "|" + title;
-            }
-            else {
+            } else {
                 title = "";
             }
 
@@ -116,8 +114,8 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
             window.parent.SqueezeBox.close();
             return false;
         }
-    </script>
-    <style>
+	</script>
+	<style>
         body {
             background: transparent;
         }
@@ -125,37 +123,37 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
         fieldset {
             margin: 5px 0 !important;
         }
-    </style>
+	</style>
 </head>
 <body>
 <form class="form-horizontal">
-    <div class="control-group">
-        <label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_SELECT_FOLDER'); ?>:</label>
-        <div class="controls">
-            <div class="selects"></div>
-            <br>
-            <input id="folder" class="folderurl uneditable-input" name="selectfolder" disabled="disabled"
-                   style="width:30%">
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_TITLE'); ?>:</label>
-        <div class="controls">
-            <input type="text" id="title" name="title" size="60" value=""/>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_CSS_CLASS'); ?>:</label>
-        <div class="controls">
-            <input type="text" id="cssclass" name="cssclass" size="60"/>
-        </div>
-    </div>
-    <div class="control-group">
-        <div class="controls">
-            <button onclick="insertJUGallery();"
-                    class="btn btn-success"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_INSERT_TAG'); ?></button>
-        </div>
-    </div>
+	<div class="control-group">
+		<label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_SELECT_FOLDER'); ?>:</label>
+		<div class="controls">
+			<div class="selects"></div>
+			<br>
+			<input id="folder" class="folderurl uneditable-input" name="selectfolder" disabled="disabled"
+					style="width:30%">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_TITLE'); ?>:</label>
+		<div class="controls">
+			<input type="text" id="title" name="title" size="60" value="" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_CSS_CLASS'); ?>:</label>
+		<div class="controls">
+			<input type="text" id="cssclass" name="cssclass" size="60" />
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<button onclick="insertJUGallery();"
+					class="btn btn-success"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_INSERT_TAG'); ?></button>
+		</div>
+	</div>
 </form>
 </body>
 </html>

@@ -6,12 +6,13 @@
  * @subpackage       pkg_jumultithumb
  *
  * @author           Denys Nosov, denys@joomla-ua.org
- * @copyright        2007-2018 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
+ * @copyright        2007-2023 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
+use Joomla\Component\Content\Site\Helper\RouteHelper;
 
 defined('_JEXEC') or die;
 
@@ -96,8 +97,6 @@ class plgContentJUMultiThumb_com_content
 	 */
 	public function jViewLink($article)
 	{
-		require_once JPATH_SITE . '/components/com_content/helpers/route.php';
-
 		if($article->params->get('access-view'))
 		{
 			$link = Route::_(ContentHelperRoute::getArticleRoute($article->slug, $article->catid));

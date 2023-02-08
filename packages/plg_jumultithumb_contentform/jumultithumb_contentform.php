@@ -6,16 +6,22 @@
  * @subpackage       pkg_jumultithumb
  *
  * @author           Denys Nosov, denys@joomla-ua.org
- * @copyright        2007-2018 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
+ * @copyright        2007-2023 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Joomla\CMS\Plugin\CMSPlugin;
+
 defined('JPATH_BASE') or die;
 
-jimport('joomla.utilities.date');
-
-class plgContentJUMultithumb_ContentForm extends JPlugin
+class plgContentJUMultithumb_ContentForm extends CMSPlugin
 {
+	/**
+	 * @since version
+	 * @var
+	 */
+	private $_subject;
+
 	/**
 	 * plgContentJUMultithumb_ContentForm constructor.
 	 *
@@ -24,7 +30,7 @@ class plgContentJUMultithumb_ContentForm extends JPlugin
 	 *
 	 * @since 7.0
 	 */
-	public function __construct(& $subject, $config)
+	public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);
 	}
@@ -37,7 +43,7 @@ class plgContentJUMultithumb_ContentForm extends JPlugin
 	 *
 	 * @since 7.0
 	 */
-	public function onContentPrepareForm($form, $data)
+	public function onContentPrepareForm($form, $data): bool
 	{
 		if(!($form instanceof JForm))
 		{

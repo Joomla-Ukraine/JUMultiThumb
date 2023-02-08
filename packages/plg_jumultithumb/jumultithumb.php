@@ -6,17 +6,18 @@
  * @subpackage       pkg_jumultithumb
  *
  * @author           Denys Nosov, denys@joomla-ua.org
- * @copyright        2007-2019 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
+ * @copyright        2007-2023 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\HTML\HTMLHelper;
 
 JLoader::register('AutoLinks', JPATH_SITE . '/plugins/content/jumultithumb/lib/links.php');
 JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
@@ -24,9 +25,9 @@ JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
 class plgContentjumultithumb extends CMSPlugin
 {
 	protected $modeHelper;
-	protected $juimg;
+	protected JUImage $juimg;
 	protected $app;
-	protected $doc;
+	protected ?Document $doc;
 	protected $option;
 	protected $itemid;
 
@@ -39,7 +40,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function __construct(& $subject, $config)
+	public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);
 
@@ -72,7 +73,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
+	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart): void
 	{
 		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
@@ -103,7 +104,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentPrepare($context, &$article, &$params, $limitstart)
+	public function onContentPrepare($context, $article, &$params, $limitstart): bool
 	{
 		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
@@ -122,8 +123,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$use_wm = 1;
 			if(isset($attribs->watermark_intro_only) == 1)
 			{
-				$watermark_into_only = $attribs->watermark_intro_only;
-				$use_wm              = 0;
+				$use_wm = 0;
 			}
 
 			$article->fulltext = @$this->ImgReplace($article->fulltext, $article, $use_wm);
@@ -142,7 +142,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function ImgReplace($text, &$article, $use_wm = 1)
+	public function ImgReplace($text, $article, int $use_wm = 1)
 	{
 		$only_image_blog     = $this->params->get('only_image_blog');
 		$only_image_category = $this->params->get('only_image_category');
@@ -163,9 +163,9 @@ class plgContentjumultithumb extends CMSPlugin
 		$text = preg_replace('#<p>\s*<img(.*?)/>\s*#s', "<img\\1\\3><p>", $text);
 
 		preg_match_all('/<img[^>]+>/i', $text, $imageAttr);
-		if(count(array_filter($imageAttr[0])) > 0)
+		if(count(array_filter($imageAttr[ 0 ])) > 0)
 		{
-			foreach ($imageAttr[0] as $image)
+			foreach($imageAttr[ 0 ] as $image)
 			{
 				$replace = $this->JUMultithumbReplacer($image, $article, $watermark_o, $watermark_s);
 				$text    = str_replace($image, $replace, $text);
@@ -175,7 +175,7 @@ class plgContentjumultithumb extends CMSPlugin
 		if(($only_image_blog == 1 && $this->modeHelper && $this->modeHelper->jView('Blog')) || ($only_image_category == 1 && $this->modeHelper && $this->modeHelper->jView('Category')) || ($only_image_featured == 1 && $this->modeHelper && $this->modeHelper->jView('Featured')))
 		{
 			preg_match_all('/(<\s*img\s+src\s*="\s*("[^"]*"|\'[^\']*\'|[^"\s]+).*?>)/i', $text, $result);
-			$img  = $result[1][0];
+			$img  = $result[ 1 ][ 0 ];
 			$text = $img;
 		}
 
@@ -193,7 +193,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function JUMultithumbReplacer($_img, $article, $watermark_o, $watermark_s)
+	public function JUMultithumbReplacer($_img, $article, $watermark_o, $watermark_s): string
 	{
 		// params
 		$quality                 = $this->params->get('quality');
@@ -221,19 +221,19 @@ class plgContentjumultithumb extends CMSPlugin
 			$use_wm = 0;
 		}
 
-		switch ($thumb_filtercolor)
+		switch($thumb_filtercolor)
 		{
 			case '1':
-				$imp_filtercolor = ['fltr_1' => 'gray'];
+				$imp_filtercolor = [ 'fltr_1' => 'gray' ];
 				break;
 			case '2':
-				$imp_filtercolor = ['fltr_1' => 'sep'];
+				$imp_filtercolor = [ 'fltr_1' => 'sep' ];
 				break;
 			case '3':
-				$imp_filtercolor = ['fltr_1' => 'th|' . $thumb_th_seting];
+				$imp_filtercolor = [ 'fltr_1' => 'th|' . $thumb_th_seting ];
 				break;
 			case '4':
-				$imp_filtercolor = ['fltr_1' => 'clr|' . $colorized . '|' . str_replace('#', '', $colorpicker)];
+				$imp_filtercolor = [ 'fltr_1' => 'clr|' . $colorized . '|' . str_replace('#', '', $colorpicker) ];
 				break;
 			default:
 				$imp_filtercolor = [];
@@ -243,50 +243,50 @@ class plgContentjumultithumb extends CMSPlugin
 		$usm_filtercolor = [];
 		if($usm == 1 && $thumb_filters == 1)
 		{
-			$usm_filtercolor = ['fltr_2' => 'usm|' . $thumb_unsharp_amount . '|' . $thumb_unsharp_radius . '|' . $thumb_unsharp_threshold];
+			$usm_filtercolor = [ 'fltr_2' => 'usm|' . $thumb_unsharp_amount . '|' . $thumb_unsharp_radius . '|' . $thumb_unsharp_threshold ];
 		}
 
 		$blur_filtercolor = [];
 		if($thumb_blur == 1 && $thumb_filters == 1)
 		{
-			$blur_filtercolor = ['fltr_3' => 'blur|' . $thumb_blur_seting];
+			$blur_filtercolor = [ 'fltr_3' => 'blur|' . $thumb_blur_seting ];
 		}
 
 		$brit_filtercolor = [];
 		if($thumb_brit == 1 && $thumb_filters == 1)
 		{
-			$brit_filtercolor = ['fltr_4' => 'brit|' . $thumb_brit_seting];
+			$brit_filtercolor = [ 'fltr_4' => 'brit|' . $thumb_brit_seting ];
 		}
 
 		$cont_filtercolor = [];
 		if($thumb_cont == 1 && $thumb_filters == 1)
 		{
-			$cont_filtercolor = ['fltr_5' => 'cont|' . $thumb_cont_seting];
+			$cont_filtercolor = [ 'fltr_5' => 'cont|' . $thumb_cont_seting ];
 		}
 
 		// image replacer
 		$lightbox = $this->params->get('selectlightbox');
 
 		preg_match_all('/(width|height|src|alt|title|class|align|style)=("[^"]*")/i', $_img, $imgAttr);
-		$countAttr = count($imgAttr[0]);
+		$countAttr = count($imgAttr[ 0 ]);
 		$img       = [];
 
-		for ($i = 0; $i < $countAttr; $i++)
+		for($i = 0; $i < $countAttr; $i++)
 		{
-			$img[$imgAttr[1][$i]] = str_replace('"', '', $imgAttr[2][$i]);
+			$img[ $imgAttr[ 1 ][ $i ] ] = str_replace('"', '', $imgAttr[ 2 ][ $i ]);
 		}
 
-		$imgsource      = $img['src'];
+		$imgsource      = $img[ 'src' ];
 		$imgsource      = str_replace(Uri::base(), '', $imgsource);
 		$originalsource = $imgsource;
-		$imgalt         = $img['alt'];
-		$imgtitle       = $img['title'];
-		$imgalign       = $img['align'];
-		$imgclass       = $img['class'] . ' ';
+		$imgalt         = $img[ 'alt' ];
+		$imgtitle       = $img[ 'title' ];
+		$imgalign       = $img[ 'align' ];
+		$imgclass       = $img[ 'class' ] . ' ';
 
-		if(preg_match('#float:(.*?);#s', $img['style'], $imgstyle))
+		if(preg_match('#float:(.*?);#s', $img[ 'style' ], $imgstyle))
 		{
-			$imgstyle = $imgstyle[1];
+			$imgstyle = $imgstyle[ 1 ];
 		}
 
 		$img_class = '';
@@ -304,25 +304,25 @@ class plgContentjumultithumb extends CMSPlugin
 		$imgalt    = mb_strtoupper(mb_substr($imgalt, 0, 1)) . mb_substr($imgalt, 1);
 		$img_alt   = $imgalt;
 		$imgtitle  = mb_strtoupper(mb_substr($imgtitle, 0, 1)) . mb_substr($imgtitle, 1);
-		$img_title = ($imgalt ?: $imgtitle);
-		$img_title = ($img_title ?: $article->title);
+		$img_title = ($imgalt ? : $imgtitle);
+		$img_title = ($img_title ? : $article->title);
 		$img_title = ($img_title ? ' title="' . $img_title . '"' : '');
 
 		$_image_noresize = 0;
-		if($this->params->get('resall') == 0 && $img['class'] !== 'juimage')
+		if($this->params->get('resall') == 0 && $img[ 'class' ] !== 'juimage')
 		{
 			$size = getimagesize(JPATH_SITE . '/' . $originalsource);
 
-			return $this->_image($originalsource, $size[0], $size[1], $imgclass, $img_alt, 1, 1, $img_title);
+			return $this->_image($originalsource, $size[ 0 ], $size[ 1 ], $imgclass, $img_alt, 1, 1, $img_title);
 		}
 
-		if($this->params->get('resall') == 1 && ($img['class'] === 'nothumb' || $img['class'] === 'noimage' || $img['class'] === 'nothumbnail' || $img['class'] === 'jugallery' || $img['class'] == $noimage_class) && $img['class'] != '')
+		if($this->params->get('resall') == 1 && ($img[ 'class' ] === 'nothumb' || $img[ 'class' ] === 'noimage' || $img[ 'class' ] === 'nothumbnail' || $img[ 'class' ] === 'jugallery' || $img[ 'class' ] == $noimage_class) && $img[ 'class' ] != '')
 		{
 			if($this->params->get('a_watermark') == 0 || $watermark_o != '1')
 			{
 				$size = getimagesize(JPATH_SITE . '/' . $originalsource);
 
-				return $this->_image($originalsource, $size[0], $size[1], $img_class, $img_alt, 1, 1, $img_title);
+				return $this->_image($originalsource, $size[ 0 ], $size[ 1 ], $img_class, $img_alt, 1, 1, $img_title);
 			}
 
 			$_image_noresize = 1;
@@ -330,7 +330,7 @@ class plgContentjumultithumb extends CMSPlugin
 
 		if($this->modeHelper && $this->modeHelper->jView('CatBlog'))
 		{
-			if(in_array($this->itemid, $this->params->get('menu_item1') ?: [], true))
+			if(in_array($this->itemid, $this->params->get('menu_item1') ? : [], true))
 			{
 				$b_newwidth           = $this->params->get('b_widthnew1');
 				$b_newheight          = $this->params->get('b_heightnew1');
@@ -345,7 +345,7 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_sxnew              = $this->params->get('b_sxnew1');
 				$b_synew              = $this->params->get('b_synew1');
 			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item2') ?: [], true))
+			elseif(in_array($this->itemid, $this->params->get('menu_item2') ? : [], true))
 			{
 				$b_newwidth           = $this->params->get('b_widthnew2');
 				$b_newheight          = $this->params->get('b_heightnew2');
@@ -360,7 +360,7 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_sxnew              = $this->params->get('b_sxnew2');
 				$b_synew              = $this->params->get('b_synew2');
 			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item3') ?: [], true))
+			elseif(in_array($this->itemid, $this->params->get('menu_item3') ? : [], true))
 			{
 				$b_newwidth           = $this->params->get('b_widthnew3');
 				$b_newheight          = $this->params->get('b_heightnew3');
@@ -375,7 +375,7 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_sxnew              = $this->params->get('b_sxnew3');
 				$b_synew              = $this->params->get('b_synew3');
 			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item4') ?: [], true))
+			elseif(in_array($this->itemid, $this->params->get('menu_item4') ? : [], true))
 			{
 				$b_newwidth           = $this->params->get('b_widthnew4');
 				$b_newheight          = $this->params->get('b_heightnew4');
@@ -390,7 +390,7 @@ class plgContentjumultithumb extends CMSPlugin
 				$b_sxnew              = $this->params->get('b_sxnew4');
 				$b_synew              = $this->params->get('b_synew4');
 			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item5') ?: [], true))
+			elseif(in_array($this->itemid, $this->params->get('menu_item5') ? : [], true))
 			{
 				$b_newwidth           = $this->params->get('b_widthnew5');
 				$b_newheight          = $this->params->get('b_heightnew5');
@@ -466,7 +466,7 @@ class plgContentjumultithumb extends CMSPlugin
 		{
 			if($this->modeHelper && $this->modeHelper->jView('Article'))
 			{
-				if(in_array($this->itemid, $this->params->get('menu_item1') ?: [], true))
+				if(in_array($this->itemid, $this->params->get('menu_item1') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('maxwidthnew1');
 					$newmaxheight       = $this->params->get('maxheightnew1');
@@ -485,7 +485,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('noresizenew1');
 					$newnofullimg       = $this->params->get('nofullimgnew1');
 				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item2') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('menu_item2') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('maxwidthnew2');
 					$newmaxheight       = $this->params->get('maxheightnew2');
@@ -504,7 +504,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('noresizenew2');
 					$newnofullimg       = $this->params->get('nofullimgnew2');
 				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item3') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('menu_item3') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('maxwidthnew3');
 					$newmaxheight       = $this->params->get('maxheightnew3');
@@ -523,7 +523,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('noresizenew3');
 					$newnofullimg       = $this->params->get('nofullimgnew3');
 				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item4') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('menu_item4') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('maxwidthnew4');
 					$newmaxheight       = $this->params->get('maxheightnew4');
@@ -542,7 +542,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('noresizenew4');
 					$newnofullimg       = $this->params->get('nofullimgnew4');
 				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item5') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('menu_item5') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('maxwidthnew5');
 					$newmaxheight       = $this->params->get('maxheightnew5');
@@ -584,7 +584,7 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 			elseif(($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('Category')))
 			{
-				if(in_array($this->itemid, $this->params->get('cat_menu_item1') ?: [], true))
+				if(in_array($this->itemid, $this->params->get('cat_menu_item1') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('cat_maxwidthnew1');
 					$newmaxheight       = $this->params->get('cat_maxheightnew1');
@@ -603,7 +603,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('cat_noresizenew1');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew1');
 				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item2') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('cat_menu_item2') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('cat_maxwidthnew2');
 					$newmaxheight       = $this->params->get('cat_maxheightnew2');
@@ -622,7 +622,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('cat_noresizenew2');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew2');
 				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item3') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('cat_menu_item3') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('cat_maxwidthnew3');
 					$newmaxheight       = $this->params->get('cat_maxheightnew3');
@@ -641,7 +641,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('cat_noresizenew3');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew3');
 				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item4') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('cat_menu_item4') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('cat_maxwidthnew4');
 					$newmaxheight       = $this->params->get('cat_maxheightnew4');
@@ -660,7 +660,7 @@ class plgContentjumultithumb extends CMSPlugin
 					$newnoresize        = $this->params->get('cat_noresizenew4');
 					$newnofullimg       = $this->params->get('cat_nofullimgnew4');
 				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item5') ?: [], true))
+				elseif(in_array($this->itemid, $this->params->get('cat_menu_item5') ? : [], true))
 				{
 					$newmaxwidth        = $this->params->get('cat_maxwidthnew5');
 					$newmaxheight       = $this->params->get('cat_maxheightnew5');
@@ -916,11 +916,11 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_noresize = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null)
+	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_noresize = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null): string
 	{
 		$template = $this->app->getTemplate();
 
-		switch ($_lightbox)
+		switch($_lightbox)
 		{
 			case 'lightgallery':
 				$lightbox = ' ' . ($_link_img ? 'data-src="' . Uri::base() . $_link_img . '"' : '') . ' ' . ($_orig_img ? 'data-download-url="' . Uri::base() . $_orig_img . '"' : '');
@@ -952,7 +952,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 *
 	 * @since 7.0
 	 */
-	public function getTmpl($template, $name)
+	public function getTmpl($template, $name): string
 	{
 		$search = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb/' . $name . '.php';
 		$tmpl   = JPATH_SITE . '/plugins/content/jumultithumb/tmpl/' . $name . '.php';
@@ -976,8 +976,8 @@ class plgContentjumultithumb extends CMSPlugin
 	public function _aspect($html, $_cropaspect)
 	{
 		$size   = getimagesize(rawurldecode(JPATH_SITE . '/' . $html));
-		$width  = $size[0];
-		$height = $size[1] * ($_cropaspect != '' ? $_cropaspect : '0');
+		$width  = $size[ 0 ];
+		$height = $size[ 1 ] * ($_cropaspect != '' ? $_cropaspect : '0');
 
 		return $height / $width;
 	}
@@ -989,7 +989,7 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onBeforeCompileHead()
+	public function onBeforeCompileHead(): bool
 	{
 		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
@@ -1005,7 +1005,7 @@ class plgContentjumultithumb extends CMSPlugin
 
 			$juhead = '';
 
-			switch ($this->params->get('selectlightbox'))
+			switch($this->params->get('selectlightbox'))
 			{
 				case 'customjs':
 					$juhead .= "\r";
@@ -1015,26 +1015,9 @@ class plgContentjumultithumb extends CMSPlugin
 					}
 					break;
 
-				case 'colorbox':
-					$jsparams = "\r";
-					if($this->params->get('colorboxparam'))
-					{
-						$jsparams = "{\n		" . str_replace('<br />', "\n		", $this->params->get('colorboxparam')) . "\n	}";
-					}
-
-					$this->doc->addStyleSheet(Uri::base() . 'media/plg_jumultithumb/colorbox/' . $this->params->get('colorboxstyle') . '/colorbox.css');
-					$this->doc->addScript(Uri::base() . 'media/plg_jumultithumb/colorbox/jquery.colorbox-min.js');
-
-					$juhead .= "jQuery(window).on('load', function() {\n";
-					$juhead .= "	jQuery(\"a[rel='lightbox[gall]']\").colorbox(";
-					$juhead .= $jsparams;
-					$juhead .= ");\n";
-					$juhead .= "});\n";
-					break;
-
 				default:
 				case 'jmodal':
-					HTMLHelper::_('behavior.modal');
+					HTMLHelper::_('bootstrap.renderModal');
 					break;
 			}
 
