@@ -18,49 +18,31 @@ define('MAX_SIZE', '500');
 require_once JPATH_BASE . '/includes/defines.php';
 require_once JPATH_BASE . '/includes/framework.php';
 
+use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
+use Joomla\Session\SessionInterface;
 
-$app = Factory::getApplication('administrator');
-$app->execute();
+$container = Factory::getContainer();
+$container->alias(SessionInterface::class, 'session.web.site');
+
+$app = $container->get(AdministratorApplication::class);
 
 $joomlaUser = Factory::getUser();
+$lang       = Factory::getLanguage();
+$doc        = Factory::getDocument();
 
-$lang = Factory::getLanguage();
 $lang->load('plg_content_jumultithumb', JPATH_ADMINISTRATOR);
-
 $language = mb_strtolower($lang->getTag());
-
-$doc = Factory::getDocument();
-
-$doc->addStyleSheet('/media/jui/css/bootstrap.min.css');
 
 if($joomlaUser->get('id') < 1)
 {
-	?>
-	<!DOCTYPE html>
-	<html lang="<?php echo $language; ?>">
-	<head>
-		<meta content="charset=utf-8" />
-		<link href="../../../../media/jui/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	</head>
-	<body>
-	<dl id="system-message">
-		<dt class="error"><?php echo JText::_('PLG_JUMULTITHUMB_NOTICE'); ?></dt>
-		<dd class="message error fade">
-			<ul>
-				<li><?php echo JText::_('PLG_JUMULTITHUMB_LOGIN'); ?></li>
-			</ul>
-		</dd>
-	</dl>
-	</body>
-	</html>
-	<?php
+	echo JText::_('PLG_JUMULTITHUMB_LOGIN');
+
 	return;
 }
 
-$plugin = JPluginHelper::getPlugin('content', 'jumultithumb_gallery');
-$json   = json_decode($plugin->params);
-
+$plugin     = JPluginHelper::getPlugin('content', 'jumultithumb_gallery');
+$json       = json_decode($plugin->params);
 $rootfolder = 'images/' . $json->galleryfolder . '/';
 
 ?>
@@ -70,10 +52,11 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_INSERT_TAG'); ?></title>
 
-	<link href="../../../../media/jui/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="/media/templates/administrator/atum/css/template.css" rel="stylesheet" data-asset-name="template.atum.ltr" data-asset-dependencies="fontawesome" />
+
 	<link href="assets/jqueryFileTree.css" rel="stylesheet" type="text/css" />
 
-	<script src="../../../../media/jui/js/jquery.min.js"></script>
+	<script src="/media/vendor/jquery/js/jquery.js?3.6.0" data-asset-name="jquery"></script>
 	<script src="assets/jqueryFileTree.js?v3"></script>
 
 	<script>
@@ -110,10 +93,13 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
             }
 
             var tag = "{gallery " + folder + title + cssclass + "}";
-            window.parent.jInsertEditorText(tag, 'jform_articletext');
-            window.parent.SqueezeBox.close();
+
+            window.parent.Joomla.editors.instances['jform_articletext'].replaceSelection(tag);
+            window.parent.Joomla.Modal.getCurrent().close();
+
             return false;
         }
+
 	</script>
 	<style>
         body {
@@ -132,8 +118,7 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
 		<div class="controls">
 			<div class="selects"></div>
 			<br>
-			<input id="folder" class="folderurl uneditable-input" name="selectfolder" disabled="disabled"
-					style="width:30%">
+			<input id="folder" class="folderurl uneditable-input" name="selectfolder" disabled="disabled" style="width:30%">
 		</div>
 	</div>
 	<div class="control-group">
@@ -150,8 +135,9 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
 	</div>
 	<div class="control-group">
 		<div class="controls">
-			<button onclick="insertJUGallery();"
-					class="btn btn-success"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_INSERT_TAG'); ?></button>
+			<button onclick="insertJUGallery();" class="btn btn-success">
+				<?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_INSERT_TAG'); ?>
+			</button>
 		</div>
 	</div>
 </form>
