@@ -28,9 +28,9 @@ class plgContentJUMultiThumb_com_content
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function __construct(&$plugin)
+	public function __construct($plugin)
 	{
-		$this->plugin = &$plugin;
+		$this->plugin = $plugin;
 		$this->app    = Factory::getApplication();
 	}
 
@@ -53,35 +53,27 @@ class plgContentJUMultiThumb_com_content
 		{
 			case 'Component':
 				return ($option === 'com_content');
-				break;
 
 			case 'CatBlog':
 				return (($view === 'category' && ($layout === 'blog')) || ($view === 'category' && ($layout === 'card')));
-				break;
 
 			case 'Blog':
 				return ($layout === 'blog');
-				break;
 
 			case 'Category':
 				return ($view === 'categories' && !$layout);
-				break;
 
 			case 'Categories':
 				return ($view === 'categories');
-				break;
 
 			case 'Featured':
 				return ($view === 'featured');
-				break;
 
 			case 'Print':
 				return ($print == '1');
-				break;
 
 			case 'Article':
 				return ($view === 'article');
-				break;
 		}
 
 		return true;
