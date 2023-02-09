@@ -926,10 +926,6 @@ class plgContentjumultithumb extends CMSPlugin
 				$lightbox = ' ' . ($_link_img ? 'data-src="' . Uri::base() . $_link_img . '"' : '') . ' ' . ($_orig_img ? 'data-download-url="' . Uri::base() . $_orig_img . '"' : '');
 				break;
 
-			case 'colorbox':
-				$lightbox = ' class="lightbox" rel="lightbox[gall]"';
-				break;
-
 			default:
 			case 'jmodal':
 				$lightbox = ' class="modal" rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
@@ -966,18 +962,18 @@ class plgContentjumultithumb extends CMSPlugin
 	}
 
 	/**
-	 * @param $html
+	 * @param $file
 	 * @param $_cropaspect
 	 *
 	 * @return float|int
 	 *
 	 * @since 7.0
 	 */
-	public function _aspect($html, $_cropaspect)
+	public function _aspect($file, $_cropaspect)
 	{
-		$size   = getimagesize(rawurldecode(JPATH_SITE . '/' . $html));
-		$width  = $size[ 0 ];
-		$height = $size[ 1 ] * ($_cropaspect != '' ? $_cropaspect : '0');
+		$size   = $this->juimg->size(rawurldecode(JPATH_SITE . '/' . $file));
+		$width  = $size->width;
+		$height = $size->height * ($_cropaspect != '' ? $_cropaspect : '0');
 
 		return $height / $width;
 	}
@@ -1022,11 +1018,6 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 
 			$this->doc->addScriptDeclaration($juhead);
-		}
-
-		if($this->params->get('use_css') == 1)
-		{
-			$this->doc->addStyleSheet(Uri::base() . 'media/plg_jumultithumb/style.css');
 		}
 
 		return true;

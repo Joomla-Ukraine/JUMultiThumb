@@ -26,6 +26,7 @@ class JFormFieldModal_Upload extends JFormField
 	 */
 	protected function getInput()
 	{
+		/*
 		JHtml::_('behavior.modal', 'a.modal');
 
 		$script   = [];
@@ -43,5 +44,6 @@ class JFormFieldModal_Upload extends JFormField
 		$html[] = '	<a class="modal btn btn-primary" title="' . JText::_('PLG_JUMULTITHUMB_WATERMARK_UPLOAD') . '" href="' . $link . '" rel="{handler: \'iframe\', size: {x: 900, y: 550}}"><i class="icon-upload"></i> ' . JText::_('PLG_JUMULTITHUMB_WATERMARK_UPLOAD') . '</a>';
 
 		return implode("\n", $html);
+		*/
 	}
 }
