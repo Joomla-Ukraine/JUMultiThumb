@@ -107,7 +107,6 @@ class plgContentjumultithumb extends CMSPlugin
 	 */
 	public function onContentPrepare($context, $article, &$params, $limitstart): bool
 	{
-		echo $context;
 		if($this->app->getName() !== 'site' || !$this->modeHelper->jView('Component'))
 		{
 			return true;
@@ -115,21 +114,26 @@ class plgContentjumultithumb extends CMSPlugin
 
 		if(isset($article->text))
 		{
-
-			$article->text = @$this->ImgReplace($article->text, $article);
+			$article->text = @$this->ImgReplace([
+				'text'    => $article->text,
+				'article' => $article
+			]);
 		}
 
 		if(isset($article->fulltext))
 		{
 			$attribs = json_decode($article->attribs);
-
-			$use_wm = 1;
+			$use_wm  = 1;
 			if(isset($attribs->watermark_intro_only) == 1)
 			{
 				$use_wm = 0;
 			}
 
-			$article->fulltext = @$this->ImgReplace($article->fulltext, $article, $use_wm);
+			$article->fulltext = @$this->ImgReplace([
+				'text'    => $article->fulltext,
+				'article' => $article,
+				'use_wm'  => $use_wm
+			]);
 		}
 
 		return true;
@@ -140,27 +144,27 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @param     $article
 	 * @param int $use_wm
 	 *
-	 * @return mixed|null|string|string[]
+	 * @return
 	 *
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	private function ImgReplace($text, $article, int $use_wm = 1)
+	private function ImgReplace(array $option = [])
 	{
 		$only_image_blog     = $this->params->get('only_image_blog');
 		$only_image_category = $this->params->get('only_image_category');
 		$only_image_featured = $this->params->get('only_image_featured');
+		$attribs             = json_decode($option[ 'article' ]->attribs);
+		$watermark_o         = $attribs->watermark;
+		$watermark_s         = $attribs->watermark_s;
 
-		$attribs     = json_decode($article->attribs);
-		$watermark_o = $attribs->watermark;
-		$watermark_s = $attribs->watermark_s;
-
-		if($use_wm == 0)
+		if($option[ 'use_wm' ] == 0)
 		{
 			$watermark_o = '0';
 			$watermark_s = '0';
 		}
 
+		$text = $option[ 'text' ];
 		$text = preg_replace('#<img(.*?)mce_src="(.*?)"(.*?)>#s', "<img\\1\\3>", $text);
 		$text = preg_replace('#<p>\s*<img(.*?)/>\s*</p>#s', "<img\\1\\3>", $text);
 		$text = preg_replace('#<p>\s*<img(.*?)/>\s*#s', "<img\\1\\3><p>", $text);
@@ -170,7 +174,12 @@ class plgContentjumultithumb extends CMSPlugin
 		{
 			foreach($imageAttr[ 0 ] as $image)
 			{
-				$replace = $this->JUMultithumbReplacer($image, $article, $watermark_o, $watermark_s);
+				$replace = $this->JUMultithumbReplacer([
+					'image'       => $image,
+					'article'     => $option[ 'article' ],
+					'watermark_o' => $watermark_o,
+					'watermark_s' => $watermark_s
+				]);
 				$text    = str_replace($image, $replace, $text);
 			}
 		}
@@ -181,7 +190,6 @@ class plgContentjumultithumb extends CMSPlugin
 			$img  = $result[ 1 ][ 0 ];
 			$text = $img;
 		}
-
 
 		return $text;
 	}
@@ -197,9 +205,8 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	private function JUMultithumbReplacer($_img, $article, $watermark_o, $watermark_s): string
+	private function JUMultithumbReplacer(array $option = [])
 	{
-		// params
 		$quality                 = $this->params->get('quality');
 		$noimage_class           = $this->params->get('noimage_class');
 		$thumb_filtercolor       = $this->params->get('thumb_filtercolor', 0);
@@ -219,7 +226,7 @@ class plgContentjumultithumb extends CMSPlugin
 		$thumb_cont_seting       = $this->params->get('thumb_cont_seting', 50);
 		$items                   = $this->params->get('items');
 
-		$attribs = json_decode($article->attribs);
+		$attribs = json_decode($option[ 'article' ]->attribs);
 		$use_wm  = 1;
 		if($attribs->watermark_off)
 		{
@@ -248,7 +255,9 @@ class plgContentjumultithumb extends CMSPlugin
 		$usm_filtercolor = [];
 		if($usm == 1 && $thumb_filters == 1)
 		{
-			$usm_filtercolor = [ 'fltr_2' => 'usm|' . $thumb_unsharp_amount . '|' . $thumb_unsharp_radius . '|' . $thumb_unsharp_threshold ];
+			$usm_filtercolor = [
+				'fltr_2' => 'usm|' . $thumb_unsharp_amount . '|' . $thumb_unsharp_radius . '|' . $thumb_unsharp_threshold
+			];
 		}
 
 		$blur_filtercolor = [];
@@ -272,7 +281,7 @@ class plgContentjumultithumb extends CMSPlugin
 		// image replacer
 		$lightbox = $this->params->get('selectlightbox');
 
-		preg_match_all('/(width|height|src|alt|title|class|align|style)=("[^"]*")/i', $_img, $imgAttr);
+		preg_match_all('/(width|height|src|alt|title|class|align|style)=("[^"]*")/i', $option[ 'image' ], $imgAttr);
 		$countAttr = count($imgAttr[ 0 ]);
 		$img       = [];
 
@@ -310,7 +319,7 @@ class plgContentjumultithumb extends CMSPlugin
 		$img_alt   = $imgalt;
 		$imgtitle  = mb_strtoupper(mb_substr($imgtitle, 0, 1)) . mb_substr($imgtitle, 1);
 		$img_title = ($imgalt ? : $imgtitle);
-		$img_title = ($img_title ? : $article->title);
+		$img_title = ($img_title ? : $option[ 'article' ]->title);
 		$img_title = ($img_title ? ' title="' . $img_title . '"' : '');
 
 		$_image_noresize = 0;
@@ -323,7 +332,7 @@ class plgContentjumultithumb extends CMSPlugin
 
 		if($this->params->get('resall') == 1 && ($img[ 'class' ] === 'nothumb' || $img[ 'class' ] === 'noimage' || $img[ 'class' ] === 'nothumbnail' || $img[ 'class' ] === 'jugallery' || $img[ 'class' ] == $noimage_class) && $img[ 'class' ] != '')
 		{
-			if($this->params->get('a_watermark') == 0 || $watermark_o != '1')
+			if($this->params->get('a_watermark') == 0 || $option[ 'watermark_o' ] != '1')
 			{
 				$size = getimagesize(JPATH_SITE . '/' . $originalsource);
 
@@ -335,137 +344,78 @@ class plgContentjumultithumb extends CMSPlugin
 
 		if($this->modeHelper && $this->modeHelper->jView('CatBlog'))
 		{
-			if(in_array($this->itemid, $this->params->get('menu_item1') ? : [], true))
+			$b_width           = $this->params->get('b_width');
+			$b_height          = $this->params->get('b_height');
+			$b_cropzoom        = $this->params->get('b_cropzoom');
+			$b_zoomcrop_params = $this->params->get('b_zoomcrop_params');
+			$b_auto_zoomcrop   = $this->params->get('b_auto_zoomcrop');
+			$b_cropaspect      = $this->params->get('b_cropaspect');
+			//$b_zoomcropbg      = $this->params->get('b_zoomcropbg');
+			$b_farcrop        = $this->params->get('b_farcrop');
+			$b_farcrop_params = $this->params->get('b_farcrop_params');
+			$b_farcropbg      = $this->params->get('b_farcropbg');
+			$b_aoe            = $this->params->get('b_aoe');
+			$b_sx             = $this->params->get('b_sx');
+			$b_sy             = $this->params->get('b_sy');
+
+			foreach($items as $item)
 			{
-				$b_newwidth           = $this->params->get('b_widthnew1');
-				$b_newheight          = $this->params->get('b_heightnew1');
-				$b_newcropzoom        = $this->params->get('b_cropzoomnew1');
-				$b_newzoomcrop_params = $this->params->get('b_zoomcrop_paramsnew1');
-				$b_newauto_zoomcrop   = $this->params->get('b_auto_zoomcropnew1');
-				$b_newcropaspect      = $this->params->get('b_cropaspectnew1');
-				$b_newfarcrop         = $this->params->get('b_farcropnew1');
-				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew1');
-				$b_newfarcropbg       = $this->params->get('b_farcropbgnew1');
-				$b_aoenew             = $this->params->get('b_aoenew1');
-				$b_sxnew              = $this->params->get('b_sxnew1');
-				$b_synew              = $this->params->get('b_synew1');
-			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item2') ? : [], true))
-			{
-				$b_newwidth           = $this->params->get('b_widthnew2');
-				$b_newheight          = $this->params->get('b_heightnew2');
-				$b_newcropzoom        = $this->params->get('b_cropzoomnew2');
-				$b_newzoomcrop_params = $this->params->get('b_zoomcrop_paramsnew2');
-				$b_newauto_zoomcrop   = $this->params->get('b_auto_zoomcropnew2');
-				$b_newcropaspect      = $this->params->get('b_cropaspectnew2');
-				$b_newfarcrop         = $this->params->get('b_farcropnew2');
-				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew2');
-				$b_newfarcropbg       = $this->params->get('b_farcropbgnew2');
-				$b_aoenew             = $this->params->get('b_aoenew2');
-				$b_sxnew              = $this->params->get('b_sxnew2');
-				$b_synew              = $this->params->get('b_synew2');
-			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item3') ? : [], true))
-			{
-				$b_newwidth           = $this->params->get('b_widthnew3');
-				$b_newheight          = $this->params->get('b_heightnew3');
-				$b_newcropzoom        = $this->params->get('b_cropzoomnew3');
-				$b_newzoomcrop_params = $this->params->get('b_zoomcrop_paramsnew3');
-				$b_newauto_zoomcrop   = $this->params->get('b_auto_zoomcropnew3');
-				$b_newcropaspect      = $this->params->get('b_cropaspectnew3');
-				$b_newfarcrop         = $this->params->get('b_farcropnew3');
-				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew3');
-				$b_newfarcropbg       = $this->params->get('b_farcropbgnew3');
-				$b_aoenew             = $this->params->get('b_aoenew3');
-				$b_sxnew              = $this->params->get('b_sxnew3');
-				$b_synew              = $this->params->get('b_synew3');
-			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item4') ? : [], true))
-			{
-				$b_newwidth           = $this->params->get('b_widthnew4');
-				$b_newheight          = $this->params->get('b_heightnew4');
-				$b_newcropzoom        = $this->params->get('b_cropzoomnew4');
-				$b_newzoomcrop_params = $this->params->get('b_zoomcrop_paramsnew4');
-				$b_newauto_zoomcrop   = $this->params->get('b_auto_zoomcropnew4');
-				$b_newcropaspect      = $this->params->get('b_cropaspectnew4');
-				$b_newfarcrop         = $this->params->get('b_farcropnew4');
-				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew4');
-				$b_newfarcropbg       = $this->params->get('b_farcropbgnew4');
-				$b_aoenew             = $this->params->get('b_aoenew4');
-				$b_sxnew              = $this->params->get('b_sxnew4');
-				$b_synew              = $this->params->get('b_synew4');
-			}
-			elseif(in_array($this->itemid, $this->params->get('menu_item5') ? : [], true))
-			{
-				$b_newwidth           = $this->params->get('b_widthnew5');
-				$b_newheight          = $this->params->get('b_heightnew5');
-				$b_newcropzoom        = $this->params->get('b_cropzoomnew5');
-				$b_newzoomcrop_params = $this->params->get('b_zoomcrop_paramsnew5');
-				$b_newauto_zoomcrop   = $this->params->get('b_auto_zoomcropnew5');
-				$b_newcropaspect      = $this->params->get('b_cropaspectnew5');
-				$b_newfarcrop         = $this->params->get('b_farcropnew5');
-				$b_newfarcrop_params  = $this->params->get('b_farcrop_paramsnew5');
-				$b_newfarcropbg       = $this->params->get('b_farcropbgnew5');
-				$b_aoenew             = $this->params->get('b_aoenew5');
-				$b_sxnew              = $this->params->get('b_sxnew5');
-				$b_synew              = $this->params->get('b_synew5');
-			}
-			else
-			{
-				$b_newwidth           = $this->params->get('b_width');
-				$b_newheight          = $this->params->get('b_height');
-				$b_newcropzoom        = $this->params->get('b_cropzoom');
-				$b_newzoomcrop_params = $this->params->get('b_zoomcrop_params');
-				$b_newauto_zoomcrop   = $this->params->get('b_auto_zoomcrop');
-				$b_newcropaspect      = $this->params->get('b_cropaspect');
-				//$b_newzoomcropbg      = $this->params->get('b_zoomcropbg');
-				$b_newfarcrop        = $this->params->get('b_farcrop');
-				$b_newfarcrop_params = $this->params->get('b_farcrop_params');
-				$b_newfarcropbg      = $this->params->get('b_farcropbg');
-				$b_aoenew            = $this->params->get('b_aoe');
-				$b_sxnew             = $this->params->get('b_sx');
-				$b_synew             = $this->params->get('b_sy');
+				if(in_array($this->itemid, $item->menu_item))
+				{
+					$b_width           = $item->b_width;
+					$b_height          = $item->b_height;
+					$b_cropzoom        = $item->b_cropzoom;
+					$b_zoomcrop_params = $item->b_zoomcrop_params;
+					$b_auto_zoomcrop   = $item->b_auto_zoomcrop;
+					$b_cropaspect      = $item->b_cropaspect;
+					$b_farcrop         = $item->b_farcrop;
+					$b_farcrop_params  = $item->b_farcrop_params;
+					$b_farcropbg       = $item->b_farcropbg;
+					$b_aoe             = $item->b_aoe;
+					$b_sx              = $item->b_sx;
+					$b_sy              = $item->b_sy;
+				}
 			}
 
 			$aspect = 0;
-			if($b_newauto_zoomcrop == 1)
+			if($b_auto_zoomcrop == 1)
 			{
-				$aspect = $this->_aspect($imgsource, $b_newcropaspect);
+				$aspect = $this->_aspect($imgsource, $b_cropaspect);
 			}
 
 			$new_imgparams = [
-				'zc' => $b_newcropzoom == 1 ? $b_newzoomcrop_params : ''
+				'zc' => $b_cropzoom == 1 ? $b_zoomcrop_params : ''
 			];
 
-			if($aspect >= '1' && $b_newauto_zoomcrop == 1)
+			if($aspect >= '1' && $b_auto_zoomcrop == 1)
 			{
 				$new_imgparams = [
 					'far' => '1',
-					'bg'  => str_replace('#', '', $b_newfarcropbg)
+					'bg'  => str_replace('#', '', $b_farcropbg)
 				];
 			}
 
-			if($b_newfarcrop == 1)
+			if($b_farcrop == 1)
 			{
 				$new_imgparams = [
-					'far' => $b_newfarcrop_params,
-					'bg'  => str_replace('#', '', $b_newfarcropbg)
+					'far' => $b_farcrop_params,
+					'bg'  => str_replace('#', '', $b_farcropbg)
 				];
 			}
 
 			$imgparams = [
-				'w'     => $b_newwidth,
-				'h'     => $b_newheight,
-				'aoe'   => $b_aoenew,
-				'sx'    => $b_sxnew,
-				'sy'    => $b_synew,
+				'w'     => $b_width,
+				'h'     => $b_height,
+				'aoe'   => $b_aoe,
+				'sx'    => $b_sx,
+				'sy'    => $b_sy,
 				'q'     => $quality,
 				'cache' => 'img'
 			];
 
 			$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams, $new_imgparams);
 			$thumb_img  = $this->juimg->render($imgsource, $_imgparams);
-			$limage     = $this->_image($thumb_img, $b_newwidth, $b_newheight, $img_class, $img_alt, 0, 0);
+			$limage     = $this->_image($thumb_img, $b_width, $b_height, $img_class, $img_alt, 0, 0);
 		}
 
 		if(($this->modeHelper && $this->modeHelper->jView('Article')) || ($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('Category')))
@@ -649,7 +599,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$wmi = '';
 			if($use_wm == 1)
 			{
-				if($watermark_o == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1)
+				if($option[ 'watermark_o' ] == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1)
 				{
 					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
 					if(is_file($wmfile))
@@ -675,7 +625,7 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 
 			$link_img = $imgsource;
-			if($watermark_o == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1 ||
+			if($option[ 'watermark_o' ] == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1 ||
 
 				$this->params->get('maxsize_orig') == 1 || $this->params->get('cat_newmaxsize_orig') == 1)
 			{
@@ -696,7 +646,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$wmi_s = '';
 			if($use_wm == 1)
 			{
-				if($watermark_s == 1 || $this->params->get('a_watermark_s') == 1 || $this->params->get('a_watermarknew1_s') == 1 || $this->params->get('a_watermarknew2_s') == 1 || $this->params->get('a_watermarknew3_s') == 1 || $this->params->get('a_watermarknew4_s') == 1 || $this->params->get('a_watermarknew5_s') == 1)
+				if($option[ 'watermark_s' ] == 1 || $this->params->get('a_watermark_s') == 1 || $this->params->get('a_watermarknew1_s') == 1 || $this->params->get('a_watermarknew2_s') == 1 || $this->params->get('a_watermarknew3_s') == 1 || $this->params->get('a_watermarknew4_s') == 1 || $this->params->get('a_watermarknew5_s') == 1)
 				{
 					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
 					if(is_file($wmfile))
@@ -769,7 +719,6 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 			else
 			{
-
 				$limage = $this->_image($thumb_img, $newwidth, $newheight, 'imgobjct ' . $img_class, $img_alt, 1, 0, $img_title, $link_img, $imgsource, $lightbox);
 			}
 		}
@@ -831,7 +780,6 @@ class plgContentjumultithumb extends CMSPlugin
 			$limage = $this->_image($thumb_img, $this->params->get('f_width'), $this->params->get('f_height'), $img_class, $img_alt, 0, 0);
 		}
 
-
 		return $limage;
 	}
 
@@ -877,6 +825,34 @@ class plgContentjumultithumb extends CMSPlugin
 		return ob_get_clean();
 	}
 
+	private function _image2(array $options = []): string
+	{
+
+		//_image(   $_lightbox = null)
+
+		$tmpl = $options[ 'tmpl' ];
+
+
+		return $this->_getTmpl($tmpl, [
+			'tmpl'         => $options[ 'tmpl' ],
+			'img'          => $options[ 'img' ],
+			'noresize'     => $options[ 'noresize' ],
+			'w'            => $options[ 'w' ],
+			'h'            => $options[ 'h' ],
+			'class'        => $options[ 'class' ],
+			'caption'      => $options[ 'caption' ],
+			'alt'          => $options[ 'alt' ],
+			'figcaption'   => $options[ 'figcaption' ],
+			'title'        => $options[ 'title' ],
+			'link_img'     => $options[ 'link_img' ],
+			'picture'      => $options[ 'picture' ],
+			'webp_support' => $options[ 'webp_support' ],
+			'source'       => $options[ 'source' ],
+			'lightbox'     => $options[ 'lightbox' ],
+			'attr'         => $options[ 'attr' ]
+		]);
+	}
+
 	/**
 	 * @param $template
 	 * @param $name
@@ -898,17 +874,18 @@ class plgContentjumultithumb extends CMSPlugin
 		return $tmpl;
 	}
 
-	private function _getTmpl($template, $name, array $variables = []): string
+	private function _getTmpl(array $options = []): string
 	{
-		$search = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb/' . $name . '.php';
-		$tmpl   = JPATH_SITE . '/plugins/content/jumultithumb/tmpl/' . $name . '.php';
+		$template = $this->app->getTemplate();
+		$search   = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb/' . $options[ 'tmpl' ] . '.php';
+		$tmpl     = JPATH_SITE . '/plugins/content/jumultithumb/tmpl/' . $options[ 'tmpl' ] . '.php';
 
 		if(file_exists($search))
 		{
-			return (new FileLayout($name, $search))->render($variables);
+			return (new FileLayout($options[ 'tmpl' ], $search))->render($options);
 		}
 
-		return (new FileLayout($name, $tmpl))->render($variables);
+		return (new FileLayout($options[ 'tmpl' ], $tmpl))->render($options);
 	}
 
 	/**
