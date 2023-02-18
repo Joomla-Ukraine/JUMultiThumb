@@ -38,7 +38,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function __construct(& $subject, $config)
+	public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -70,14 +70,14 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart)
+	public function onContentBeforeDisplay($context, $article, $params, $limitstart): void
 	{
 		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
 			return;
 		}
 
-		if($this->modeHelper && $this->modeHelper->jView('Article'))
+		if($this->modeHelper->jView('Article'))
 		{
 			return;
 		}
@@ -98,14 +98,14 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentPrepare($context, &$article, &$params, $limitstart)
+	public function onContentPrepare($context, $article, $params, $limitstart): bool
 	{
 		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
 		{
 			return true;
 		}
 
-		if(!($this->modeHelper && $this->modeHelper->jView('Article')) && ($this->params->get('useimgagegallery') == '0'))
+		if(!($this->modeHelper->jView('Article')) && ($this->params->get('useimgagegallery') == '0'))
 		{
 			$regex = "/<p>\s*{gallery\s+(.*?)}\s*</p>/i";
 			preg_match_all($regex, $article->text, $matches, PREG_SET_ORDER);
@@ -189,102 +189,24 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 					$matcheslist[ 3 ] = $gallstyle;
 				}
 
-				if(in_array($this->itemid, $this->params->get('menu_item1') ? : []))
+				$maxsize_orignew = $this->params->get('maxsize_orignew');
+				$newmaxwidth     = $this->params->get('maxwidthnew');
+				$newmaxheight    = $this->params->get('maxheightnew');
+
+				$gallwidth    = $this->params->get('gallwidth');
+				$gallheight   = $this->params->get('gallheight');
+				$gallcropzoom = $this->params->get('gallcropzoom');
+
+				$galltitle = str_replace('title=', '', trim($matcheslist[ 1 ]));
+				if(!$galltitle)
 				{
-					$maxsize_orignew = $this->params->get('maxsize_orignew1');
-					$newmaxwidth     = $this->params->get('maxwidthnew1');
-					$newmaxheight    = $this->params->get('maxheightnew1');
-
-					$gallwidth    = $this->params->get('gallwidth1');
-					$gallheight   = $this->params->get('gallheight1');
-					$gallcropzoom = $this->params->get('gallcropzoom1');
-
-					$galltitle         = ($this->params->get('usegallery_title1') == 1 ? $this->params->get('gallery_title1') : '');
-					$gallstyle         = $this->params->get('cssclass1');
-					$a_watermarkgall_s = $this->params->get('watermark_gall_s1');
-					$a_watermarkgall   = $this->params->get('watermark_gall1');
+					$galltitle = $this->params->get('gallery_title');
 				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item2') ? : []))
+
+				$gallstyle = str_replace('class=', '', trim($matcheslist[ 2 ]));
+				if(!$gallstyle)
 				{
-					$maxsize_orignew = $this->params->get('maxsize_orignew2');
-					$newmaxwidth     = $this->params->get('maxwidthnew2');
-					$newmaxheight    = $this->params->get('maxheightnew2');
-
-					$gallwidth    = $this->params->get('gallwidth2');
-					$gallheight   = $this->params->get('gallheight2');
-					$gallcropzoom = $this->params->get('gallcropzoom2');
-
-					$galltitle         = ($this->params->get('usegallery_title2') == 1 ? $this->params->get('gallery_title2') : '');
-					$gallstyle         = $this->params->get('cssclass2');
-					$a_watermarkgall_s = $this->params->get('watermark_gall_s2');
-					$a_watermarkgall   = $this->params->get('watermark_gall2');
-				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item3') ? : []))
-				{
-					$maxsize_orignew = $this->params->get('maxsize_orignew3');
-					$newmaxwidth     = $this->params->get('maxwidthnew3');
-					$newmaxheight    = $this->params->get('maxheightnew3');
-
-					$gallwidth    = $this->params->get('gallwidth3');
-					$gallheight   = $this->params->get('gallheight3');
-					$gallcropzoom = $this->params->get('gallcropzoom3');
-
-					$galltitle         = ($this->params->get('usegallery_title3') == 1 ? $this->params->get('gallery_title3') : '');
-					$gallstyle         = $this->params->get('cssclass3');
-					$a_watermarkgall_s = $this->params->get('watermark_gall_s3');
-					$a_watermarkgall   = $this->params->get('watermark_gall3');
-				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item4') ? : []))
-				{
-					$maxsize_orignew = $this->params->get('maxsize_orignew4');
-					$newmaxwidth     = $this->params->get('maxwidthnew4');
-					$newmaxheight    = $this->params->get('maxheightnew4');
-
-					$gallwidth    = $this->params->get('gallwidth4');
-					$gallheight   = $this->params->get('gallheight4');
-					$gallcropzoom = $this->params->get('gallcropzoom4');
-
-					$galltitle         = ($this->params->get('usegallery_title4') == 1 ? $this->params->get('gallery_title4') : '');
-					$gallstyle         = $this->params->get('cssclass4');
-					$a_watermarkgall_s = $this->params->get('watermark_gall_s4');
-					$a_watermarkgall   = $this->params->get('watermark_gall4');
-				}
-				elseif(in_array($this->itemid, $this->params->get('menu_item5') ? : []))
-				{
-					$maxsize_orignew = $this->params->get('maxsize_orignew5');
-					$newmaxwidth     = $this->params->get('maxwidthnew5');
-					$newmaxheight    = $this->params->get('maxheightnew5');
-
-					$gallwidth    = $this->params->get('gallwidth5');
-					$gallheight   = $this->params->get('gallheight5');
-					$gallcropzoom = $this->params->get('gallcropzoom5');
-
-					$galltitle         = ($this->params->get('usegallery_title5') == 1 ? $this->params->get('gallery_title5') : '');
-					$gallstyle         = $this->params->get('cssclass5');
-					$a_watermarkgall_s = $this->params->get('watermark_gall_s5');
-					$a_watermarkgall   = $this->params->get('watermark_gall5');
-				}
-				else
-				{
-					$maxsize_orignew = $this->params->get('maxsize_orignew');
-					$newmaxwidth     = $this->params->get('maxwidthnew');
-					$newmaxheight    = $this->params->get('maxheightnew');
-
-					$gallwidth    = $this->params->get('gallwidth');
-					$gallheight   = $this->params->get('gallheight');
-					$gallcropzoom = $this->params->get('gallcropzoom');
-
-					$galltitle = str_replace('title=', '', trim($matcheslist[ 1 ]));
-					if(!$galltitle)
-					{
-						$galltitle = $this->params->get('gallery_title');
-					}
-
-					$gallstyle = str_replace('class=', '', trim($matcheslist[ 2 ]));
-					if(!$gallstyle)
-					{
-						$gallstyle = $this->params->get('cssclass');
-					}
+					$gallstyle = $this->params->get('cssclass');
 				}
 
 				$img_cache  = $this->params->get('img_cache');
@@ -361,7 +283,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 
 							$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams);
 
-							$thumb_img   = $this->juimg->render($file, $_imgparams);
+							$thumb_img = $this->juimg->render($file, $_imgparams);
 
 							return $this->_image($thumb_img, $this->params->get('width'), $this->params->get('height'), null, $_title, 0, $_title);
 						}
@@ -472,7 +394,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null)
+	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null): string
 	{
 		$template = $this->app->getTemplate();
 
@@ -514,7 +436,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 *
 	 * @since 7.0
 	 */
-	public function getTmpl($template, $name)
+	public function getTmpl($template, $name): string
 	{
 		$search = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb_gallery/' . $name . '.php';
 		if(is_file($search))

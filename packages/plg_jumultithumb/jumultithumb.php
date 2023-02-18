@@ -10,8 +10,6 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
-
 use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
@@ -19,8 +17,12 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
+use JUMultiThumb\Helpers\AutoLinks;
 
-JLoader::register('AutoLinks', JPATH_SITE . '/plugins/content/jumultithumb/lib/links.php');
+defined('_JEXEC') or die;
+
+require_once __DIR__ . '/libraries/vendor/autoload.php';
+
 JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
 
 class plgContentjumultithumb extends CMSPlugin
@@ -86,12 +88,11 @@ class plgContentjumultithumb extends CMSPlugin
 			return;
 		}
 
-		$autolinks      = new AutoLinks();
 		$onlyFirstImage = $this->params->get('Only_For_First_Image');
 		$link           = $this->modeHelper->jViewLink($article);
 
-		$article->text      = @$autolinks->handleImgLinks($article->text, $article->title, $link, $onlyFirstImage);
-		$article->introtext = @$autolinks->handleImgLinks($article->introtext, $article->title, $link, $onlyFirstImage);
+		$article->text      = AutoLinks::handleImgLinks($article->text, $article->title, $link, $onlyFirstImage);
+		$article->introtext = AutoLinks::handleImgLinks($article->introtext, $article->title, $link, $onlyFirstImage);
 	}
 
 	/**
@@ -468,120 +469,46 @@ class plgContentjumultithumb extends CMSPlugin
 
 			if(($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('Category')))
 			{
-				if(in_array($this->itemid, $this->params->get('cat_menu_item1') ? : [], true))
+				$newmaxwidth        = $this->params->get('cat_maxwidth');
+				$newmaxheight       = $this->params->get('cat_maxheight');
+				$newwidth           = $this->params->get('cat_width');
+				$newheight          = $this->params->get('cat_height');
+				$newcropzoom        = $this->params->get('cat_cropzoom');
+				$newzoomcrop_params = $this->params->get('cat_zoomcrop_params');
+				$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcrop');
+				$newcropaspect      = $this->params->get('cat_cropaspect');
+				//$newzoomcropbg      = $this->params->get('cat_zoomcropbg');
+				$newfarcrop        = $this->params->get('cat_farcrop');
+				$newfarcrop_params = $this->params->get('cat_farcrop_params');
+				$newfarcropbg      = $this->params->get('cat_farcropbg');
+				$newaoe            = $this->params->get('cat_aoe');
+				$newsx             = $this->params->get('cat_sx');
+				$newsy             = $this->params->get('cat_sy');
+				$newnoresize       = $this->params->get('cat_noresize');
+				$newnofullimg      = $this->params->get('cat_nofullimg');
+
+				foreach($items as $item)
 				{
-					$newmaxwidth        = $this->params->get('cat_maxwidthnew1');
-					$newmaxheight       = $this->params->get('cat_maxheightnew1');
-					$newwidth           = $this->params->get('cat_widthnew1');
-					$newheight          = $this->params->get('cat_heightnew1');
-					$newcropzoom        = $this->params->get('cat_cropzoomnew1');
-					$newzoomcrop_params = $this->params->get('cat_zoomcrop_paramsnew1');
-					$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcropnew1');
-					$newcropaspect      = $this->params->get('cat_cropaspectnew1');
-					$newfarcrop         = $this->params->get('cat_farcropnew1');
-					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew1');
-					$newfarcropbg       = $this->params->get('cat_farcropbgnew1');
-					$newaoe             = $this->params->get('cat_aoenew1');
-					$newsx              = $this->params->get('cat_sxnew1');
-					$newsy              = $this->params->get('cat_synew1');
-					$newnoresize        = $this->params->get('cat_noresizenew1');
-					$newnofullimg       = $this->params->get('cat_nofullimgnew1');
-				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item2') ? : [], true))
-				{
-					$newmaxwidth        = $this->params->get('cat_maxwidthnew2');
-					$newmaxheight       = $this->params->get('cat_maxheightnew2');
-					$newwidth           = $this->params->get('cat_widthnew2');
-					$newheight          = $this->params->get('cat_heightnew2');
-					$newcropzoom        = $this->params->get('cat_cropzoomnew2');
-					$newzoomcrop_params = $this->params->get('cat_zoomcrop_paramsnew2');
-					$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcropnew2');
-					$newcropaspect      = $this->params->get('cat_cropaspectnew2');
-					$newfarcrop         = $this->params->get('cat_farcropnew2');
-					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew2');
-					$newfarcropbg       = $this->params->get('cat_farcropbgnew2');
-					$newaoe             = $this->params->get('cat_aoenew2');
-					$newsx              = $this->params->get('cat_sxnew2');
-					$newsy              = $this->params->get('cat_synew2');
-					$newnoresize        = $this->params->get('cat_noresizenew2');
-					$newnofullimg       = $this->params->get('cat_nofullimgnew2');
-				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item3') ? : [], true))
-				{
-					$newmaxwidth        = $this->params->get('cat_maxwidthnew3');
-					$newmaxheight       = $this->params->get('cat_maxheightnew3');
-					$newwidth           = $this->params->get('cat_widthnew3');
-					$newheight          = $this->params->get('cat_heightnew3');
-					$newcropzoom        = $this->params->get('cat_cropzoomnew3');
-					$newzoomcrop_params = $this->params->get('cat_zoomcrop_paramsnew3');
-					$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcropnew3');
-					$newcropaspect      = $this->params->get('cat_cropaspectnew3');
-					$newfarcrop         = $this->params->get('cat_farcropnew3');
-					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew3');
-					$newfarcropbg       = $this->params->get('cat_farcropbgnew3');
-					$newaoe             = $this->params->get('cat_aoenew3');
-					$newsx              = $this->params->get('cat_sxnew3');
-					$newsy              = $this->params->get('cat_synew3');
-					$newnoresize        = $this->params->get('cat_noresizenew3');
-					$newnofullimg       = $this->params->get('cat_nofullimgnew3');
-				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item4') ? : [], true))
-				{
-					$newmaxwidth        = $this->params->get('cat_maxwidthnew4');
-					$newmaxheight       = $this->params->get('cat_maxheightnew4');
-					$newwidth           = $this->params->get('cat_widthnew4');
-					$newheight          = $this->params->get('cat_heightnew4');
-					$newcropzoom        = $this->params->get('cat_cropzoomnew4');
-					$newzoomcrop_params = $this->params->get('cat_zoomcrop_paramsnew4');
-					$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcropnew4');
-					$newcropaspect      = $this->params->get('cat_cropaspectnew4');
-					$newfarcrop         = $this->params->get('cat_farcropnew4');
-					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew4');
-					$newfarcropbg       = $this->params->get('cat_farcropbgnew4');
-					$newaoe             = $this->params->get('cat_aoenew4');
-					$newsx              = $this->params->get('cat_sxnew4');
-					$newsy              = $this->params->get('cat_synew4');
-					$newnoresize        = $this->params->get('cat_noresizenew4');
-					$newnofullimg       = $this->params->get('cat_nofullimgnew4');
-				}
-				elseif(in_array($this->itemid, $this->params->get('cat_menu_item5') ? : [], true))
-				{
-					$newmaxwidth        = $this->params->get('cat_maxwidthnew5');
-					$newmaxheight       = $this->params->get('cat_maxheightnew5');
-					$newwidth           = $this->params->get('cat_widthnew5');
-					$newheight          = $this->params->get('cat_heightnew5');
-					$newcropzoom        = $this->params->get('cat_cropzoomnew5');
-					$newzoomcrop_params = $this->params->get('cat_zoomcrop_paramsnew5');
-					$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcropnew5');
-					$newcropaspect      = $this->params->get('cat_cropaspectnew5');
-					$newfarcrop         = $this->params->get('cat_farcropnew5');
-					$newfarcrop_params  = $this->params->get('cat_farcrop_paramsnew5');
-					$newfarcropbg       = $this->params->get('cat_farcropbgnew5');
-					$newaoe             = $this->params->get('cat_aoenew5');
-					$newsx              = $this->params->get('cat_sxnew5');
-					$newsy              = $this->params->get('cat_synew5');
-					$newnoresize        = $this->params->get('cat_noresizenew5');
-					$newnofullimg       = $this->params->get('cat_nofullimgnew5');
-				}
-				else
-				{
-					$newmaxwidth        = $this->params->get('cat_maxwidth');
-					$newmaxheight       = $this->params->get('cat_maxheight');
-					$newwidth           = $this->params->get('cat_width');
-					$newheight          = $this->params->get('cat_height');
-					$newcropzoom        = $this->params->get('cat_cropzoom');
-					$newzoomcrop_params = $this->params->get('cat_zoomcrop_params');
-					$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcrop');
-					$newcropaspect      = $this->params->get('cat_cropaspect');
-					//$newzoomcropbg      = $this->params->get('cat_zoomcropbg');
-					$newfarcrop        = $this->params->get('cat_farcrop');
-					$newfarcrop_params = $this->params->get('cat_farcrop_params');
-					$newfarcropbg      = $this->params->get('cat_farcropbg');
-					$newaoe            = $this->params->get('cat_aoe');
-					$newsx             = $this->params->get('cat_sx');
-					$newsy             = $this->params->get('cat_sy');
-					$newnoresize       = $this->params->get('cat_noresize');
-					$newnofullimg      = $this->params->get('cat_nofullimg');
+					if(in_array($this->itemid, $item->cat_menu_item))
+					{
+						$newmaxwidth        = $item->cat_maxwidth;
+						$newmaxheight       = $item->cat_maxheight;
+						$newwidth           = $item->cat_width;
+						$newheight          = $item->cat_height;
+						$newcropzoom        = $item->cat_cropzoom;
+						$newzoomcrop_params = $item->cat_zoomcrop_params;
+						$newauto_zoomcrop   = $item->cat_auto_zoomcrop;
+						$newcropaspect      = $item->cat_cropaspect;
+						//$newzoomcropbg      = $item->cat_zoomcropbg;
+						$newfarcrop        = $item->cat_farcrop;
+						$newfarcrop_params = $item->cat_farcrop_params;
+						$newfarcropbg      = $item->cat_farcropbg;
+						$newaoe            = $item->cat_aoe;
+						$newsx             = $item->cat_sx;
+						$newsy             = $item->cat_sy;
+						$newnoresize       = $item->cat_noresize;
+						$newnofullimg      = $item->cat_nofullimg;
+					}
 				}
 			}
 

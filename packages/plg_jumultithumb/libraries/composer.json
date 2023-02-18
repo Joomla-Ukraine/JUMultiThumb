@@ -1,0 +1,46 @@
+{
+  "name": "joomla-ua/jumultithumb",
+  "homepage": "https://joomla-ua.org",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Denys Nosov",
+      "email": "denys@joomla-ua.org",
+      "homepage": "https://joomla-ua.org",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "denys@joomla-ua.org",
+    "issues": "https://github.com/Joomla-Ukraine/JUImage/issues",
+    "forum": "https://github.com/Joomla-Ukraine/JUImage/issues",
+    "source": "https://github.com/Joomla-Ukraine/JUImage",
+    "docs": "https://github.com/Joomla-Ukraine/JUImage/blob/master/README.md"
+  },
+  "autoload": {
+    "psr-4": {
+      "JUMultiThumb\\": "src/"
+    }
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "optimize-autoloader": true,
+    "use-include-path": false,
+    "prepend-autoloader": true,
+    "prefer-dist": true,
+    "no-dev": true,
+    "sort-packages": true,
+    "archive-format": "zip",
+    "platform": {
+      "php": "7.4"
+    }
+  },
+  "prefer-stable": true,
+  "suggest": {
+    "ext-imagick": "PHP ImageMagick"
+  },
+  "require": {
+    "php": ">=7.4"
+  }
+}

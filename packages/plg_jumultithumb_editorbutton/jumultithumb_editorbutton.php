@@ -12,6 +12,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\CMSPlugin;
 
 defined('_JEXEC') or die;
@@ -44,7 +45,7 @@ class plgButtonJUmultithumb_EditorButton extends CMSPlugin
 		}
 
 		$link            = '../plugins/editors-xtd/jumultithumb_editorbutton/form.php';
-		$button          = new JObject;
+		$button          = new CMSObject();
 		$button->modal   = true;
 		$button->link    = $link;
 		$button->text    = Text::_('PLG_JUMULTITHUMB') . ' - ' . Text::_('COM_PLUGINS_GALLERY_FIELDSET_LABEL');

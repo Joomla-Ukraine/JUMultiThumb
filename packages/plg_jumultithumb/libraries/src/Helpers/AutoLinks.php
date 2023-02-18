@@ -10,6 +10,8 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+namespace JUMultiThumb\Helpers;
+
 defined('_JEXEC') or die;
 
 class AutoLinks
@@ -20,11 +22,11 @@ class AutoLinks
 	 * @param $link
 	 * @param $onlyFirstImage
 	 *
-	 * @return null|string|string[]
+	 * @return string
 	 *
-	 * @since 7.0
+	 * @since 8.0
 	 */
-	public function handleImgLinks($text, $title, $link, $onlyFirstImage)
+	public static function handleImgLinks($text, $title, $link, $onlyFirstImage)
 	{
 		if(empty($link))
 		{
@@ -32,18 +34,18 @@ class AutoLinks
 		}
 
 		$regex = '/<img[^>]+>/i';
-		$this->_replaceImg(null, $link, $title);
+		self::_replaceImg(null, $link, $title);
 
 		if($onlyFirstImage)
 		{
 			return preg_replace_callback($regex, [
-				$this,
+				__CLASS__,
 				'_replaceImg'
 			], $text, 1);
 		}
 
 		return preg_replace_callback($regex, [
-			$this,
+			__CLASS__,
 			'_replaceImg'
 		], $text);
 	}
@@ -55,9 +57,9 @@ class AutoLinks
 	 *
 	 * @return string
 	 *
-	 * @since 7.0
+	 * @since 8.0
 	 */
-	public function _replaceImg($matches, $link = null, $title = null)
+	private static function _replaceImg($matches, $link = null, $title = null)
 	{
 		static $_link;
 		static $_title;
@@ -71,8 +73,8 @@ class AutoLinks
 			return '';
 		}
 
-		$img  = $matches[ 0 ];
-		$img  = str_replace('alt=""', 'alt="' . trim($_title) . '"', $img);
+		$img = $matches[ 0 ];
+		$img = str_replace('alt=""', 'alt="' . trim($_title) . '"', $img);
 
 		return '<a href="' . $_link . '">' . $img . '</a>';
 	}

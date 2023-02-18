@@ -10,11 +10,13 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 defined('JPATH_BASE') or die;
 
-jimport('joomla.form.formfield');
-
-class JFormFieldModal_Upload extends JFormField
+class JFormFieldModal_Upload extends FormField
 {
 	protected $type = 'Modal_Upload';
 
@@ -26,24 +28,17 @@ class JFormFieldModal_Upload extends JFormField
 	 */
 	protected function getInput()
 	{
-		/*
-		JHtml::_('behavior.modal', 'a.modal');
+		$link                        = str_replace('administrator/', '', JURI::base()) . 'plugins/content/jumultithumb/load/watermark/watermark.php';
+		$modalParams[ 'title' ]      = Text::_('PLG_JUMULTITHUMB_WATERMARK_UPLOAD');
+		$modalParams[ 'url' ]        = $link;
+		$modalParams[ 'height' ]     = '100%';
+		$modalParams[ 'width' ]      = '100%';
+		$modalParams[ 'bodyHeight' ] = 70;
+		$modalParams[ 'modalWidth' ] = 80;
 
-		$script   = [];
-		$script[] = '	function jSelectArticle_' . $this->id . '(id, title, catid, object) {';
-		$script[] = '		document.id("' . $this->id . '_id").value = id;';
-		$script[] = '		document.id("' . $this->id . '_name").value = title;';
-		$script[] = '		SqueezeBox.close();';
-		$script[] = '	}';
+		$html = HTMLHelper::_('bootstrap.renderModal', 'modal-' . $this->id, $modalParams);
+		$html .= '<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-' . $this->id . '">' . Text::_('PLG_JUMULTITHUMB_WATERMARK_UPLOAD') . '</button>';
 
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
-
-		$html = [];
-		$link = str_replace('administrator/', '', JURI::base()) . 'plugins/content/jumultithumb/load/watermark/watermark.php';
-
-		$html[] = '	<a class="modal btn btn-primary" title="' . JText::_('PLG_JUMULTITHUMB_WATERMARK_UPLOAD') . '" href="' . $link . '" rel="{handler: \'iframe\', size: {x: 900, y: 550}}"><i class="icon-upload"></i> ' . JText::_('PLG_JUMULTITHUMB_WATERMARK_UPLOAD') . '</a>';
-
-		return implode("\n", $html);
-		*/
+		return $html;
 	}
 }
