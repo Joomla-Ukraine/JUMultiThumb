@@ -14,23 +14,17 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use JUMultiThumb\Helpers\AutoLinks;
+use JUMultiThumb\Helpers\Image;
 use JUMultiThumb\Helpers\Utils;
 
 defined('_JEXEC') or die;
 
 require_once dirname(__DIR__) . '/jumultithumb/libraries/vendor/autoload.php';
 
-JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
+\JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
 
 class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 {
-	protected $modeHelper;
-	protected $juimg;
-	protected $app;
-	protected $doc;
-	protected $option;
-	protected $itemid;
-
 	/**
 	 * plgContentJUMULTITHUMB_Gallery constructor.
 	 *
@@ -65,7 +59,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 *
 	 * @since 7.0
 	 */
-	public function onContentBeforeDisplay($context, $article, $params, $limitstart): void
+	public function onContentBeforeDisplay($context, $article): void
 	{
 		if(class_exists($this->modeHelper) === false)
 		{
@@ -145,7 +139,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 */
 	public function GalleryReplace($text, $article)
 	{
-		$regex = "/<p>\s*{gallery\s+(.*?)}\s*<\/p>/i";
+		$regex = "/{gallery\s+(.*?)}/i";
 		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 
 		if($matches)
@@ -191,7 +185,6 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 					$gallstyle = $this->params->get('cssclass');
 				}
 
-				$img_cache  = $this->params->get('img_cache');
 				$img_title  = preg_replace('/"/', "'", $article->title);
 				$lightbox   = $this->params->get('selectlightbox');
 				$folder     = trim($matcheslist[ 0 ]);
@@ -255,17 +248,15 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 						{
 							$_title = mb_strtoupper(mb_substr($img_title, 0, 1)) . mb_substr($img_title, 1);
 
-							$imgparams = [
+							//$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor);
+
+							$thumb_img = Image::thumb([
+								'image' => $file,
+								'zc'    => $this->params->get('cropzoom'),
 								'w'     => $this->params->get('width'),
 								'h'     => $this->params->get('height'),
-								'aoe'   => '1',
-								'zc'    => $this->params->get('cropzoom'),
-								'cache' => $img_cache
-							];
-
-							$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams);
-
-							$thumb_img = $this->juimg->render($file, $_imgparams);
+								'q'     => $json->quality,
+							]);
 
 							return $this->_image([
 								'image'    => $thumb_img,
@@ -281,21 +272,23 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 						$imgsource = $file;
 
 						$imgparams = [
+							'image' => $file,
+							'zc'    => $gallcropzoom,
 							'w'     => $gallwidth,
 							'h'     => $gallheight,
-							'aoe'   => '1',
-							'zc'    => $gallcropzoom,
-							'cache' => $img_cache
+							'q'     => $json->quality,
 						];
 
-						$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams);
-						$thumb_img  = $this->juimg->render($file, $_imgparams);
-						$_title     = ($galltitle == '' ? $img_title : $galltitle . '. ' . $img_title);
-						$_title     = mb_strtoupper(mb_substr($_title, 0, 1)) . mb_substr($_title, 1);
+						$options = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams);
+
+						$thumb_img = Image::thumb($options);
+
+						$_title = ($galltitle == '' ? $img_title : $galltitle . '. ' . $img_title);
+						$_title = mb_strtoupper(mb_substr($_title, 0, 1)) . mb_substr($_title, 1);
 
 						$_gallery[] = $this->_image([
 							'image'    => $thumb_img,
-							'orig_img' => $imgsource,
+							'orig_img' => $file,
 							'link_img' => $file,
 							'w'        => $gallwidth,
 							'h'        => $gallheight,
@@ -314,7 +307,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 					]);
 				}
 
-				$text = preg_replace($regex, '' . $html, $text, 1);
+				$text = preg_replace($regex, $html, $text, 1);
 			}
 		}
 
@@ -322,7 +315,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	}
 
 	/**
-	 * @param      $options
+	 * @param array $options
 	 *
 	 * @return string
 	 *

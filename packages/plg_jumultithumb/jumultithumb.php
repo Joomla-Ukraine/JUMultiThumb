@@ -17,6 +17,7 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
 use JUMultiThumb\Helpers\AutoLinks;
+use JUMultiThumb\Helpers\Image;
 
 defined('_JEXEC') or die;
 
@@ -326,9 +327,9 @@ class plgContentjumultithumb extends CMSPlugin
 		{
 			$b_width           = $this->params->get('b_width');
 			$b_height          = $this->params->get('b_height');
-			$b_cropzoom        = $this->params->get('b_cropzoom');
+			$b_zc              = $this->params->get('b_zc');
 			$b_zoomcrop_params = $this->params->get('b_zoomcrop_params');
-			$b_auto_zoomcrop   = $this->params->get('b_auto_zoomcrop');
+			$b_zoom_crop_bg    = $this->params->get('b_zoom_crop_bg');
 			$b_cropaspect      = $this->params->get('b_cropaspect');
 			//$b_zoomcropbg      = $this->params->get('b_zoomcropbg');
 			$b_farcrop        = $this->params->get('b_farcrop');
@@ -344,9 +345,9 @@ class plgContentjumultithumb extends CMSPlugin
 				{
 					$b_width           = $item->b_width;
 					$b_height          = $item->b_height;
-					$b_cropzoom        = $item->b_cropzoom;
+					$b_zc              = $item->b_zc;
 					$b_zoomcrop_params = $item->b_zoomcrop_params;
-					$b_auto_zoomcrop   = $item->b_auto_zoomcrop;
+					$b_zoom_crop_bg    = $item->b_zoom_crop_bg;
 					$b_cropaspect      = $item->b_cropaspect;
 					$b_farcrop         = $item->b_farcrop;
 					$b_farcrop_params  = $item->b_farcrop_params;
@@ -358,16 +359,16 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 
 			$aspect = 0;
-			if($b_auto_zoomcrop == 1)
+			if($b_zoom_crop_bg == 1)
 			{
 				$aspect = $this->_aspect($imgsource, $b_cropaspect);
 			}
 
 			$new_imgparams = [
-				'zc' => $b_cropzoom == 1 ? $b_zoomcrop_params : ''
+				'zc' => $b_zc == 1 ? $b_zoomcrop_params : ''
 			];
 
-			if($aspect >= '1' && $b_auto_zoomcrop == 1)
+			if($aspect >= '1' && $b_zoom_crop_bg == 1)
 			{
 				$new_imgparams = [
 					'far' => '1',
@@ -403,230 +404,230 @@ class plgContentjumultithumb extends CMSPlugin
 
 			if($this->modeHelper::view('Article'))
 			{
-				$newmaxwidth        = $this->params->get('maxwidth');
-				$newmaxheight       = $this->params->get('maxheight');
-				$newwidth           = $this->params->get('width');
-				$newheight          = $this->params->get('height');
-				$newcropzoom        = $this->params->get('cropzoom');
-				$newzoomcrop_params = $this->params->get('zoomcrop_params');
-				$newauto_zoomcrop   = $this->params->get('auto_zoomcrop');
-				$newcropaspect      = $this->params->get('cropaspect');
-				$newfarcrop         = $this->params->get('farcrop');
-				$newfarcrop_params  = $this->params->get('farcrop_params');
-				$newfarcropbg       = $this->params->get('farcropbg');
-				$newaoe             = $this->params->get('aoe');
-				$newsx              = $this->params->get('sx');
-				$newsy              = $this->params->get('sy');
-				$newnoresize        = $this->params->get('noresize');
-				$newnofullimg       = $this->params->get('nofullimg');
+				$w            = $this->params->get('width');
+				$h            = $this->params->get('height');
+				$zc           = $this->params->get('zc');
+				$zoom_crop_bg = $this->params->get('zoom_crop_bg');
+				$cropaspect   = $this->params->get('cropaspect');
+				$farcrop      = $this->params->get('farcrop');
+				$farcropbg    = $this->params->get('farcropbg');
+				$noresize     = $this->params->get('noresize');
+				$nofullimg    = $this->params->get('nofullimg');
 
 				foreach($items as $item)
 				{
 					if(in_array($this->itemid, $item->menu_item))
 					{
-						$newmaxwidth        = $item->maxwidth;
-						$newmaxheight       = $item->maxheight;
-						$newwidth           = $item->width;
-						$newheight          = $item->height;
-						$newcropzoom        = $item->cropzoom;
-						$newzoomcrop_params = $item->zoomcrop_params;
-						$newauto_zoomcrop   = $item->auto_zoomcrop;
-						$newcropaspect      = $item->cropaspect;
-						$newfarcrop         = $item->farcrop;
-						$newfarcrop_params  = $item->farcrop_params;
-						$newfarcropbg       = $item->farcropbg;
-						$newaoe             = $item->aoe;
-						$newsx              = $item->sx;
-						$newsy              = $item->sy;
-						$newnoresize        = $item->noresize;
-						$newnofullimg       = $item->nofullimg;
+						$w            = $item->w;
+						$h            = $item->h;
+						$zc           = $item->zc;
+						$zoom_crop_bg = $item->zoom_crop_bg;
+						$cropaspect   = $item->cropaspect;
+						$farcrop      = $item->farcrop;
+						$farcropbg    = $item->farcropbg;
+						$noresize     = $item->noresize;
+						$nofullimg    = $item->nofullimg;
 					}
 				}
 
-				echo $newwidth;
+				echo $w;
 			}
 
-			if($this->modeHelper::view('Categories') || $this->modeHelper::view('Category'))
+			$thumb_img = Image::thumb([
+				'image'        => $imgsource,
+				'noresize'     => $noresize,
+				'zc'           => $zc,
+				'cropaspect'   => $cropaspect,
+				'zoom_crop_bg' => $zoom_crop_bg,
+				'w'            => $w,
+				'h'            => $h,
+				'farcrop'      => $farcrop,
+				'farcropbg'    => $farcropbg,
+				'q'            => $quality,
+			]);
+
+			/*
+						if($this->modeHelper::view('Categories') || $this->modeHelper::view('Category'))
+						{
+							$newmaxwidth        = $this->params->get('cat_maxwidth');
+							$newmaxheight       = $this->params->get('cat_maxheight');
+							$w           = $this->params->get('cat_width');
+							$h          = $this->params->get('cat_height');
+							$zc        = $this->params->get('cat_zc');
+							$newzoomcrop_params = $this->params->get('cat_zoomcrop_params');
+							$zoom_crop_bg   = $this->params->get('cat_zoom_crop_bg');
+							$cropaspect      = $this->params->get('cat_cropaspect');
+							//$newzoomcropbg      = $this->params->get('cat_zoomcropbg');
+							$farcrop        = $this->params->get('cat_farcrop');
+							$newfarcrop_params = $this->params->get('cat_farcrop_params');
+							$farcropbg      = $this->params->get('cat_farcropbg');
+							$newaoe            = $this->params->get('cat_aoe');
+							$sx             = $this->params->get('cat_sx');
+							$sy             = $this->params->get('cat_sy');
+							$noresize       = $this->params->get('cat_noresize');
+							$nofullimg      = $this->params->get('cat_nofullimg');
+
+							foreach($items as $item)
+							{
+								if(in_array($this->itemid, $item->cat_menu_item))
+								{
+									$newmaxwidth        = $item->cat_maxwidth;
+									$newmaxheight       = $item->cat_maxheight;
+									$w           = $item->cat_width;
+									$h          = $item->cat_height;
+									$zc        = $item->cat_zc;
+									$newzoomcrop_params = $item->cat_zoomcrop_params;
+									$zoom_crop_bg   = $item->cat_zoom_crop_bg;
+									$cropaspect      = $item->cat_cropaspect;
+									//$newzoomcropbg      = $item->cat_zoomcropbg;
+									$farcrop        = $item->cat_farcrop;
+									$newfarcrop_params = $item->cat_farcrop_params;
+									$farcropbg      = $item->cat_farcropbg;
+									$newaoe            = $item->cat_aoe;
+									$sx             = $item->cat_sx;
+									$sy             = $item->cat_sy;
+									$noresize       = $item->cat_noresize;
+									$nofullimg      = $item->cat_nofullimg;
+								}
+							}
+						}
+
+						if($noresize == 1) // || $cat_newnoresize == 1
+						{
+							$juimgresmatche = str_replace([
+								' /',
+								Uri::base()
+							], '', $originalsource);
+
+							return $this->_image(Uri::base() . $juimgresmatche, $newmaxwidth, $newmaxheight, $img_class, $img_alt, 1, 1);
+						}
+
+						// Watermark
+						$wmi = '';
+						if($use_wm == 1)
+						{
+							if($option[ 'watermark_o' ] == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1)
+							{
+								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
+								if(!is_file($wmfile))
+								{
+									$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
+								}
+								$watermark = $wmfile;
+
+								$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
+							}
+						}
+
+						$_width  = '';
+						$_height = '';
+						if($this->params->get('maxsize_orig') == 1 || $this->params->get('cat_newmaxsize_orig') == 1)
+						{
+							$_width  = $newmaxwidth;
+							$_height = $newmaxheight;
+						}
+
+						$link_img = $imgsource;
+						if($option[ 'watermark_o' ] == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1 ||
+
+							$this->params->get('maxsize_orig') == 1 || $this->params->get('cat_newmaxsize_orig') == 1)
+						{
+							$link_imgparams = [
+								'w'     => $_width,
+								'h'     => $_height,
+								'aoe'   => $newaoe,
+								'fltr'  => $wmi != '' ? $wmi : '',
+								'q'     => $quality,
+								'cache' => 'img'
+							];
+
+							$_link_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $link_imgparams);
+							$link_img        = $this->juimg->render($imgsource, $_link_imgparams);
+						}
+
+						// Small watermark
+						$wmi_s = '';
+						if($use_wm == 1)
+						{
+							if($option[ 'watermark_s' ] == 1 || $this->params->get('a_watermark_s') == 1 || $this->params->get('a_watermarknew1_s') == 1 || $this->params->get('a_watermarknew2_s') == 1 || $this->params->get('a_watermarknew3_s') == 1 || $this->params->get('a_watermarknew4_s') == 1 || $this->params->get('a_watermarknew5_s') == 1)
+							{
+								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
+								if(!is_file($wmfile))
+								{
+									$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
+								}
+								$watermark_s = $wmfile;
+
+								$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
+							}
+						}
+
+						if($_image_noresize == 1)
+						{
+							$wmi_s       = $wmi;
+							$w    = ($_width && $wmi ? $_width : '');
+							$h   = ($_height && $wmi ? $_height : '');
+							$newaoe      = '';
+							$sx       = '';
+							$sy       = '';
+							$zc = '0';
+						}
+
+						$aspect = 0;
+						if($zoom_crop_bg == 1)
+						{
+							$aspect = $this->_aspect($imgsource, $cropaspect);
+						}
+
+						$new_imgparams = [
+							'zc' => $zc == 1 ? $newzoomcrop_params : ''
+						];
+						if($aspect >= '1' && $zoom_crop_bg == 1)
+						{
+							$new_imgparams = [
+								'far' => '1',
+								'bg'  => str_replace('#', '', $farcropbg)
+							];
+						}
+
+						if($farcrop == 1)
+						{
+							$new_imgparams = [
+								'far' => $newfarcrop_params,
+								'bg'  => str_replace('#', '', $farcropbg)
+							];
+						}
+
+						$imgparams = [
+							'w'     => $w,
+							'h'     => $h,
+							'aoe'   => $newaoe,
+							'sx'    => $sx,
+							'sy'    => $sy,
+							'fltr'  => $wmi_s != '' ? $wmi_s : '',
+							'q'     => $quality,
+							'cache' => 'img'
+						];
+
+						$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams, $new_imgparams);
+						$thumb_img  = $this->juimg->render($imgsource, $_imgparams);
+			*/
+			if($_image_noresize == 1 || $nofullimg == 1 || $this->modeHelper::view('Print'))
 			{
-				$newmaxwidth        = $this->params->get('cat_maxwidth');
-				$newmaxheight       = $this->params->get('cat_maxheight');
-				$newwidth           = $this->params->get('cat_width');
-				$newheight          = $this->params->get('cat_height');
-				$newcropzoom        = $this->params->get('cat_cropzoom');
-				$newzoomcrop_params = $this->params->get('cat_zoomcrop_params');
-				$newauto_zoomcrop   = $this->params->get('cat_auto_zoomcrop');
-				$newcropaspect      = $this->params->get('cat_cropaspect');
-				//$newzoomcropbg      = $this->params->get('cat_zoomcropbg');
-				$newfarcrop        = $this->params->get('cat_farcrop');
-				$newfarcrop_params = $this->params->get('cat_farcrop_params');
-				$newfarcropbg      = $this->params->get('cat_farcropbg');
-				$newaoe            = $this->params->get('cat_aoe');
-				$newsx             = $this->params->get('cat_sx');
-				$newsy             = $this->params->get('cat_sy');
-				$newnoresize       = $this->params->get('cat_noresize');
-				$newnofullimg      = $this->params->get('cat_nofullimg');
-
-				foreach($items as $item)
-				{
-					if(in_array($this->itemid, $item->cat_menu_item))
-					{
-						$newmaxwidth        = $item->cat_maxwidth;
-						$newmaxheight       = $item->cat_maxheight;
-						$newwidth           = $item->cat_width;
-						$newheight          = $item->cat_height;
-						$newcropzoom        = $item->cat_cropzoom;
-						$newzoomcrop_params = $item->cat_zoomcrop_params;
-						$newauto_zoomcrop   = $item->cat_auto_zoomcrop;
-						$newcropaspect      = $item->cat_cropaspect;
-						//$newzoomcropbg      = $item->cat_zoomcropbg;
-						$newfarcrop        = $item->cat_farcrop;
-						$newfarcrop_params = $item->cat_farcrop_params;
-						$newfarcropbg      = $item->cat_farcropbg;
-						$newaoe            = $item->cat_aoe;
-						$newsx             = $item->cat_sx;
-						$newsy             = $item->cat_sy;
-						$newnoresize       = $item->cat_noresize;
-						$newnofullimg      = $item->cat_nofullimg;
-					}
-				}
-			}
-
-			if($newnoresize == 1) // || $cat_newnoresize == 1
-			{
-				$juimgresmatche = str_replace([
-					' /',
-					Uri::base()
-				], '', $originalsource);
-
-				return $this->_image(Uri::base() . $juimgresmatche, $newmaxwidth, $newmaxheight, $img_class, $img_alt, 1, 1);
-			}
-
-			// Watermark
-			$wmi = '';
-			if($use_wm == 1)
-			{
-				if($option[ 'watermark_o' ] == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1)
-				{
-					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
-					if(!is_file($wmfile))
-					{
-						$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
-					}
-					$watermark = $wmfile;
-
-					$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
-				}
-			}
-
-			$_width  = '';
-			$_height = '';
-			if($this->params->get('maxsize_orig') == 1 || $this->params->get('cat_newmaxsize_orig') == 1)
-			{
-				$_width  = $newmaxwidth;
-				$_height = $newmaxheight;
-			}
-
-			$link_img = $imgsource;
-			if($option[ 'watermark_o' ] == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1 ||
-
-				$this->params->get('maxsize_orig') == 1 || $this->params->get('cat_newmaxsize_orig') == 1)
-			{
-				$link_imgparams = [
-					'w'     => $_width,
-					'h'     => $_height,
-					'aoe'   => $newaoe,
-					'fltr'  => $wmi != '' ? $wmi : '',
-					'q'     => $quality,
-					'cache' => 'img'
-				];
-
-				$_link_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $link_imgparams);
-				$link_img        = $this->juimg->render($imgsource, $_link_imgparams);
-			}
-
-			// Small watermark
-			$wmi_s = '';
-			if($use_wm == 1)
-			{
-				if($option[ 'watermark_s' ] == 1 || $this->params->get('a_watermark_s') == 1 || $this->params->get('a_watermarknew1_s') == 1 || $this->params->get('a_watermarknew2_s') == 1 || $this->params->get('a_watermarknew3_s') == 1 || $this->params->get('a_watermarknew4_s') == 1 || $this->params->get('a_watermarknew5_s') == 1)
-				{
-					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
-					if(!is_file($wmfile))
-					{
-						$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
-					}
-					$watermark_s = $wmfile;
-
-					$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
-				}
-			}
-
-			if($_image_noresize == 1)
-			{
-				$wmi_s       = $wmi;
-				$newwidth    = ($_width && $wmi ? $_width : '');
-				$newheight   = ($_height && $wmi ? $_height : '');
-				$newaoe      = '';
-				$newsx       = '';
-				$newsy       = '';
-				$newcropzoom = '0';
-			}
-
-			$aspect = 0;
-			if($newauto_zoomcrop == 1)
-			{
-				$aspect = $this->_aspect($imgsource, $newcropaspect);
-			}
-
-			$new_imgparams = [
-				'zc' => $newcropzoom == 1 ? $newzoomcrop_params : ''
-			];
-			if($aspect >= '1' && $newauto_zoomcrop == 1)
-			{
-				$new_imgparams = [
-					'far' => '1',
-					'bg'  => str_replace('#', '', $newfarcropbg)
-				];
-			}
-
-			if($newfarcrop == 1)
-			{
-				$new_imgparams = [
-					'far' => $newfarcrop_params,
-					'bg'  => str_replace('#', '', $newfarcropbg)
-				];
-			}
-
-			$imgparams = [
-				'w'     => $newwidth,
-				'h'     => $newheight,
-				'aoe'   => $newaoe,
-				'sx'    => $newsx,
-				'sy'    => $newsy,
-				'fltr'  => $wmi_s != '' ? $wmi_s : '',
-				'q'     => $quality,
-				'cache' => 'img'
-			];
-
-			$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams, $new_imgparams);
-			$thumb_img  = $this->juimg->render($imgsource, $_imgparams);
-
-			if($_image_noresize == 1 || $newnofullimg == 1 || $this->modeHelper::view('Print'))
-			{
-				$limage = $this->_image($thumb_img, $newwidth, $newheight, $img_class, $img_alt, 1, $_image_noresize, $img_title);
+				$limage = $this->_image($thumb_img, $w, $h, $img_class, $img_alt, 1, $_image_noresize, $img_title);
 			}
 			else
 			{
-				$limage = $this->_image($thumb_img, $newwidth, $newheight, 'imgobjct ' . $img_class, $img_alt, 1, 0, $img_title, $link_img, $imgsource, $lightbox);
+				$limage = $this->_image($thumb_img, $w, $h, 'imgobjct ' . $img_class, $img_alt, 1, 0, $img_title, $link_img, $imgsource, $lightbox);
 			}
 		}
 		elseif($this->modeHelper::view('Featured'))
 		{
 			$f_newwidth           = $this->params->get('f_width');
 			$f_newheight          = $this->params->get('f_height');
-			$f_newcropzoom        = $this->params->get('f_cropzoom');
+			$f_newzc              = $this->params->get('f_zc');
 			$f_newzoomcrop_params = $this->params->get('f_zoomcrop_params');
-			$f_newauto_zoomcrop   = $this->params->get('f_auto_zoomcrop');
+			$f_newzoom_crop_bg    = $this->params->get('f_zoom_crop_bg');
 			$f_newcropaspect      = $this->params->get('f_cropaspect');
 			//$f_newzoomcropbg      = $this->params->get('f_zoomcropbg');
 			$f_newfarcrop        = $this->params->get('f_farcrop');
@@ -637,15 +638,15 @@ class plgContentjumultithumb extends CMSPlugin
 			$f_synew             = $this->params->get('f_sy');
 
 			$aspect = 0;
-			if($f_newauto_zoomcrop == 1)
+			if($f_newzoom_crop_bg == 1)
 			{
 				$aspect = $this->_aspect($imgsource, $f_newcropaspect);
 			}
 
 			$new_imgparams = [
-				'zc' => $f_newcropzoom == 1 ? $f_newzoomcrop_params : ''
+				'zc' => $f_newzc == 1 ? $f_newzoomcrop_params : ''
 			];
-			if($aspect >= '1' && $f_newauto_zoomcrop == 1)
+			if($aspect >= '1' && $f_newzoom_crop_bg == 1)
 			{
 				$new_imgparams = [
 					'far' => '1',

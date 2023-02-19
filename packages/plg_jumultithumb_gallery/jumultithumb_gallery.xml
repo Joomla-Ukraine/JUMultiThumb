@@ -107,31 +107,6 @@
                        label="PLG_JUMULTITHUMB_HEIGHT"
                        description="PLG_JUMULTITHUMB_HEIGHT_TIPS" />
 
-                <field name="maxsize_orignew"
-                       type="radio"
-                       layout="joomla.form.field.radio.switcher"
-                       default="0"
-                       label="PLG_JUMULTITHUMB_MAX_SIZE_FOR_IMAGE">
-                    <option value="0">JNO</option>
-                    <option value="1">JYES</option>
-                </field>
-
-                <field name="maxwidthnew"
-                       type="text"
-                       default="800"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_MAX_WIDTH_FOR_ORIGINAL_IMAGE"
-                       showon="maxsize_orignew:1"
-                />
-
-                <field name="maxheightnew"
-                       type="text"
-                       default="500"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_MAX_HEIGHT_FOR_ORIGINAL_IMAGE"
-                       showon="maxsize_orignew:1"
-                />
-
                 <field name="gallcropzoom"
                        type="radio"
                        layout="joomla.form.field.radio.switcher"
@@ -140,16 +115,6 @@
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-
-                <field name="img_cache"
-                       type="folderlist"
-                       default="img"
-                       label="PLG_JUMULTITHUMB_IMAGE_FOLDER"
-                       description="PLG_JUMULTITHUMB_IMAGE_FOLDER_DESC"
-                       directory=""
-                       exclude="administrator|bin|cli|components|includes|files|layouts|log|language|libraries|logs|modules|plugins|templates|tmp"
-                       hide_none="1"
-                       hide_default="1" />
 
 	            <!--
 							  <field name="watermarkgall"
@@ -254,24 +219,12 @@
 													 showon="watermarkgall_s:1,2"
 											  />
 							  -->
-	            <field name="selectlightbox"
-	                   type="list"
-	                   default="jmodal"
-	                   label="PLG_JUMULTITHUMB_SELECT_LIGHTBOX">
-                    <option value="jmodal">Joomla Modal window</option>
-                    <option value="customjs">PLG_JUMULTITHUMB_CUSTOM_JS</option>
-                </field>
 
-                <field type="spacer"
-                       name="mi0"
-                       class="text"
-                       label="PLG_JUMULTITHUMB_MENU_ITEM_SETTING_DEFAULT" />
-
-                <field name="gallery_title"
-                       type="text"
-                       default=""
-                       size="4"
-                       label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
+	            <field name="gallery_title"
+	                   type="text"
+	                   default=""
+	                   size="4"
+	                   label="PLG_JUMULTITHUMB_GALLERY_TITLE" />
 
                 <field name="cssclass"
                        type="text"
