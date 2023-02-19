@@ -72,9 +72,9 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
         });
 
         function insertJUGallery() {
-            var folder = document.getElementById("folder").value;
-            var title = document.getElementById("title").value;
-            var cssclass = document.getElementById("cssclass").value;
+            var folder = document.getElementById("folder").value,
+                title = document.getElementById("title").value,
+                cssclass = document.getElementById("cssclass").value;
 
             if (folder !== '') {
                 folder = "" + folder + "";
@@ -114,7 +114,7 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
 <body>
 <form class="form-horizontal">
 	<div class="control-group">
-		<label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_SELECT_FOLDER'); ?>:</label>
+		<label class="control-label" for="folder"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_SELECT_FOLDER'); ?>:</label>
 		<div class="controls">
 			<div class="selects"></div>
 			<br>
@@ -122,13 +122,13 @@ $rootfolder = 'images/' . $json->galleryfolder . '/';
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_TITLE'); ?>:</label>
+		<label class="control-label" for="title"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_TITLE'); ?>:</label>
 		<div class="controls">
 			<input type="text" id="title" name="title" size="60" value="" />
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_CSS_CLASS'); ?>:</label>
+		<label class="control-label" for="cssclass"><?php echo JText::_('PLG_JUMULTITHUMB_GALLERY_CSS_CLASS'); ?>:</label>
 		<div class="controls">
 			<input type="text" id="cssclass" name="cssclass" size="60" />
 		</div>

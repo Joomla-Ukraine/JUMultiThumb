@@ -24,6 +24,7 @@ class ComposerStaticInit56ea923932ec8cfe2724c775f562a864
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'JUMultiThumb\\Adapters\\com_content' => __DIR__ . '/../..' . '/src/Adapters/com_content.php',
         'JUMultiThumb\\Helpers\\AutoLinks' => __DIR__ . '/../..' . '/src/Helpers/AutoLinks.php',
+        'JUMultiThumb\\Helpers\\Image' => __DIR__ . '/../..' . '/src/Helpers/Image.php',
         'JUMultiThumb\\Helpers\\Utils' => __DIR__ . '/../..' . '/src/Helpers/Utils.php',
     );
 

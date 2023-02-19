@@ -89,15 +89,13 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	/**
 	 * @param $context
 	 * @param $article
-	 * @param $params
-	 * @param $limitstart
 	 *
 	 * @return void
 	 *
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentPrepare($context, $article, $params, $limitstart): void
+	public function onContentPrepare($context, $article): void
 	{
 		if(class_exists($this->modeHelper) === false)
 		{
@@ -155,29 +153,12 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 			$plugin = PluginHelper::getPlugin('content', 'jumultithumb');
 			$json   = json_decode($plugin->params);
 
-			$a_watermarkgall_s = $this->params->get('watermarkgall_s');
-			$a_watermarkgall   = $this->params->get('watermarkgall');
-
-			$attribs             = json_decode($article->attribs);
-			$watermark_gallery   = $attribs->watermark_gallery;
-			$watermark_gallery_s = $attribs->watermark_gallery_s;
-
-			$attribs = json_decode($article->attribs);
-			$use_wm  = 1;
-			if($attribs->watermark_off)
-			{
-				$use_wm = 0;
-			}
-
 			foreach($matches as $match)
 			{
 				$matcheslist = explode('|', $match[ 1 ]);
 
 				$galltitle = null;
 				$gallstyle = null;
-				$img_alt   = null;
-				$img_style = null;
-				$attr      = null;
 
 				if(!array_key_exists(1, $matcheslist))
 				{
@@ -193,10 +174,6 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 				{
 					$matcheslist[ 3 ] = $gallstyle;
 				}
-
-				$maxsize_orignew = $this->params->get('maxsize_orignew');
-				$newmaxwidth     = $this->params->get('maxwidthnew');
-				$newmaxheight    = $this->params->get('maxheightnew');
 
 				$gallwidth    = $this->params->get('gallwidth');
 				$gallheight   = $this->params->get('gallheight');
@@ -290,59 +267,20 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 
 							$thumb_img = $this->juimg->render($file, $_imgparams);
 
-							return $this->_image($thumb_img, $this->params->get('width'), $this->params->get('height'), null, $_title, 0, $_title);
-						}
-
-						// Watermark
-						$wmi = '';
-						if($use_wm == 1)
-						{
-							if($watermark_gallery == '1' || $a_watermarkgall == '1')
-							{
-								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
-								if(!is_file($wmfile))
-								{
-									$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
-								}
-								$watermark = $wmfile;
-
-								$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
-							}
+							return $this->_image([
+								'image'    => $thumb_img,
+								'orig_img' => $file,
+								'link_img' => $file,
+								'w'        => $this->params->get('width'),
+								'h'        => $this->params->get('height'),
+								'title'    => $_title,
+								'caption'  => $_title
+							]);
 						}
 
 						$imgsource = $file;
-						if($watermark_gallery == '1' || $a_watermarkgall == '1')
-						{
-							$link_imgparams = [
-								'w'     => $this->params->get('maxsize_orignew') == '1' ? $newmaxwidth : '',
-								'h'     => $this->params->get('maxsize_orignew') == '1' ? $newmaxheight : '',
-								'fltr'  => $wmi != '' ? $wmi : '',
-								'cache' => $img_cache
-							];
-
-							$_link_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $link_imgparams);
-
-							$imgsource = $this->juimg->render($file, $_link_imgparams);
-						}
-
-						// Small watermark
-						$wmi_s = '';
-						if($use_wm == 1)
-						{
-							if($watermark_gallery_s == '1' || $a_watermarkgall_s == '1')
-							{
-								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
-								if(!is_file($wmfile))
-								{
-									$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
-								}
-								$watermark_s = $wmfile;
-								$wmi_s       = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
-							}
-						}
 
 						$imgparams = [
-							'fltr'  => $wmi_s != '' ? $wmi_s : '',
 							'w'     => $gallwidth,
 							'h'     => $gallheight,
 							'aoe'   => '1',
@@ -355,7 +293,16 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 						$_title     = ($galltitle == '' ? $img_title : $galltitle . '. ' . $img_title);
 						$_title     = mb_strtoupper(mb_substr($_title, 0, 1)) . mb_substr($_title, 1);
 
-						$_gallery[] = $this->_image($thumb_img, $gallwidth, $gallheight, null, $_title, 0, $_title, $imgsource, $file, $lightbox);
+						$_gallery[] = $this->_image([
+							'image'    => $thumb_img,
+							'orig_img' => $imgsource,
+							'link_img' => $file,
+							'w'        => $gallwidth,
+							'h'        => $gallheight,
+							'title'    => $_title,
+							'caption'  => $_title,
+							'lightbox' => $lightbox
+						]);
 					}
 
 					$gallery = implode($_gallery);
@@ -367,7 +314,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 					]);
 				}
 
-				$text = preg_replace($regex, 'yy' . $html, $text, 1);
+				$text = preg_replace($regex, '' . $html, $text, 1);
 			}
 		}
 
@@ -375,56 +322,47 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	}
 
 	/**
-	 * @param      $img
-	 * @param      $w
-	 * @param      $h
-	 * @param null $class
-	 * @param null $alt
-	 * @param null $caption
-	 * @param null $title
-	 * @param null $link_img
-	 * @param null $orig_img
-	 * @param null $lightbox
+	 * @param      $options
 	 *
 	 * @return string
 	 *
 	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function _image($img, $w, $h, $class = null, $alt = null, $caption = null, $title = null, $link_img = null, $orig_img = null, $lightbox = null): string
+	public function _image(array $options = []): string
 	{
-		switch($lightbox)
+		switch($options[ 'lightbox' ])
 		{
 			case 'lightgallery':
 				$link          = '#';
 				$lightbox      = ' ';
-				$lightbox_data = ' ' . ($link_img ? 'data-src="' . JURI::base() . $link_img . '"' : '') . ' ' . ($orig_img ? 'data-download-url="' . JURI::base() . $orig_img . '"' : '');
+				$lightbox_data = ' ' . ($options[ 'link_img' ] ? 'data-src="' . JURI::base() . $options[ 'link_img' ] . '"' : '') . ' ' . ($options[ 'orig_img' ] ? 'data-download-url="' . JURI::base() . $options[ 'orig_img' ] . '"' : '');
 				break;
 
 			case 'colorbox':
-				$link          = $link_img;
+				$link          = $options[ 'link_img' ];
 				$lightbox      = ' class="lightbox" rel="lightbox[gall]"';
 				$lightbox_data = '';
 				break;
 
 			default:
 			case 'jmodal':
-				$link          = $link_img;
+				$link          = $options[ 'link_img' ];
 				$lightbox      = ' rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
 				$lightbox_data = '';
 				break;
 		}
 
 		return Utils::tmpl('jumultithumb_gallery', 'image', [
-			'img'            => $img,
-			'w'              => $w,
-			'h'              => $h,
-			'class'          => $class,
-			'alt'            => $alt,
-			'caption'        => $caption,
-			'title'          => $title,
-			'link_img'       => $link_img,
-			'orig_img'       => $orig_img,
+			'img'            => $options[ 'image' ],
+			'w'              => $options[ 'w' ],
+			'h'              => $options[ 'h' ],
+			'class'          => $options[ 'class' ],
+			'alt'            => $options[ 'alt' ],
+			'caption'        => $options[ 'caption' ],
+			'title'          => $options[ 'title' ],
+			'link_img'       => $options[ 'link_img' ],
+			'orig_img'       => $options[ 'orig_img' ],
 			'link'           => $link,
 			'lightbox'       => $lightbox,
 			'lightbox_data ' => $lightbox_data

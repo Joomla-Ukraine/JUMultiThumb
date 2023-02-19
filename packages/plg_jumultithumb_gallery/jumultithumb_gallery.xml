@@ -151,112 +151,113 @@
                        hide_none="1"
                        hide_default="1" />
 
-                <field name="watermarkgall"
-                       type="list"
-                       default="0"
-                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
-                    <option value="0">JNO</option>
-                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-                    <option value="1">JYES</option>
-                </field>
+	            <!--
+							  <field name="watermarkgall"
+									 type="list"
+									 default="0"
+									 label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG">
+								  <option value="0">JNO</option>
+								  <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+								  <option value="1">JYES</option>
+							  </field>
 
-                <field name="wmposition"
-                       type="list"
-                       default="BR"
-                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS"
-                       showon="watermarkgall:1,2"
-                >
-                    <option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-                    <option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-                    <option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
-                    <option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
-                    <option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
-                    <option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
-                    <option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
-                    <option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
-                    <option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
-                </field>
+											  <field name="wmposition"
+													 type="list"
+													 default="BR"
+													 label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS"
+													 showon="watermarkgall:1,2"
+											  >
+												  <option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+												  <option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+												  <option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
+												  <option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
+												  <option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
+												  <option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
+												  <option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
+												  <option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
+												  <option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
+											  </field>
 
-                <field name="wmopst"
-                       type="text"
-                       default="75"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC"
-                       description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS"
-                       showon="watermarkgall:1,2"
-                />
+											  <field name="wmopst"
+													 type="text"
+													 default="75"
+													 size="4"
+													 label="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC"
+													 description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS"
+													 showon="watermarkgall:1,2"
+											  />
 
-                <field name="wmx"
-                       type="text"
-                       default="0"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN"
-                       showon="watermarkgall:1,2"
-                />
+											  <field name="wmx"
+													 type="text"
+													 default="0"
+													 size="4"
+													 label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN"
+													 showon="watermarkgall:1,2"
+											  />
 
-                <field name="wmy"
-                       type="text"
-                       default="0"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN"
-                       showon="watermarkgall:1,2"
-                />
+											  <field name="wmy"
+													 type="text"
+													 default="0"
+													 size="4"
+													 label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN"
+													 showon="watermarkgall:1,2"
+											  />
 
-                <field name="watermarkgall_s"
-                       type="list"
-                       default="0"
-                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
-                    <option value="0">JNO</option>
-                    <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
-                    <option value="1">JYES</option>
-                </field>
+											  <field name="watermarkgall_s"
+													 type="list"
+													 default="0"
+													 label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG">
+												  <option value="0">JNO</option>
+												  <option value="2">PLG_JUMULTITHUMB_WATERMARK_ARTICLE_SELECTED</option>
+												  <option value="1">JYES</option>
+											  </field>
 
-                <field name="wmposition_s"
-                       type="list"
-                       default="BR"
-                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_POS"
-                       showon="watermarkgall_s:1,2"
-                >
-                    <option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-                    <option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
-                    <option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
-                    <option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
-                    <option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
-                    <option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
-                    <option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
-                    <option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
-                    <option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
-                </field>
+											  <field name="wmposition_s"
+													 type="list"
+													 default="BR"
+													 label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_POS"
+													 showon="watermarkgall_s:1,2"
+											  >
+												  <option value="T">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+												  <option value="B">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_T</option>
+												  <option value="L">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_L</option>
+												  <option value="R">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_R</option>
+												  <option value="C">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_C</option>
+												  <option value="TL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TL</option>
+												  <option value="TR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_TR</option>
+												  <option value="BL">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BL</option>
+												  <option value="BR">PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_POS_BR</option>
+											  </field>
 
-                <field name="wmopst_s"
-                       type="text"
-                       default="75"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_OPAC"
-                       description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS"
-                       showon="watermarkgall_s:1,2"
-                />
+											  <field name="wmopst_s"
+													 type="text"
+													 default="75"
+													 size="4"
+													 label="PLG_JUMULTITHUMB_WATERMARK_SMALL_IMG_OPAC"
+													 description="PLG_JUMULTITHUMB_WATERMARK_ORIG_IMG_OPAC_TIPS"
+													 showon="watermarkgall_s:1,2"
+											  />
 
-                <field name="wmx_s"
-                       type="text"
-                       default="0"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN"
-                       showon="watermarkgall_s:1,2"
-                />
+											  <field name="wmx_s"
+													 type="text"
+													 default="0"
+													 size="4"
+													 label="PLG_JUMULTITHUMB_WATERMARK_IMG_XMARGIN"
+													 showon="watermarkgall_s:1,2"
+											  />
 
-                <field name="wmy_s"
-                       type="text"
-                       default="0"
-                       size="4"
-                       label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN"
-                       showon="watermarkgall_s:1,2"
-                />
-
-                <field name="selectlightbox"
-                       type="list"
-                       default="jmodal"
-                       label="PLG_JUMULTITHUMB_SELECT_LIGHTBOX">
+											  <field name="wmy_s"
+													 type="text"
+													 default="0"
+													 size="4"
+													 label="PLG_JUMULTITHUMB_WATERMARK_IMG_YMARGIN"
+													 showon="watermarkgall_s:1,2"
+											  />
+							  -->
+	            <field name="selectlightbox"
+	                   type="list"
+	                   default="jmodal"
+	                   label="PLG_JUMULTITHUMB_SELECT_LIGHTBOX">
                     <option value="jmodal">Joomla Modal window</option>
                     <option value="customjs">PLG_JUMULTITHUMB_CUSTOM_JS</option>
                 </field>

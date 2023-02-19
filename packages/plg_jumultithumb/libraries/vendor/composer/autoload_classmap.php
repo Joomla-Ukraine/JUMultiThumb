@@ -9,5 +9,6 @@ return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'JUMultiThumb\\Adapters\\com_content' => $baseDir . '/src/Adapters/com_content.php',
     'JUMultiThumb\\Helpers\\AutoLinks' => $baseDir . '/src/Helpers/AutoLinks.php',
+    'JUMultiThumb\\Helpers\\Image' => $baseDir . '/src/Helpers/Image.php',
     'JUMultiThumb\\Helpers\\Utils' => $baseDir . '/src/Helpers/Utils.php',
 );

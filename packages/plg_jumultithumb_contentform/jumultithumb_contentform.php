@@ -17,12 +17,6 @@ defined('JPATH_BASE') or die;
 class plgContentJUMultithumb_ContentForm extends CMSPlugin
 {
 	/**
-	 * @since version
-	 * @var
-	 */
-	private $_subject;
-
-	/**
 	 * plgContentJUMultithumb_ContentForm constructor.
 	 *
 	 * @param $subject
@@ -43,7 +37,7 @@ class plgContentJUMultithumb_ContentForm extends CMSPlugin
 	 *
 	 * @since 7.0
 	 */
-	public function onContentPrepareForm($form, $data)
+	public function onContentPrepareForm($form, $data): void
 	{
 		if(!($form instanceof JForm))
 		{
@@ -60,7 +54,5 @@ class plgContentJUMultithumb_ContentForm extends CMSPlugin
 		JForm::addFormPath(__DIR__ . '/forms');
 
 		$form->loadFile('article', false);
-
-		return;
 	}
 }

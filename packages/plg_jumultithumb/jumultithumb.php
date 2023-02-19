@@ -12,7 +12,6 @@
 
 use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -21,7 +20,7 @@ use JUMultiThumb\Helpers\AutoLinks;
 
 defined('_JEXEC') or die;
 
-//require_once __DIR__ . '/libraries/vendor/autoload.php';
+require_once __DIR__ . '/libraries/vendor/autoload.php';
 
 JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
 
@@ -49,20 +48,12 @@ class plgContentjumultithumb extends CMSPlugin
 
 		$this->loadLanguage();
 
-		$this->juimg  = new JUImage();
-		$this->app    = Factory::getApplication();
-		$this->doc    = Factory::getDocument();
-		$this->option = $this->app->input->get('option');
-		$this->itemid = $this->app->input->getInt('Itemid');
-
-		$adapter = JPATH_SITE . '/plugins/content/jumultithumb/adapters/' . $this->option . '.php';
-		if(File::exists($adapter))
-		{
-			require_once $adapter;
-
-			$mode_option      = 'plgContentJUMultiThumb_' . $this->option;
-			$this->modeHelper = new $mode_option($this);
-		}
+		$this->juimg      = new JUImage();
+		$this->app        = Factory::getApplication();
+		$this->doc        = Factory::getDocument();
+		$this->option     = $this->app->input->get('option');
+		$this->itemid     = $this->app->input->getInt('Itemid');
+		$this->modeHelper = '\\JUMultiThumb\\Adapters\\' . $this->option;
 	}
 
 	/**
@@ -76,20 +67,15 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentBeforeDisplay($context, &$article, &$params, $limitstart): void
+	public function onContentBeforeDisplay($context, $article): void
 	{
-		if($this->app->getName() !== 'site' || !$this->modeHelper->jView('Component'))
-		{
-			return;
-		}
-
-		if($this->modeHelper && $this->modeHelper->jView('Article'))
+		if($this->app->getName() !== 'site' || !$this->modeHelper::view('Component') || $this->modeHelper::view('Article'))
 		{
 			return;
 		}
 
 		$onlyFirstImage = $this->params->get('Only_For_First_Image');
-		$link           = $this->modeHelper->jViewLink($article);
+		$link           = $this->modeHelper::link($article);
 
 		$article->text      = AutoLinks::handleImgLinks($article->text, $article->title, $link, $onlyFirstImage);
 		$article->introtext = AutoLinks::handleImgLinks($article->introtext, $article->title, $link, $onlyFirstImage);
@@ -101,16 +87,16 @@ class plgContentjumultithumb extends CMSPlugin
 	 * @param $params
 	 * @param $limitstart
 	 *
-	 * @return bool
+	 * @return void
 	 *
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentPrepare($context, $article, &$params, $limitstart): bool
+	public function onContentPrepare($context, $article): void
 	{
-		if($this->app->getName() !== 'site' || !$this->modeHelper->jView('Component'))
+		if($this->app->getName() !== 'site' || !$this->modeHelper::view('Component'))
 		{
-			return true;
+			return;
 		}
 
 		if(isset($article->text))
@@ -136,18 +122,14 @@ class plgContentjumultithumb extends CMSPlugin
 				'use_wm'  => $use_wm
 			]);
 		}
-
-		return true;
 	}
 
 	/**
-	 * @param     $text
-	 * @param     $article
-	 * @param int $use_wm
+	 * @param array $option
 	 *
-	 * @return
+	 * @return mixed|string|string[]|null
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	private function ImgReplace(array $option = [])
@@ -185,7 +167,7 @@ class plgContentjumultithumb extends CMSPlugin
 			}
 		}
 
-		if(($only_image_blog == 1 && $this->modeHelper && $this->modeHelper->jView('Blog')) || ($only_image_category == 1 && $this->modeHelper && $this->modeHelper->jView('Category')) || ($only_image_featured == 1 && $this->modeHelper && $this->modeHelper->jView('Featured')))
+		if(($only_image_blog == 1 && $this->modeHelper::view('Blog')) || ($only_image_category == 1 && $this->modeHelper::view('Category')) || ($only_image_featured == 1 && $this->modeHelper::view('Featured')))
 		{
 			preg_match_all('/(<\s*img\s+src\s*="\s*("[^"]*"|\'[^\']*\'|[^"\s]+).*?>)/i', $text, $result);
 			$img  = $result[ 1 ][ 0 ];
@@ -196,17 +178,14 @@ class plgContentjumultithumb extends CMSPlugin
 	}
 
 	/**
-	 * @param $_img
-	 * @param $article
-	 * @param $watermark_o
-	 * @param $watermark_s
+	 * @param array $option
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	private function JUMultithumbReplacer(array $option = [])
+	private function JUMultithumbReplacer(array $option = []): string
 	{
 		$quality                 = $this->params->get('quality');
 		$noimage_class           = $this->params->get('noimage_class');
@@ -343,7 +322,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$_image_noresize = 1;
 		}
 
-		if($this->modeHelper && $this->modeHelper->jView('CatBlog'))
+		if($this->modeHelper::view('CatBlog'))
 		{
 			$b_width           = $this->params->get('b_width');
 			$b_height          = $this->params->get('b_height');
@@ -419,10 +398,10 @@ class plgContentjumultithumb extends CMSPlugin
 			$limage     = $this->_image($thumb_img, $b_width, $b_height, $img_class, $img_alt, 0, 0);
 		}
 
-		if(($this->modeHelper && $this->modeHelper->jView('Article')) || ($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('Category')))
+		if($this->modeHelper::view('Article') || $this->modeHelper::view('Categories') || $this->modeHelper::view('Category'))
 		{
 
-			if($this->modeHelper && $this->modeHelper->jView('Article'))
+			if($this->modeHelper::view('Article'))
 			{
 				$newmaxwidth        = $this->params->get('maxwidth');
 				$newmaxheight       = $this->params->get('maxheight');
@@ -467,7 +446,7 @@ class plgContentjumultithumb extends CMSPlugin
 				echo $newwidth;
 			}
 
-			if(($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('Category')))
+			if($this->modeHelper::view('Categories') || $this->modeHelper::view('Category'))
 			{
 				$newmaxwidth        = $this->params->get('cat_maxwidth');
 				$newmaxheight       = $this->params->get('cat_maxheight');
@@ -529,15 +508,11 @@ class plgContentjumultithumb extends CMSPlugin
 				if($option[ 'watermark_o' ] == 1 || $_image_noresize == 1 || $this->params->get('a_watermark') == 1 || $this->params->get('a_watermarknew1') == 1 || $this->params->get('a_watermarknew2') == 1 || $this->params->get('a_watermarknew3') == 1 || $this->params->get('a_watermarknew4') == 1 || $this->params->get('a_watermarknew5') == 1)
 				{
 					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
-					if(is_file($wmfile))
+					if(!is_file($wmfile))
 					{
-						$watermark = $wmfile;
+						$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
 					}
-					else
-					{
-						$wmfile    = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
-						$watermark = $wmfile;
-					}
+					$watermark = $wmfile;
 
 					$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
 				}
@@ -576,15 +551,11 @@ class plgContentjumultithumb extends CMSPlugin
 				if($option[ 'watermark_s' ] == 1 || $this->params->get('a_watermark_s') == 1 || $this->params->get('a_watermarknew1_s') == 1 || $this->params->get('a_watermarknew2_s') == 1 || $this->params->get('a_watermarknew3_s') == 1 || $this->params->get('a_watermarknew4_s') == 1 || $this->params->get('a_watermarknew5_s') == 1)
 				{
 					$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
-					if(is_file($wmfile))
+					if(!is_file($wmfile))
 					{
-						$watermark_s = $wmfile;
+						$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
 					}
-					else
-					{
-						$wmfile      = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
-						$watermark_s = $wmfile;
-					}
+					$watermark_s = $wmfile;
 
 					$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
 				}
@@ -640,7 +611,7 @@ class plgContentjumultithumb extends CMSPlugin
 			$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams, $new_imgparams);
 			$thumb_img  = $this->juimg->render($imgsource, $_imgparams);
 
-			if($_image_noresize == 1 || $newnofullimg == 1 || ($this->modeHelper && $this->modeHelper->jView('Print')))
+			if($_image_noresize == 1 || $newnofullimg == 1 || $this->modeHelper::view('Print'))
 			{
 				$limage = $this->_image($thumb_img, $newwidth, $newheight, $img_class, $img_alt, 1, $_image_noresize, $img_title);
 			}
@@ -649,7 +620,7 @@ class plgContentjumultithumb extends CMSPlugin
 				$limage = $this->_image($thumb_img, $newwidth, $newheight, 'imgobjct ' . $img_class, $img_alt, 1, 0, $img_title, $link_img, $imgsource, $lightbox);
 			}
 		}
-		elseif($this->modeHelper && $this->modeHelper->jView('Featured'))
+		elseif($this->modeHelper::view('Featured'))
 		{
 			$f_newwidth           = $this->params->get('f_width');
 			$f_newheight          = $this->params->get('f_height');
@@ -841,12 +812,12 @@ class plgContentjumultithumb extends CMSPlugin
 	 */
 	public function onBeforeCompileHead(): bool
 	{
-		if($this->app->getName() !== 'site' || !$this->modeHelper->jView('Component'))
+		if($this->app->getName() !== 'site' || !$this->modeHelper::view('Component'))
 		{
 			return true;
 		}
 
-		if($this->params->get('uselightbox', '1') == 1 && (($this->modeHelper && $this->modeHelper->jView('Article')) || ($this->modeHelper && $this->modeHelper->jView('Categories')) || ($this->modeHelper && $this->modeHelper->jView('CatBlog'))) && !($this->modeHelper && $this->modeHelper->jView('Print')))
+		if($this->params->get('uselightbox', '1') == 1 && (($this->modeHelper::view('Article')) || ($this->modeHelper::view('Categories')) || ($this->modeHelper::view('CatBlog'))) && !($this->modeHelper::view('Print')))
 		{
 			if($this->params->get('jujq') == 0)
 			{

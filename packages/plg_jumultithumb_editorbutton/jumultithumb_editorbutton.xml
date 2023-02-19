@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.1" type="plugin" group="editors-xtd" method="upgrade">
+<extension version="3.1"
+           type="plugin"
+           group="editors-xtd"
+           method="upgrade">
     <name>plg_jumultithumb_editorbutton</name>
     <author>Denys Nosov</author>
     <creationDate>13.10.2018</creationDate>
     <copyright>(C) 2007-2018 Denys Nosov. All rights reserved.</copyright>
-    <license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
+    <license>https://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
     </license>
     <authorEmail>denys@joomla-ua.org</authorEmail>
     <authorUrl>joomla-ua.org</authorUrl>
