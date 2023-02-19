@@ -39,28 +39,28 @@ class plgContentJUMultithumb_ContentForm extends CMSPlugin
 	 * @param $form
 	 * @param $data
 	 *
-	 * @return bool
+	 * @return void
 	 *
 	 * @since 7.0
 	 */
-	public function onContentPrepareForm($form, $data): bool
+	public function onContentPrepareForm($form, $data)
 	{
 		if(!($form instanceof JForm))
 		{
 			$this->_subject->setError('JERROR_NOT_A_FORM');
 
-			return false;
+			return;
 		}
 
 		if($form->getName() !== 'com_content.article')
 		{
-			return true;
+			return;
 		}
 
 		JForm::addFormPath(__DIR__ . '/forms');
 
 		$form->loadFile('article', false);
 
-		return true;
+		return;
 	}
 }

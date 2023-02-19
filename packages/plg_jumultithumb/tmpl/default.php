@@ -28,49 +28,34 @@ defined('_JEXEC') or die;
 
 ?>
 <?php if($_noresize == 1): ?>
-<div class="row row-fluid">
-    <div class="col-xs-12 span12">
+	<div class="row row-fluid">
+	<div class="col-xs-12 span12">
 <?php endif; ?>
 
-        <figure
-        class="<?php echo $_class . ($_noresize == 1 ? ' thumbnail' : ''); ?>"
-        itemprop="image"
-        itemscope itemtype="https://schema.org/ImageObject"
-        >
-            <?php if($_link_img) : ?>
-            <a href="<?php echo $_link_img; ?>"<?php echo $_title . $lightbox; ?>>
-            <?php endif; ?>
+	<figure class="<?php echo $_class . ($_noresize == 1 ? ' thumbnail' : ''); ?>">
+		<?php if($_link_img) : ?>
+		<a href="<?php echo $_link_img; ?>"<?php echo $_title . $lightbox; ?>>
+			<?php endif; ?>
 
-            <img
-            src="<?php echo $_img; ?>"
-            alt="<?php echo $_alt; ?>"
-            itemprop="url"
-            <?php echo ($_w ? 'width="'. $_w .'"' : '') . ($_h ? 'height="'. $_h .'"' : ''); ?>
-            >
+			<img
+					src="<?php echo $_img; ?>"
+					alt="<?php echo $_alt; ?>"
+				<?php echo ($_w ? 'width="' . $_w . '"' : '') . ($_h ? 'height="' . $_h . '"' : ''); ?>
+			>
 
-            <?php if($_w): ?>
-            <meta itemprop="width" content="<?php echo $_w; ?>" />
-            <?php endif; ?>
+			<?php if($_alt != ''): ?>
+				<?php if($_caption == 1): ?>
+					<figcaption itemprop="caption" class="text-muted"><?php echo $_alt; ?></figcaption>
+				<?php endif; ?>
+			<?php endif; ?>
 
-            <?php if($_h): ?>
-            <meta itemprop="height" content="<?php echo $_h; ?>" />
-            <?php endif; ?>
+			<?php if($_link_img): ?>
+		</a>
+	<?php endif; ?>
 
-            <?php if($_alt != ''): ?>
-                <?php if($_caption == 1): ?>
-                <figcaption itemprop="caption" class="text-muted"><?php echo $_alt; ?></figcaption>
-                <?php else: ?>
-                <meta itemprop="caption" content="<?php echo $_alt; ?>" />
-                <?php endif; ?>
-            <?php endif; ?>
-
-            <?php if($_link_img): ?>
-            </a>
-            <?php endif; ?>
-
-        </figure>
+	</figure>
 
 <?php if($_noresize == 1): ?>
-    </div>
-</div>
+	</div>
+	</div>
 <?php endif; ?>

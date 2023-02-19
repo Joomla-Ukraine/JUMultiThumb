@@ -10,14 +10,16 @@
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
-
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
+use JUMultiThumb\Helpers\AutoLinks;
+use JUMultiThumb\Helpers\Utils;
 
-JLoader::register('AutoLinks', JPATH_SITE . '/plugins/content/jumultithumb/lib/links.php');
+defined('_JEXEC') or die;
+
+require_once dirname(__DIR__) . '/jumultithumb/libraries/vendor/autoload.php';
+
 JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
 
 class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
@@ -43,20 +45,45 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
 
-		$this->juimg  = new JUImage();
-		$this->app    = Factory::getApplication();
-		$this->doc    = Factory::getDocument();
-		$this->option = $this->app->input->get('option');
-		$this->itemid = $this->app->input->getInt('Itemid');
+		$this->juimg      = new JUImage();
+		$this->app        = Factory::getApplication();
+		$this->doc        = Factory::getDocument();
+		$this->option     = $this->app->input->get('option');
+		$this->itemid     = $this->app->input->getInt('Itemid');
+		$this->modeHelper = '\\JUMultiThumb\\Adapters\\' . $this->option;
+	}
 
-		$adapter = JPATH_SITE . '/plugins/content/jumultithumb/adapters/' . $this->option . '.php';
-		if(File::exists($adapter))
+	/**
+	 * @param $context
+	 * @param $article
+	 * @param $params
+	 * @param $limitstart
+	 *
+	 * @return void
+	 *
+	 * @throws Exception
+	 *
+	 * @since 7.0
+	 */
+	public function onContentBeforeDisplay($context, $article, $params, $limitstart): void
+	{
+		if(class_exists($this->modeHelper) === false)
 		{
-			require_once $adapter;
-
-			$mode_option      = 'plgContentJUMultiThumb_' . $this->option;
-			$this->modeHelper = new $mode_option($this);
+			return;
 		}
+
+		if($this->app->getName() !== 'site' || !$this->modeHelper::view('Component'))
+		{
+			return;
+		}
+
+		if($this->modeHelper::view('Article'))
+		{
+			return;
+		}
+
+		$link          = $this->modeHelper::link($article);
+		$article->text = AutoLinks::handleImgLinks($article->text, $article->title, $link, 1);
 	}
 
 	/**
@@ -70,51 +97,31 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	 * @throws Exception
 	 * @since 7.0
 	 */
-	public function onContentBeforeDisplay($context, $article, $params, $limitstart): void
+	public function onContentPrepare($context, $article, $params, $limitstart): void
 	{
-		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
+		if(class_exists($this->modeHelper) === false)
 		{
 			return;
 		}
 
-		if($this->modeHelper->jView('Article'))
+		if($this->app->getName() !== 'site' || !$this->modeHelper::view('Component'))
 		{
 			return;
 		}
 
-		$autolinks     = new AutoLinks();
-		$link          = $this->modeHelper->jViewLink($article);
-		$article->text = $autolinks->handleImgLinks($article->text, $article->title, $link, 1);
-	}
-
-	/**
-	 * @param $context
-	 * @param $article
-	 * @param $params
-	 * @param $limitstart
-	 *
-	 * @return bool
-	 *
-	 * @throws Exception
-	 * @since 7.0
-	 */
-	public function onContentPrepare($context, $article, $params, $limitstart): bool
-	{
-		if($this->app->getName() !== 'site' || !($this->modeHelper && $this->modeHelper->jView('Component')))
-		{
-			return true;
-		}
-
-		if(!($this->modeHelper->jView('Article')) && ($this->params->get('useimgagegallery') == '0'))
+		if(!($this->modeHelper::view('Article')) && ($this->params->get('useimgagegallery') == '0'))
 		{
 			$regex = "/<p>\s*{gallery\s+(.*?)}\s*</p>/i";
 			preg_match_all($regex, $article->text, $matches, PREG_SET_ORDER);
 
-			foreach($matches as $match)
+			foreach($matches as $val)
 			{
-				$article->text = preg_replace($regex, '', $article->text, 1);
+				if($val)
+				{
+					$article->text = preg_replace($regex, '', $article->text, 1);
 
-				return true;
+					return;
+				}
 			}
 		}
 
@@ -127,8 +134,6 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 		{
 			$article->fulltext = @$this->GalleryReplace($article->fulltext, $article);
 		}
-
-		return true;
 	}
 
 	/**
@@ -269,7 +274,7 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 							$cont_filtercolor = [ 'fltr_5' => 'cont|' . $json->thumb_cont_seting ];
 						}
 
-						if(!($this->modeHelper && $this->modeHelper->jView('Article')) && ($this->params->get('useimgagegallery') == '1'))
+						if(!$this->modeHelper::view('Article') && ($this->params->get('useimgagegallery') == '1'))
 						{
 							$_title = mb_strtoupper(mb_substr($img_title, 0, 1)) . mb_substr($img_title, 1);
 
@@ -295,15 +300,11 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 							if($watermark_gallery == '1' || $a_watermarkgall == '1')
 							{
 								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/w.png';
-								if(is_file($wmfile))
+								if(!is_file($wmfile))
 								{
-									$watermark = $wmfile;
+									$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
 								}
-								else
-								{
-									$wmfile    = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juw.png';
-									$watermark = $wmfile;
-								}
+								$watermark = $wmfile;
 
 								$wmi = 'wmi|' . $watermark . '|' . $this->params->get('wmposition') . '|' . $this->params->get('wmopst') . '|' . $this->params->get('wmx') . '|' . $this->params->get('wmy');
 							}
@@ -331,16 +332,12 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 							if($watermark_gallery_s == '1' || $a_watermarkgall_s == '1')
 							{
 								$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/ws.png';
-								if(is_file($wmfile))
+								if(!is_file($wmfile))
 								{
-									$watermark_s = $wmfile;
+									$wmfile = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
 								}
-								else
-								{
-									$wmfile      = JPATH_SITE . '/plugins/content/jumultithumb/load/watermark/juws.png';
-									$watermark_s = $wmfile;
-								}
-								$wmi_s = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
+								$watermark_s = $wmfile;
+								$wmi_s       = 'wmi|' . $watermark_s . '|' . $this->params->get('wmposition_s') . '|' . $this->params->get('wmopst_s') . '|' . $this->params->get('wmx_s') . '|' . $this->params->get('wmy_s');
 							}
 						}
 
@@ -361,16 +358,16 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 						$_gallery[] = $this->_image($thumb_img, $gallwidth, $gallheight, null, $_title, 0, $_title, $imgsource, $file, $lightbox);
 					}
 
-					$gallery  = implode($_gallery);
-					$template = $this->app->getTemplate();
-					$tmpl     = $this->getTmpl($template, 'gallery');
+					$gallery = implode($_gallery);
 
-					ob_start();
-					require $tmpl;
-					$html = ob_get_clean();
+					$html = Utils::tmpl('jumultithumb_gallery', 'gallery', [
+						'gallery'   => $gallery,
+						'gallstyle' => $gallstyle,
+						'galltitle' => $galltitle
+					]);
 				}
 
-				$text = preg_replace($regex, $html, $text, 1);
+				$text = preg_replace($regex, 'yy' . $html, $text, 1);
 			}
 		}
 
@@ -378,72 +375,59 @@ class plgContentJUMULTITHUMB_Gallery extends CMSPlugin
 	}
 
 	/**
-	 * @param      $_img
-	 * @param      $_w
-	 * @param      $_h
-	 * @param null $_class
-	 * @param null $_alt
-	 * @param null $_caption
-	 * @param null $_title
-	 * @param null $_link_img
-	 * @param null $_orig_img
-	 * @param null $_lightbox
+	 * @param      $img
+	 * @param      $w
+	 * @param      $h
+	 * @param null $class
+	 * @param null $alt
+	 * @param null $caption
+	 * @param null $title
+	 * @param null $link_img
+	 * @param null $orig_img
+	 * @param null $lightbox
 	 *
 	 * @return string
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
-	public function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null): string
+	public function _image($img, $w, $h, $class = null, $alt = null, $caption = null, $title = null, $link_img = null, $orig_img = null, $lightbox = null): string
 	{
-		$template = $this->app->getTemplate();
-
-		switch($_lightbox)
+		switch($lightbox)
 		{
 			case 'lightgallery':
 				$link          = '#';
 				$lightbox      = ' ';
-				$lightbox_data = ' ' . ($_link_img ? 'data-src="' . JURI::base() . $_link_img . '"' : '') . ' ' . ($_orig_img ? 'data-download-url="' . JURI::base() . $_orig_img . '"' : '');
+				$lightbox_data = ' ' . ($link_img ? 'data-src="' . JURI::base() . $link_img . '"' : '') . ' ' . ($orig_img ? 'data-download-url="' . JURI::base() . $orig_img . '"' : '');
 				break;
 
 			case 'colorbox':
-				$link          = $_link_img;
+				$link          = $link_img;
 				$lightbox      = ' class="lightbox" rel="lightbox[gall]"';
 				$lightbox_data = '';
 				break;
 
 			default:
 			case 'jmodal':
-				$link          = $_link_img;
-				$lightbox      = ' class="modal" rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
+				$link          = $link_img;
+				$lightbox      = ' rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
 				$lightbox_data = '';
 				break;
 		}
 
-		$tmpl = $this->getTmpl($template, 'image');
-
-		ob_start();
-		require $tmpl;
-
-		return ob_get_clean();
-	}
-
-	/**
-	 * @param $template
-	 * @param $name
-	 *
-	 * @return string
-	 *
-	 * @since 7.0
-	 */
-	public function getTmpl($template, $name): string
-	{
-		$search = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb_gallery/' . $name . '.php';
-		if(is_file($search))
-		{
-			return $search;
-		}
-
-		return JPATH_SITE . '/plugins/content/jumultithumb_gallery/tmpl/' . $name . '.php';
+		return Utils::tmpl('jumultithumb_gallery', 'image', [
+			'img'            => $img,
+			'w'              => $w,
+			'h'              => $h,
+			'class'          => $class,
+			'alt'            => $alt,
+			'caption'        => $caption,
+			'title'          => $title,
+			'link_img'       => $link_img,
+			'orig_img'       => $orig_img,
+			'link'           => $link,
+			'lightbox'       => $lightbox,
+			'lightbox_data ' => $lightbox_data
+		]);
 	}
 }

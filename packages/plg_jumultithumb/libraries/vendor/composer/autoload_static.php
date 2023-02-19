@@ -22,7 +22,9 @@ class ComposerStaticInit56ea923932ec8cfe2724c775f562a864
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'JUMultiThumb\\Adapters\\com_content' => __DIR__ . '/../..' . '/src/Adapters/com_content.php',
         'JUMultiThumb\\Helpers\\AutoLinks' => __DIR__ . '/../..' . '/src/Helpers/AutoLinks.php',
+        'JUMultiThumb\\Helpers\\Utils' => __DIR__ . '/../..' . '/src/Helpers/Utils.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -19,15 +19,17 @@ defined('_JEXEC') or die;
 *       $gallery    — display gallery
 */
 
-?>
-<div class="juphotogallery<?php echo (isset($gallstyle) ? ' '. $gallstyle : ''); ?>">
-    <?php if($galltitle !== '') : ?>
-    <h3 class="jutitlegallery">
-        <?php echo $galltitle; ?>
-    </h3>
-    <?php endif; ?>
+$data = (object) $displayData;
 
-    <div class="jugallerybody row row-photo" itemscope itemtype="http://schema.org/ImageGallery">
-        <?php echo $gallery; ?>
-    </div>
+?>
+<div class="juphotogallery<?php echo(isset($data->gallstyle) ? ' ' . $data->gallstyle : ''); ?>">
+	<?php if($data->galltitle !== '') : ?>
+		<h3 class="jutitlegallery">
+			<?php echo $data->galltitle; ?>
+		</h3>
+	<?php endif; ?>
+
+	<div class="jugallerybody row row-photo" itemscope itemtype="http://schema.org/ImageGallery">
+		<?php echo $data->gallery; ?>
+	</div>
 </div>

@@ -21,7 +21,7 @@ use JUMultiThumb\Helpers\AutoLinks;
 
 defined('_JEXEC') or die;
 
-require_once __DIR__ . '/libraries/vendor/autoload.php';
+//require_once __DIR__ . '/libraries/vendor/autoload.php';
 
 JLoader::register('JUImage', JPATH_LIBRARIES . '/juimage/JUImage.php');
 
@@ -740,7 +740,7 @@ class plgContentjumultithumb extends CMSPlugin
 
 			default:
 			case 'jmodal':
-				$lightbox = ' class="modal" rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
+				$lightbox = ' rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
 				break;
 		}
 

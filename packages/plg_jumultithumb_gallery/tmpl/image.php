@@ -26,56 +26,40 @@ defined('_JEXEC') or die;
 *       $lightbox   — litebox (lightgallery, colorbox, jmodal)
 */
 
+$data = (object) $displayData;
+
 ?>
-<div class="col-xs-4 col-sm-3"<?php echo $lightbox_data; ?>>
-    <div class="<?php echo $_class; ?> thumbnail">
-        <figure
-            class="galleryobjcts"
-            itemprop="associatedMedia"
-            itemscope
-            itemtype="http://schema.org/ImageObject"
-        >
-            <?php if($_link_img) : ?>
-            <a
-                itemprop="contentUrl"
-                href="<?php echo $link; ?>"
-                <?php echo ($_title ? ' title="'. $_title .'"' : '') . $lightbox; ?>
-            >
-            <?php endif; ?>
+<div class="col-xs-4 col-sm-3"<?php echo $data->lightbox_data; ?>>
+	<div class="<?php echo $data->class; ?> thumbnail">
+		<figure
+				class="galleryobjcts"
+		>
+			<?php if($data->link_img) : ?>
+			<a
+					href="<?php echo $data->link; ?>"
+				<?php echo ($data->title ? ' title="' . $data->title . '"' : '') . $data->lightbox; ?>
+			>
+				<?php endif; ?>
 
-                <img
-                    itemprop="thumbnail"
-                    src="<?php echo $_img; ?>"
-                    alt="<?php echo $_alt; ?>"
-                    width="<?php echo $_w; ?>"
-                    height="<?php echo $_h; ?>"
-                />
+				<img
+						src="<?php echo $data->img; ?>"
+						alt="<?php echo $data->alt; ?>"
+						width="<?php echo $data->w; ?>"
+						height="<?php echo $data->h; ?>"
+				/>
 
-                <?php if($_w): ?>
-                <meta itemprop="width" content="<?php echo $_w; ?>" />
-                <?php endif; ?>
+				<?php if($data->alt !== ''): ?>
+					<?php if($data->caption == 1): ?>
+						<figcaption class="text-muted">
+							<?php echo $data->alt; ?>
+						</figcaption>
+					<?php endif; ?>
+				<?php endif; ?>
 
-                <?php if($_h): ?>
-                <meta itemprop="height" content="<?php echo $_h; ?>" />
-                <?php endif; ?>
+				<?php if($data->link_img): ?>
+			</a>
+		<?php endif; ?>
 
-                <?php if($_alt !== ''): ?>
-                    <?php if($_caption == 1): ?>
-                    <figcaption
-                        itemprop="caption"
-                        class="text-muted"
-                    >
-                        <?php echo $_alt; ?>
-                    </figcaption>
-                    <?php else: ?>
-                    <meta itemprop="caption" content="<?php echo $_alt; ?>" />
-                    <?php endif; ?>
-                <?php endif; ?>
-
-            <?php if($_link_img): ?>
-            </a>
-            <?php endif; ?>
-
-        </figure>
-    </div>
+		</figure>
+	</div>
 </div>

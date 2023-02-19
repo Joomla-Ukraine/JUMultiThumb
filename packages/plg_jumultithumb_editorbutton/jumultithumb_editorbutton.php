@@ -6,7 +6,7 @@
  * @subpackage       pkg_jumultithumb
  *
  * @author           Denys Nosov, denys@joomla-ua.org
- * @copyright        2007-2018 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
+ * @copyright        2007-2023 (C) Joomla! Ukraine, https://joomla-ua.org. All rights reserved.
  * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -26,7 +26,7 @@ class plgButtonJUmultithumb_EditorButton extends CMSPlugin
 	 * @param $asset
 	 * @param $author
 	 *
-	 * @return bool|JObject
+	 * @return \Joomla\CMS\Object\CMSObject|void
 	 *
 	 * @throws Exception
 	 * @since 7.0
