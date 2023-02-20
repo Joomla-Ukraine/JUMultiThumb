@@ -8,8 +8,6 @@ Help to translate: http://opentranslators.transifex.net/projects/p/jumultithumb/
 
 English Support: http://forum.joomla.org/viewtopic.php?f=628&t=683882
 
-Russian Support: http://joomlaforum.ru/index.php/board,276.0.html
-
 Ukrainian Support: https://joomla-ua.org/community/t/jumultithumb
 
 ## Sponsors
