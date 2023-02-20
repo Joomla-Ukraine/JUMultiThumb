@@ -1,4 +1,4 @@
-# JUMultiThumb
+# JUMultiThumb for Joomla! 4
 
 JUMultiThumb - best Joomla! plugin for resize image in Joomla Content (article, blog, category, categories and featured) and other components with support Content Plugin.
 
