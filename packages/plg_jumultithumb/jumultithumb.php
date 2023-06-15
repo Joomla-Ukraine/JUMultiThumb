@@ -13,11 +13,10 @@
 use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\CMS\Uri\Uri;
 use JUMultiThumb\Helpers\AutoLinks;
 use JUMultiThumb\Helpers\Image;
+use JUMultiThumb\Helpers\Utils;
 
 defined('_JEXEC') or die;
 
@@ -60,12 +59,9 @@ class plgContentjumultithumb extends CMSPlugin
 	/**
 	 * @param $context
 	 * @param $article
-	 * @param $params
-	 * @param $limitstart
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
 	 * @since 7.0
 	 */
 	public function onContentBeforeDisplay($context, $article): void
@@ -85,12 +81,9 @@ class plgContentjumultithumb extends CMSPlugin
 	/**
 	 * @param $context
 	 * @param $article
-	 * @param $params
-	 * @param $limitstart
-	 *
 	 * @return void
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 7.0
 	 */
 	public function onContentPrepare($context, $article): void
@@ -259,7 +252,6 @@ class plgContentjumultithumb extends CMSPlugin
 			$cont_filtercolor = [ 'fltr_5' => 'cont|' . $thumb_cont_seting ];
 		}
 
-		// image replacer
 		$lightbox = $this->params->get('selectlightbox');
 
 		preg_match_all('/(width|height|src|alt|title|class|align|style)=("[^"]*")/i', $option[ 'image' ], $imgAttr);
@@ -271,58 +263,135 @@ class plgContentjumultithumb extends CMSPlugin
 			$img[ $imgAttr[ 1 ][ $i ] ] = str_replace('"', '', $imgAttr[ 2 ][ $i ]);
 		}
 
-		$imgsource      = $img[ 'src' ];
-		$imgsource      = str_replace(Uri::base(), '', $imgsource);
-		$originalsource = $imgsource;
-		$imgalt         = $img[ 'alt' ];
-		$imgtitle       = $img[ 'title' ];
-		$imgalign       = $img[ 'align' ];
-		$imgclass       = $img[ 'class' ] . ' ';
+		$imgsource = Utils::img_source($img[ 'src' ]);
+		$imgalt    = $img[ 'alt' ];
+		$imgtitle  = $img[ 'title' ];
+		$imgalign  = $img[ 'align' ];
 
 		if(preg_match('#float:(.*?);#s', $img[ 'style' ], $imgstyle))
 		{
 			$imgstyle = $imgstyle[ 1 ];
 		}
 
-		$img_class = '';
-		if($imgalign !== '')
-		{
-			$img_class = 'ju' . trim($imgalign) . ' ';
-		}
-		elseif($imgstyle !== '')
-		{
-			$img_class = 'ju' . trim($imgstyle) . ' ';
-		}
+		$img_class = Utils::img_class([
+			'imgclass' => $img[ 'class' ],
+			'imgalign' => $imgalign,
+			'imgstyle' => $imgstyle,
+			'view'     => $this->app->input->get('view')
+		]);
 
-		// attributes
-		$img_class = 'juimage ' . $imgclass . $img_class . 'juimg-' . $this->app->input->get('view');
-		$imgalt    = mb_strtoupper(mb_substr($imgalt, 0, 1)) . mb_substr($imgalt, 1);
-		$img_alt   = $imgalt;
-		$imgtitle  = mb_strtoupper(mb_substr($imgtitle, 0, 1)) . mb_substr($imgtitle, 1);
-		$img_title = ($imgalt ? : $imgtitle);
-		$img_title = ($img_title ? : $option[ 'article' ]->title);
-		$img_title = ($img_title ? ' title="' . $img_title . '"' : '');
+		
+		$img_alt  = Utils::img_alt($img[ 'alt' ]);
+		$imgtitle = mb_strtoupper(mb_substr($imgtitle, 0, 1)) . mb_substr($imgtitle, 1);
+		$title    = ($imgalt ? : $imgtitle);
+		$title    = ($title ? : $option[ 'article' ]->title);
+		$title    = ($title ? ' title="' . $title . '"' : '');
 
 		$_image_noresize = 0;
 		if($this->params->get('resall') == 0 && $img[ 'class' ] !== 'juimage')
 		{
-			$size = getimagesize(JPATH_SITE . '/' . $originalsource);
+			$size = getimagesize(JPATH_SITE . '/' . $imgsource);
 
-			return $this->_image($originalsource, $size[ 0 ], $size[ 1 ], $imgclass, $img_alt, 1, 1, $img_title);
+			return Utils::image('jumultithumb', 'default', [
+				'image'    => $imgsource,
+				'orig_img' => $imgsource,
+				'link_img' => $imgsource,
+				'w'        => $size[ 0 ],
+				'h'        => $size[ 1 ],
+				'title'    => $title,
+				'caption'  => $title,
+				'lightbox' => $lightbox
+			]);
 		}
 
 		if($this->params->get('resall') == 1 && ($img[ 'class' ] === 'nothumb' || $img[ 'class' ] === 'noimage' || $img[ 'class' ] === 'nothumbnail' || $img[ 'class' ] === 'jugallery' || $img[ 'class' ] == $noimage_class) && $img[ 'class' ] != '')
 		{
 			if($this->params->get('a_watermark') == 0 || $option[ 'watermark_o' ] != '1')
 			{
-				$size = getimagesize(JPATH_SITE . '/' . $originalsource);
+				$size = getimagesize(JPATH_SITE . '/' . $imgsource);
 
-				return $this->_image($originalsource, $size[ 0 ], $size[ 1 ], $img_class, $img_alt, 1, 1, $img_title);
+				return Utils::image('jumultithumb', 'default', [
+					'image'    => $imgsource,
+					'orig_img' => $imgsource,
+					'link_img' => $imgsource,
+					'w'        => $size[ 0 ],
+					'h'        => $size[ 1 ],
+					'title'    => $title,
+					'caption'  => $title,
+					'lightbox' => $lightbox
+				]);
 			}
 
 			$_image_noresize = 1;
 		}
 
+		if($this->modeHelper::view('Article'))
+		{
+			$w            = $this->params->get('width');
+			$h            = $this->params->get('height');
+			$zc           = $this->params->get('zc');
+			$zoom_crop_bg = $this->params->get('zoom_crop_bg');
+			$cropaspect   = $this->params->get('cropaspect');
+			$farcrop      = $this->params->get('farcrop');
+			$farcropbg    = $this->params->get('farcropbg');
+			$noresize     = $this->params->get('noresize');
+			$nofullimg    = $this->params->get('nofullimg');
+
+			foreach($items as $item)
+			{
+				if(in_array($this->itemid, $item->menu_item))
+				{
+					$w            = $item->w;
+					$h            = $item->h;
+					$zc           = $item->zc;
+					$zoom_crop_bg = $item->zoom_crop_bg;
+					$cropaspect   = $item->cropaspect;
+					$farcrop      = $item->farcrop;
+					$farcropbg    = $item->farcropbg;
+					$noresize     = $item->noresize;
+					$nofullimg    = $item->nofullimg;
+				}
+			}
+
+			echo $w;
+		}
+
+		$thumb_img = Image::thumb([
+			'image'        => $imgsource,
+			'noresize'     => $noresize,
+			'zc'           => $zc,
+			'cropaspect'   => $cropaspect,
+			'zoom_crop_bg' => $zoom_crop_bg,
+			'w'            => $w,
+			'h'            => $h,
+			'farcrop'      => $farcrop,
+			'farcropbg'    => $farcropbg,
+			'q'            => $quality,
+		]);
+
+		$limage = Utils::image('jumultithumb', 'default', [
+			'image'    => $thumb_img,
+			'orig_img' => $imgsource,
+			'link_img' => $imgsource,
+			'w'        => $w,
+			'h'        => $h,
+			'title'    => $title,
+			'caption'  => $title,
+			'lightbox' => $lightbox
+		]);
+
+		/*if($_image_noresize == 1 || $nofullimg == 1 || $this->modeHelper::view('Print'))
+		{
+			$limage = $this->_image($thumb_img, $w, $h, $img_class, $img_alt, 1, $_image_noresize, $title);
+		}
+		else
+		{
+			$limage = $this->_image($thumb_img, $w, $h, 'imgobjct ' . $img_class, $img_alt, 1, 0, $title, $link_img, $imgsource, $lightbox);
+		}*/
+
+		return $limage;
+
+		/*
 		if($this->modeHelper::view('CatBlog'))
 		{
 			$b_width           = $this->params->get('b_width');
@@ -446,7 +515,7 @@ class plgContentjumultithumb extends CMSPlugin
 				'q'            => $quality,
 			]);
 
-			/*
+
 						if($this->modeHelper::view('Categories') || $this->modeHelper::view('Category'))
 						{
 							$newmaxwidth        = $this->params->get('cat_maxwidth');
@@ -497,7 +566,7 @@ class plgContentjumultithumb extends CMSPlugin
 							$juimgresmatche = str_replace([
 								' /',
 								Uri::base()
-							], '', $originalsource);
+							], '', $imgsource);
 
 							return $this->_image(Uri::base() . $juimgresmatche, $newmaxwidth, $newmaxheight, $img_class, $img_alt, 1, 1);
 						}
@@ -611,14 +680,15 @@ class plgContentjumultithumb extends CMSPlugin
 
 						$_imgparams = array_merge($imp_filtercolor, $usm_filtercolor, $blur_filtercolor, $brit_filtercolor, $cont_filtercolor, $imgparams, $new_imgparams);
 						$thumb_img  = $this->juimg->render($imgsource, $_imgparams);
-			*/
+
+
 			if($_image_noresize == 1 || $nofullimg == 1 || $this->modeHelper::view('Print'))
 			{
-				$limage = $this->_image($thumb_img, $w, $h, $img_class, $img_alt, 1, $_image_noresize, $img_title);
+				$limage = $this->_image($thumb_img, $w, $h, $img_class, $img_alt, 1, $_image_noresize, $title);
 			}
 			else
 			{
-				$limage = $this->_image($thumb_img, $w, $h, 'imgobjct ' . $img_class, $img_alt, 1, 0, $img_title, $link_img, $imgsource, $lightbox);
+				$limage = $this->_image($thumb_img, $w, $h, 'imgobjct ' . $img_class, $img_alt, 1, 0, $title, $link_img, $imgsource, $lightbox);
 			}
 		}
 		elseif($this->modeHelper::view('Featured'))
@@ -678,130 +748,9 @@ class plgContentjumultithumb extends CMSPlugin
 
 			$limage = $this->_image($thumb_img, $this->params->get('f_width'), $this->params->get('f_height'), $img_class, $img_alt, 0, 0);
 		}
-
-		return $limage;
-	}
-
-	/**
-	 * @param      $_img
-	 * @param      $_w
-	 * @param      $_h
-	 * @param null $_class
-	 * @param null $_alt
-	 * @param null $_caption
-	 * @param null $_noresize
-	 * @param null $_title
-	 * @param null $_link_img
-	 * @param null $_orig_img
-	 * @param null $_lightbox
-	 *
-	 * @return string
-	 *
-	 * @throws Exception
-	 * @since 7.0
-	 */
-	private function _image($_img, $_w, $_h, $_class = null, $_alt = null, $_caption = null, $_noresize = null, $_title = null, $_link_img = null, $_orig_img = null, $_lightbox = null): string
-	{
-		$template = $this->app->getTemplate();
-
-		switch($_lightbox)
-		{
-			case 'lightgallery':
-				$lightbox = ' ' . ($_link_img ? 'data-src="' . Uri::base() . $_link_img . '"' : '') . ' ' . ($_orig_img ? 'data-download-url="' . Uri::base() . $_orig_img . '"' : '');
-				break;
-
-			default:
-			case 'jmodal':
-				$lightbox = ' rel="{handler: \'image\', marginImage: {x: 50, y: 50}}"';
-				break;
-		}
-
-		$tmpl = $this->getTmpl($template, 'default');
-
-		ob_start();
-		require $tmpl;
-
-		return ob_get_clean();
-	}
-
-	private function _image2(array $options = []): string
-	{
-
-		//_image(   $_lightbox = null)
-
-		$tmpl = $options[ 'tmpl' ];
+*/
 
 
-		return $this->_getTmpl($tmpl, [
-			'tmpl'         => $options[ 'tmpl' ],
-			'img'          => $options[ 'img' ],
-			'noresize'     => $options[ 'noresize' ],
-			'w'            => $options[ 'w' ],
-			'h'            => $options[ 'h' ],
-			'class'        => $options[ 'class' ],
-			'caption'      => $options[ 'caption' ],
-			'alt'          => $options[ 'alt' ],
-			'figcaption'   => $options[ 'figcaption' ],
-			'title'        => $options[ 'title' ],
-			'link_img'     => $options[ 'link_img' ],
-			'picture'      => $options[ 'picture' ],
-			'webp_support' => $options[ 'webp_support' ],
-			'source'       => $options[ 'source' ],
-			'lightbox'     => $options[ 'lightbox' ],
-			'attr'         => $options[ 'attr' ]
-		]);
-	}
-
-	/**
-	 * @param $template
-	 * @param $name
-	 *
-	 * @return string
-	 *
-	 * @since 7.0
-	 */
-	private function getTmpl($template, $name): string
-	{
-		$search = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb/' . $name . '.php';
-		$tmpl   = JPATH_SITE . '/plugins/content/jumultithumb/tmpl/' . $name . '.php';
-
-		if(is_file($search))
-		{
-			$tmpl = $search;
-		}
-
-		return $tmpl;
-	}
-
-	private function _getTmpl(array $options = []): string
-	{
-		$template = $this->app->getTemplate();
-		$search   = JPATH_SITE . '/templates/' . $template . '/html/plg_jumultithumb/' . $options[ 'tmpl' ] . '.php';
-		$tmpl     = JPATH_SITE . '/plugins/content/jumultithumb/tmpl/' . $options[ 'tmpl' ] . '.php';
-
-		if(file_exists($search))
-		{
-			return (new FileLayout($options[ 'tmpl' ], $search))->render($options);
-		}
-
-		return (new FileLayout($options[ 'tmpl' ], $tmpl))->render($options);
-	}
-
-	/**
-	 * @param $file
-	 * @param $_cropaspect
-	 *
-	 * @return float|int
-	 *
-	 * @since 7.0
-	 */
-	private function _aspect($file, $_cropaspect)
-	{
-		$size   = $this->juimg->size(rawurldecode(JPATH_SITE . '/' . $file));
-		$width  = $size->width;
-		$height = $size->height * ($_cropaspect != '' ? $_cropaspect : '0');
-
-		return $height / $width;
 	}
 
 	/**

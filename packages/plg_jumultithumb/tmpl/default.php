@@ -26,36 +26,38 @@ defined('_JEXEC') or die;
 *       $lightbox   — litebox (lightgallery, colorbox, jmodal)
 */
 
+$data = (object) $displayData;
+
 ?>
-<?php if($_noresize == 1): ?>
+<?php if($data->noresize == 1): ?>
 	<div class="row row-fluid">
 	<div class="col-xs-12 span12">
 <?php endif; ?>
 
-	<figure class="<?php echo $_class . ($_noresize == 1 ? ' thumbnail' : ''); ?>">
-		<?php if($_link_img) : ?>
-		<a href="<?php echo $_link_img; ?>"<?php echo $_title . $lightbox; ?>>
+	<figure class="<?php echo $data->class . ($data->noresize == 1 ? ' thumbnail' : ''); ?>">
+		<?php if($data->link_img) : ?>
+		<a href="<?php echo $data->link_img; ?>"<?php echo $data->title . $data->lightbox; ?>>
 			<?php endif; ?>
 
 			<img
-					src="<?php echo $_img; ?>"
-					alt="<?php echo $_alt; ?>"
-				<?php echo ($_w ? 'width="' . $_w . '"' : '') . ($_h ? 'height="' . $_h . '"' : ''); ?>
+					src="<?php echo $data->img; ?>"
+					alt="<?php echo $data->alt; ?>"
+				<?php echo ($data->w ? 'width="' . $data->w . '"' : '') . ($data->h ? 'height="' . $data->h . '"' : ''); ?>
 			>
 
-			<?php if($_alt != ''): ?>
-				<?php if($_caption == 1): ?>
-					<figcaption itemprop="caption" class="text-muted"><?php echo $_alt; ?></figcaption>
+			<?php if($data->alt != ''): ?>
+				<?php if($data->caption == 1): ?>
+					<figcaption itemprop="caption" class="text-muted"><?php echo $data->alt; ?></figcaption>
 				<?php endif; ?>
 			<?php endif; ?>
 
-			<?php if($_link_img): ?>
+			<?php if($data->link_img): ?>
 		</a>
 	<?php endif; ?>
 
 	</figure>
 
-<?php if($_noresize == 1): ?>
+<?php if($data->noresize == 1): ?>
 	</div>
 	</div>
 <?php endif; ?>

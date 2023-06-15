@@ -5,13 +5,13 @@
            method="upgrade">
     <name>PLG_JUMULTITHUMB</name>
     <author>Denys Nosov</author>
-    <creationDate>13.10.2018</creationDate>
+    <creationDate>@date@</creationDate>
     <copyright>(C) 2007-2023 Denys Nosov. All rights reserved.</copyright>
     <license>http://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
     </license>
     <authorEmail>denys@joomla-ua.org</authorEmail>
-    <authorUrl>www.joomla-ua.org</authorUrl>
-    <version>7.1.3</version>
+    <authorUrl>https://joomla-ua.org</authorUrl>
+    <version>@version@</version>
     <description>PLG_JUMULTITHUMB_DESCRIPTION</description>
 
     <files>
@@ -19,7 +19,7 @@
         <folder>adapters</folder>
         <folder>assets</folder>
         <folder>fields</folder>
-        <folder>lib</folder>
+        <folder>libraries</folder>
         <folder>load</folder>
         <folder>tmpl</folder>
     </files>
@@ -27,8 +27,6 @@
     <languages>
         <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb.ini</language>
         <language tag="en-GB">language/en-GB/en-GB.plg_content_jumultithumb.sys.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.plg_content_jumultithumb.sys.ini</language>
     </languages>
 
     <updateservers>
@@ -64,7 +62,6 @@
 		            <field name="note13"
 		                   type="note"
 		                   label=""
-		                   class="alert"
 		                   description="PLG_JUMULTITHUMB_NOTICE0" />
 
 	                <field

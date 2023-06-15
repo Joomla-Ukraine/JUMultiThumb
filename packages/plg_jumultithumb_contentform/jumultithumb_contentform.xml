@@ -5,13 +5,13 @@
            method="upgrade">
     <name>PLG_JUMULTITHUMB_CONTENTFORM</name>
     <author>Denys Nosov</author>
-    <creationDate>07.02.2023</creationDate>
+    <creationDate>@date@</creationDate>
     <copyright>(C) 2007-2023 Denys Nosov. All rights reserved.</copyright>
     <license>https://creativecommons.org/licenses/by-nc-nd/3.0/ Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 License
     </license>
     <authorEmail>denys@joomla-ua.org</authorEmail>
     <authorUrl>joomla-ua.org</authorUrl>
-    <version>8.0</version>
+    <version>@version@</version>
     <description>JUMultiThumb Content Form</description>
 
     <files>

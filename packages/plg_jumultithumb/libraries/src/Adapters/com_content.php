@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
 class com_content
 {
 	/**
-	 * @param $layout
+	 * @param $type
 	 *
 	 * @return string
 	 *

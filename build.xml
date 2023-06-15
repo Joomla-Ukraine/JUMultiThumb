@@ -1,7 +1,7 @@
 <project name="jumultithumb" default="dist" basedir=".">
 
-    <property name="VERSION" value="8.0"/>
-    <property name="juimage" value="5.12"/>
+    <property name="VERSION" value="8.0.1"/>
+    <property name="juimage" value="5.14"/>
     <property name="JOOMLA" value="3.9"/>
 
     <tstamp>

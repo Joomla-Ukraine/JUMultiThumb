@@ -126,8 +126,8 @@ class Image
 	}
 
 	/**
-	 * @param $html
-	 * @param $_cropaspect
+	 * @param   string  $html
+	 * @param   float   $_cropaspect
 	 *
 	 * @return float|int
 	 *
